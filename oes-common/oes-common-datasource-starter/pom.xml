@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>oes-common</artifactId>
+    <groupId>com.oes</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <version>1.0-SNAPSHOT</version>
+  <name>${project.artifactId}</name>
+  <description>oes 通用数据源模块</description>
+  <artifactId>oes-common-datasource-starter</artifactId>
+
+  <properties>
+    <oes.version>1.0-SNAPSHOT</oes.version>
+  </properties>
+
+  <dependencies>
+    <!-- 通用核心模块 -->
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-core</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <!-- dynamic-datasource -->
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+      <version>${dynamic-datasource.version}</version>
+    </dependency>
+    <!-- mysql -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- p6sy -->
+    <dependency>
+      <groupId>p6spy</groupId>
+      <artifactId>p6spy</artifactId>
+      <version>${p6spy.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>

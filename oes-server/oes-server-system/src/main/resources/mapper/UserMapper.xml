@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.system.mapper.UserMapper">
+
+  <sql id="baseSql">
+    SELECT u.user_id,
+           u.username,
+           u.email,
+           u.mobile,
+           u.status,
+           u.create_time,
+           u.ssex as                 sex,
+           u.last_login_time,
+           u.update_time,
+           u.description,
+           u.avatar,
+           u.dept_id,
+           d.dept_name,
+           GROUP_CONCAT(r.role_id)   roleId,
+           GROUP_CONCAT(r.role_name) roleName
+    FROM t_user u
+           LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
+           LEFT JOIN t_role r ON (r.role_id = ur.role_id)
+           LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
+    WHERE 1 = 1
+  </sql>
+
+  <select id="pageSystemUserDetail" parameterType="com.oes.common.core.entity.system.SystemUser"
+    resultType="com.oes.common.core.entity.system.SystemUser">
+    <include refid="baseSql"/>
+    <if test="user.username != null and user.username != ''">
+      AND u.username like CONCAT('%',#{user.username},'%')
+    </if>
+    <if test="user.deptName != null and user.deptName != ''">
+      AND d.dept_name like CONCAT('%',#{user.deptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="user.sex != null">
+      AND u.ssex = #{user.sex}
+    </if>
+    <if test="user.status != null">
+      AND u.status = #{user.status}
+    </if>
+    <if test="user.mobile != null and user.mobile != ''">
+      AND u.mobile = #{user.mobile}
+    </if>
+    <if test="user.createTimeFrom != null and user.createTimeFrom !=''">
+      AND u.create_time &gt; #{user.createTimeFrom}
+    </if>
+    <if test="user.createTimeTo!= null and user.createTimeTo !=''">
+      AND u.create_time &lt; #{user.createTimeTo}
+    </if>
+    GROUP BY u.username,u.user_id,u.email,u.mobile,u.status,u.create_time,u.ssex,
+    u.dept_id,u.last_login_time,u.update_time,u.description,u.avatar
+  </select>
+
+  <select id="selectSystemUserDetail"
+    parameterType="com.oes.common.core.entity.system.SystemUser"
+    resultType="com.oes.common.core.entity.system.SystemUser">
+    <include refid="baseSql"/>
+    <if test="user.username != null and user.username != ''">
+      AND u.username = #{user.username}
+    </if>
+    <if test="user.deptName != null and user.deptName != ''">
+      AND d.dept_name like CONCAT('%',#{user.deptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="user.sex != null and user.sex != ''">
+      AND u.ssex = #{user.sex}
+    </if>
+    <if test="user.status != null">
+      AND u.status = #{user.status}
+    </if>
+    <if test="user.mobile != null and user.mobile != ''">
+      AND u.mobile = #{user.mobile}
+    </if>
+    <if test="user.createTimeFrom != null and user.createTimeFrom !=''">
+      AND u.create_time &gt; #{user.createTimeFrom}
+    </if>
+    <if test="user.createTimeTo!= null and user.createTimeTo !=''">
+      AND u.create_time &lt; #{user.createTimeTo}
+    </if>
+    GROUP BY u.username,u.user_id,u.email,u.mobile,u.status,u.create_time,u.ssex,
+    u.dept_id,u.last_login_time,u.update_time,u.description,u.avatar
+  </select>
+</mapper>

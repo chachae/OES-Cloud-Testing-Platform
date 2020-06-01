@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>oes</artifactId>
+    <groupId>com.oes</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>oes-auth</artifactId>
+  <name>${project.artifactId}</name>
+  <description>OES 统一认证授权服务</description>
+
+  <properties>
+    <oes.version>1.0-SNAPSHOT</oes.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-redis-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-datasource-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-security-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.whvcse</groupId>
+      <artifactId>easy-captcha</artifactId>
+      <version>${easy-captcha.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>${logstash-logback-encoder.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.xkcoding.justauth</groupId>
+      <artifactId>justauth-spring-boot-starter</artifactId>
+      <version>${justauth.version}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
