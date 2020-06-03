@@ -50,9 +50,9 @@ public class SystemUserDetailServiceImpl extends ServiceImpl<UserMapper, SystemU
       if (SystemUserConstant.STATUS_VALID.equals(systemUser.getStatus())) {
         // 设置用户权限信息
         List<GrantedAuthority> authorities;
-        String expression = userManager.findUserPermissions(systemUser.getUsername());
-        authorities = StrUtil.isNotBlank(expression) ? AuthorityUtils
-            .commaSeparatedStringToAuthorityList(expression) : AuthorityUtils.NO_AUTHORITIES;
+        String perms = userManager.findUserPermissions(systemUser.getUsername());
+        authorities = StrUtil.isNotBlank(perms) ? AuthorityUtils
+            .commaSeparatedStringToAuthorityList(perms) : AuthorityUtils.NO_AUTHORITIES;
         // 设置认证用户属性
         AuthUser authUser = new AuthUser(systemUser.getUsername(), password, true,
             true, true, true, authorities);

@@ -44,7 +44,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
   @Override
   public String getUserPermissions(String username) {
     List<Menu> menus = baseMapper.selectUserPermissions(username);
-    return menus.stream().map(Menu::getExpression).collect(Collectors.joining(","));
+    return menus.stream().map(Menu::getPerms).collect(Collectors.joining(","));
   }
 
   @Override
@@ -143,7 +143,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
       tree.setOrderNum(menu.getOrderNum());
       tree.setPath(menu.getPath());
       tree.setType(menu.getType());
-      tree.setExpression(menu.getExpression());
+      tree.setPerms(menu.getPerms());
       trees.add(tree);
     });
   }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.system.Log;
@@ -12,7 +13,6 @@ import com.oes.common.core.util.SortUtil;
 import com.oes.server.system.mapper.LogMapper;
 import com.oes.server.system.service.ILogService;
 import com.oes.server.system.util.AddressUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogS
     }
 
     Page<Log> page = new Page<>(request.getPageNum(), request.getPageSize());
-    SortUtil.handlePageSort(request, page, "create_time", SystemConstant.ORDER_DESC, false);
+    SortUtil.handlePageSort(request, page, "createTime", SystemConstant.ORDER_DESC, true);
 
     return this.page(page, queryWrapper);
   }

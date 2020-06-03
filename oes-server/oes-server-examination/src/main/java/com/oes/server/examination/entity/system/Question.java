@@ -100,4 +100,6 @@ public class Question implements Serializable {
    * 难度：困难
    */
   private static final Integer HARD = 3;
+
+  private transient String[] typeIds;
 }

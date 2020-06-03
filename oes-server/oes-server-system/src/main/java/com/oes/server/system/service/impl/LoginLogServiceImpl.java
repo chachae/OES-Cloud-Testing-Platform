@@ -50,7 +50,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
     }
 
     Page<LoginLog> page = new Page<>(param.getPageNum(), param.getPageSize());
-    SortUtil.handlePageSort(param, page, "login_time", SystemConstant.ORDER_DESC, false);
+    SortUtil.handlePageSort(param, page, "loginTime", SystemConstant.ORDER_DESC, true);
 
     return this.page(page, qw);
   }

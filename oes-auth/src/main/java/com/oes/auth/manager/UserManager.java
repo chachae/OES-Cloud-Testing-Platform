@@ -57,7 +57,7 @@ public class UserManager {
    */
   public String findUserPermissions(String username) {
     List<Menu> userPermissions = menuMapper.selectUserPermissions(username);
-    return userPermissions.stream().map(Menu::getExpression).collect(Collectors.joining(","));
+    return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));
   }
 
   /**

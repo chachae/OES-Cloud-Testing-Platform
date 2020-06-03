@@ -53,7 +53,7 @@ public class Menu implements Serializable {
   /**
    * 权限表达式
    */
-  private String expression;
+  private String perms;
   /**
    * 图标
    */

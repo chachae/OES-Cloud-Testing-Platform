@@ -3,8 +3,8 @@ package com.oes.common.core.util;
 import static com.alibaba.fastjson.JSON.toJSONBytes;
 
 import cn.hutool.core.net.NetUtil;
-import com.oes.common.core.entity.UserAgent;
 import com.google.common.net.HttpHeaders;
+import com.oes.common.core.entity.UserAgent;
 import java.io.IOException;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
@@ -134,7 +134,8 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
     if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
       ip = request.getRemoteAddr();
     }
-    if (LOCALHOST[1].equalsIgnoreCase(ip) || LOCALHOST[2].equalsIgnoreCase(ip)) {
+    if (LOCALHOST[0].equalsIgnoreCase(ip) || LOCALHOST[1].equalsIgnoreCase(ip) || LOCALHOST[2]
+        .equalsIgnoreCase(ip)) {
       ip = NetUtil.getLocalhostStr();
     }
     return ip;
