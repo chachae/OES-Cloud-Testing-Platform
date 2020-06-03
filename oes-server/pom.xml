@@ -15,6 +15,7 @@
   <modules>
     <module>oes-server-system</module>
     <module>oes-server-demo</module>
+    <module>oes-server-examination</module>
   </modules>
   <packaging>pom</packaging>
 
