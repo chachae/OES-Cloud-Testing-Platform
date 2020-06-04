@@ -6,6 +6,7 @@ import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.Dept;
 import com.oes.server.system.annotation.ControllerEndpoint;
 import com.oes.server.system.service.IDeptService;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -47,6 +48,12 @@ public class DeptController {
   @GetMapping
   public R<Map<String, Object>> deptList(QueryParam param, Dept dept) {
     return R.ok(this.deptService.getDepts(param, dept));
+  }
+
+  @GetMapping("options")
+  public R<List<Dept>> getDeptList(Dept dept, QueryParam param) {
+    List<Dept> depts = this.deptService.getDepts(dept, param);
+    return R.ok(depts);
   }
 
   @PostMapping

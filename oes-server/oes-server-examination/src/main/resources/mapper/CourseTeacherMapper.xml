@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.examination.mapper.CourseTeacherMapper">
+  <resultMap id="baseMap" type="com.oes.server.examination.entity.system.CourseTeacher">
+    <result column="course_id" property="courseId"/>
+    <result column="teacher_id" property="teacherId"/>
+    <result column="full_name" property="teacherName"/>
+  </resultMap>
+
+  <select id="selectList" parameterType="long" resultMap="baseMap">
+    select tct.course_id, tct.teacher_id, tu.full_name
+    from t_course_teacher tct left join t_user tu on tct.teacher_id = tu.user_id
+    where tct.course_id = #{courseId,jdbcType=BIGINT}
+  </select>
+</mapper>

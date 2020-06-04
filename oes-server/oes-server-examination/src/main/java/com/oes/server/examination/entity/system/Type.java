@@ -20,7 +20,7 @@ public class Type implements Serializable {
 
   private static final long serialVersionUID = -4973257667419556920L;
 
-  public static final String[] DEFAULT_TYPE_ID_ARRAY = {"1", "2", "3", "4", "5", "6"};
+  public static final String[] DEFAULT_TYPE_ID_ARRAY = {"1", "2", "3", "4", "5"};
 
   /**
    * 题目类型主键

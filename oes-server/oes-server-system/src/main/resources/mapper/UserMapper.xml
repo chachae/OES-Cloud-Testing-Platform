@@ -6,6 +6,7 @@
   <sql id="baseSql">
     SELECT u.user_id,
            u.username,
+           u.full_name,
            u.email,
            u.mobile,
            u.status,
@@ -78,6 +79,9 @@
     </if>
     <if test="user.createTimeTo!= null and user.createTimeTo !=''">
       AND u.create_time &lt; #{user.createTimeTo}
+    </if>
+    <if test="user.roleId != null and user.roleId != ''">
+      AND r.role_id = #{user.roleId,jdbcType=VARCHAR}
     </if>
     GROUP BY u.username,u.user_id,u.email,u.mobile,u.status,u.create_time,u.ssex,
     u.dept_id,u.last_login_time,u.update_time,u.description,u.avatar

@@ -52,6 +52,7 @@
     <if test="question.creatorId != null">
       and tq.creator_id = #{question.creatorId,jdbcType=BIGINT}
     </if>
+    group by tq.question_id, tq.question_name
   </select>
 
 </mapper>

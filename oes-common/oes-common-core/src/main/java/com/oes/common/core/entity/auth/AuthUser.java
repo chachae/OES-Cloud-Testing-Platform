@@ -29,6 +29,7 @@ public class AuthUser extends User {
 
   private Long userId;
   private String username;
+  private String fullName;
   @JsonIgnore
   private String password;
   private Long deptId;

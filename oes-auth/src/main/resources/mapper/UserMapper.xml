@@ -6,6 +6,7 @@
   <sql id="baseSql">
     SELECT u.user_id,
            u.username,
+           u.full_name,
            u.email,
            u.mobile,
            u.password,

@@ -1,5 +1,6 @@
 package com.oes.server.examination.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.server.examination.entity.system.CourseTeacher;
 import com.oes.server.examination.mapper.CourseTeacherMapper;
@@ -19,4 +20,9 @@ public class CourseTeacherServiceImpl extends
     ServiceImpl<CourseTeacherMapper, CourseTeacher> implements
     ICourseTeacherService {
 
+  @Override
+  public void deleteByCourseId(Long courseId) {
+    baseMapper
+        .delete(new LambdaQueryWrapper<CourseTeacher>().eq(CourseTeacher::getCourseId, courseId));
+  }
 }

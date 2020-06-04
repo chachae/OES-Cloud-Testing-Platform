@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
+import com.oes.common.core.entity.OptionTree;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.auth.CurrentUser;
 import com.oes.common.core.entity.system.SystemUser;
@@ -20,6 +21,7 @@ import com.oes.server.system.service.IUserRoleService;
 import com.oes.server.system.service.IUserService;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Override
   public IPage<SystemUser> pageSystemUser(QueryParam param, SystemUser user) {
     Page<SystemUser> page = new Page<>(param.getPageNum(), param.getPageSize());
-    SortUtil.handlePageSort(param, page, "user_id", SystemConstant.ORDER_ASC, false);
+    SortUtil.handlePageSort(param, page, "userId", SystemConstant.ORDER_ASC, true);
     return baseMapper.pageSystemUserDetail(page, user);
   }
 
@@ -166,11 +168,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
 
   }
 
+  @Override
+  public List<OptionTree<SystemUser>> getSystemUserTree(SystemUser user) {
+    List<SystemUser> users = baseMapper.selectSystemUserDetail(user);
+    Collection<List<SystemUser>> values = users.stream()
+        .collect(Collectors.groupingBy(SystemUser::getDeptId)).values();
+
+    List<OptionTree<SystemUser>> result = new ArrayList<>();
+
+    for (List<SystemUser> list : values) {
+      OptionTree<SystemUser> parent = new OptionTree<>();
+      parent.setValue((String.valueOf(list.get(0).getDeptId())));
+      parent.setLabel(list.get(0).getDeptName());
+
+      List<OptionTree<SystemUser>> children = new ArrayList<>();
+      for (SystemUser systemUser : list) {
+        OptionTree<SystemUser> child = new OptionTree<>();
+        child.setValue((String.valueOf(systemUser.getUserId())));
+        child.setLabel(systemUser.getFullName());
+        children.add(child);
+      }
+      parent.setChildren(children);
+      result.add(parent);
+    }
+
+    return result;
+  }
+
   private void setUserRoles(SystemUser user, String[] roles) {
     List<UserRole> userRoles = new ArrayList<>();
-    UserRole userRole = new UserRole();
-    userRole.setUserId(user.getUserId());
     for (String roleId : roles) {
+      UserRole userRole = new UserRole();
+      userRole.setUserId(user.getUserId());
       userRole.setRoleId(Long.valueOf(roleId));
       userRoles.add(userRole);
     }
@@ -179,9 +208,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
 
   private void setUserDataPermissions(SystemUser user, String[] deptIds) {
     List<UserDataPermission> userDataPermissions = new ArrayList<>();
-    UserDataPermission permission = new UserDataPermission();
-    permission.setUserId(user.getUserId());
     for (String deptId : deptIds) {
+      UserDataPermission permission = new UserDataPermission();
+      permission.setUserId(user.getUserId());
       permission.setDeptId(Long.valueOf(deptId));
       userDataPermissions.add(permission);
     }

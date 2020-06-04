@@ -23,10 +23,6 @@ public class Answer implements Serializable {
   @TableId
   private Long answerId;
   /**
-   * 试题编号（id）
-   */
-  private Long questionId;
-  /**
    * 学生答题数据
    */
   private String answerContent;
@@ -38,5 +34,12 @@ public class Answer implements Serializable {
    * 试卷编号（id）
    */
   private Long paperId;
-
+  /**
+   * 试题编号（id）
+   */
+  private Long questionId;
+  /**
+   * 题目的分
+   */
+  private Integer score;
 }

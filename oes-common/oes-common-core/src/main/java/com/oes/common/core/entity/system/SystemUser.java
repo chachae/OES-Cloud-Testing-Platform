@@ -70,6 +70,11 @@ public class SystemUser implements Serializable {
   private String username;
 
   /**
+   * 真实姓名
+   */
+  private String fullName;
+
+  /**
    * 密码
    */
   private String password;

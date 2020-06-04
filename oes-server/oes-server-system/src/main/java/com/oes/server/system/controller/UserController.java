@@ -2,6 +2,7 @@ package com.oes.server.system.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.oes.common.core.entity.OptionTree;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.LoginLog;
@@ -97,6 +98,18 @@ public class UserController {
   public boolean checkUserName(@NotBlank(message = "{required}") @PathVariable String username) {
     SystemUser result = userService.getSystemUser(username);
     return result == null;
+  }
+
+  /**
+   * 用户名检测
+   *
+   * @param user 用户数据
+   * @return boolean
+   */
+  @GetMapping("options")
+  public R<List<OptionTree<SystemUser>>> getTreeOption(SystemUser user) {
+    List<OptionTree<SystemUser>> tree = userService.getSystemUserTree(user);
+    return R.ok(tree);
   }
 
   @GetMapping

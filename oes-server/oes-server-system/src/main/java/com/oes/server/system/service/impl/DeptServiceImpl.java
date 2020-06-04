@@ -77,6 +77,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
           .ge(Dept::getCreateTime, dept.getCreateTimeFrom())
           .le(Dept::getCreateTime, dept.getCreateTimeTo());
     }
+    if (dept.getParentId() != null) {
+      qw.lambda().eq(Dept::getParentId, dept.getParentId());
+    }
     SortUtil.handleWrapperSort(param, qw, "order_num", SystemConstant.ORDER_ASC, false);
     return baseMapper.selectList(qw);
   }

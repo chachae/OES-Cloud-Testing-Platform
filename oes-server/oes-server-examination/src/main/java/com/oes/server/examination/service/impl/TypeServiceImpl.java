@@ -39,7 +39,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
     if (type.getTypeName() != null) {
       wrapper.like(Type::getTypeName, type.getTypeName());
     }
-    SortUtil.handlePageSort(param, page, "createTime", SystemConstant.ORDER_DESC, true);
+    SortUtil.handlePageSort(param, page, "typeId", SystemConstant.ORDER_ASC, true);
     return baseMapper.selectPage(page, wrapper);
   }
 

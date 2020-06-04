@@ -9,4 +9,11 @@ import com.oes.server.examination.entity.system.CourseTeacher;
  */
 public interface ICourseTeacherService extends IService<CourseTeacher> {
 
+  /**
+   * 通过课程编号删除课程-教师中间表数据
+   *
+   * @param courseId 课程编号
+   */
+  void deleteByCourseId(Long courseId);
+
 }

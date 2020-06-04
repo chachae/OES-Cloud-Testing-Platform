@@ -1,9 +1,12 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -21,7 +24,7 @@ public class Course implements Serializable {
   /**
    * 课程主键（id）
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   private Long courseId;
   /**
    * 课程名称
@@ -43,4 +46,19 @@ public class Course implements Serializable {
    * 更新时间
    */
   private Date updateTime;
+
+  /**
+   * 指派教师信息集合
+   */
+  @TableField(exist = false)
+  private List<CourseTeacher> teachers;
+
+  /**
+   * 开课单位名称
+   */
+  @TableField(exist = false)
+  private String deptName;
+
+  private transient String teacherIds;
+
 }

@@ -3,6 +3,7 @@ package com.oes.server.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.oes.common.core.entity.OptionTree;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.system.SystemUser;
 import java.util.List;
@@ -96,5 +97,12 @@ public interface IUserService extends IService<SystemUser> {
    * @param usernames 用户集合
    */
   void resetPassword(String[] usernames);
+
+  /**
+   * 获取用户树
+   *
+   * @param user 用户信息
+   */
+  List<OptionTree<SystemUser>> getSystemUserTree(SystemUser user);
 
 }

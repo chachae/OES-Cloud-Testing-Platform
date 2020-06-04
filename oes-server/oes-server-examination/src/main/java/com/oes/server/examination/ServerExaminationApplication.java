@@ -6,6 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @since 2020/4/29 17:53
  */
 @EnableAsync
+@EnableFeignClients
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableDistributedTransaction

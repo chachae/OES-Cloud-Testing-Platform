@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.examination.mapper.CourseMapper">
+
+  <resultMap id="baseMap" type="com.oes.server.examination.entity.system.Course">
+    <id column="course_id" property="courseId"/>
+    <result column="course_name" property="courseName"/>
+    <result column="dept_id" property="deptId"/>
+    <result column="creator_id" property="creatorId"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="dept_name" property="deptName"/>
+    <!-- 课程指派教师信息 -->
+    <collection property="teachers" column="course_id"
+      ofType="com.oes.server.examination.entity.system.CourseTeacher"
+      select="com.oes.server.examination.mapper.CourseTeacherMapper.selectList"/>
+  </resultMap>
+
+  <sql id="baseSql">
+    select tc.course_id,
+           tc.course_name,
+           tc.dept_id,
+           tc.creator_id,
+           tc.create_time,
+           tc.update_time,
+           td.dept_name
+    from t_course tc
+           left join t_dept td on tc.dept_id = td.dept_id
+    where 1 = 1
+  </sql>
+
+  <select id="pageCourse" parameterType="com.oes.server.examination.entity.system.Course"
+    resultMap="baseMap">
+    <include refid="baseSql"/>
+    <if test="course.courseId != null">
+      and tc.course_id = #{course.courseId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+</mapper>

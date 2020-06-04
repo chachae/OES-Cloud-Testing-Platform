@@ -27,4 +27,9 @@ public interface ServerConstant {
    * Server-DEMO 微服务名
    */
   String OES_SERVER_DEMO = "OES-Server-Demo";
+
+  /**
+   * Server-EXAMINATION 微服务名
+   */
+  String OES_SERVER_EXAMINATION = "OES-Server-Examination";
 }

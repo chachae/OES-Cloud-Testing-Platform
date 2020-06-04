@@ -25,7 +25,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   public IPage<Question> pageQuestion(QueryParam param, Question question) {
     Page<Question> page = new Page<>(param.getPageNum(), param.getPageSize());
-    SortUtil.handlePageSort(param, page, "question_id", SystemConstant.ORDER_ASC, false);
+    SortUtil.handlePageSort(param, page, "questionId", SystemConstant.ORDER_ASC, true);
     return baseMapper.pageQuestion(page, question);
   }
 }
