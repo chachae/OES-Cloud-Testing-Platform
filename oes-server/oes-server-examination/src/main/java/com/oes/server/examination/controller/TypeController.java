@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("type")
 @RequiredArgsConstructor
+@RequestMapping("type")
 public class TypeController {
 
   private final ITypeService typeService;

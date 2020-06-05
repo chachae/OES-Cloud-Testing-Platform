@@ -35,6 +35,12 @@
     <if test="course.courseId != null">
       AND tc.course_id = #{course.courseId,jdbcType=BIGINT}
     </if>
+    <if test="course.courseName != null and course.courseName != ''">
+      AND tc.course_name LIKE CONCAT('%',#{course.courseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="course.deptId != null">
+      AND tc.dept_id = #{course.deptId,jdbcType=BIGINT}
+    </if>
     GROUP BY
     tc.course_id
   </select>

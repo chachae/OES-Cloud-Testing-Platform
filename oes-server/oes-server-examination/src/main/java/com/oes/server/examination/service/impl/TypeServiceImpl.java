@@ -56,11 +56,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
     if (hasDefaultType(typeIds)) {
       throw new ApiException("不能删除默认题型");
     }
-    // 查询是否有题目使用到
-    Question question = new Question();
-    question.setTypeIds(typeIds);
-    IPage<Question> result = questionService.pageQuestion(new QueryParam(1L, 1L), question);
-    if (result.getTotal() > 0L) {
+    if (hasQuestion(typeIds)) {
       throw new ApiException("该题型已有题目使用，请移除相关题目后重试");
     }
 
@@ -87,5 +83,11 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
       }
     }
     return false;
+  }
+
+  public boolean hasQuestion(String[] typeIds) {
+    return this.questionService
+        .count(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)))
+        > 0;
   }
 }

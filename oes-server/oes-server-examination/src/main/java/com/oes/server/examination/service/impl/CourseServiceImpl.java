@@ -40,6 +40,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void deleteCourse(String[] courseIds) {
     if (hasCourse(courseIds)) {
       throw new ApiException("当前题库包含改门课程的题目，请移除相关题目后重试");
@@ -59,6 +60,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void createCourse(Course course) {
     course.setCreateTime(new Date());
     baseMapper.insert(course);

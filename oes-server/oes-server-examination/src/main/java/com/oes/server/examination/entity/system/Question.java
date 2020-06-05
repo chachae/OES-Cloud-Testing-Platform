@@ -1,5 +1,6 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -17,6 +18,19 @@ import lombok.Data;
 public class Question implements Serializable {
 
   private static final long serialVersionUID = 1033860346245112691L;
+
+  /**
+   * 难度：简单
+   */
+  private static final Integer EASY = 1;
+  /**
+   * 难度：中等
+   */
+  private static final Integer MEDIUM = 2;
+  /**
+   * 难度：困难
+   */
+  private static final Integer HARD = 3;
 
   /**
    * 题目主键（id）
@@ -89,17 +103,20 @@ public class Question implements Serializable {
   private Integer difficult;
 
   /**
-   * 难度：简单
+   * 出题人姓名
    */
-  private static final Integer EASY = 1;
-  /**
-   * 难度：中等
-   */
-  private static final Integer MEDIUM = 2;
-  /**
-   * 难度：困难
-   */
-  private static final Integer HARD = 3;
+  @TableField(exist = false)
+  private String fullName;
 
-  private transient String[] typeIds;
+  /**
+   * 题目类型名称
+   */
+  @TableField(exist = false)
+  private String typeName;
+
+  /**
+   * 课程名称
+   */
+  @TableField(exist = false)
+  private String courseName;
 }

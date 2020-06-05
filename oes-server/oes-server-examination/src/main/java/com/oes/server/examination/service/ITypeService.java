@@ -28,9 +28,9 @@ public interface ITypeService extends IService<Type> {
   void createType(Type type);
 
   /**
-   * 删除题目
+   * 删除类型
    *
-   * @param typeIds 试题编号集合
+   * @param typeIds 类型编号集合
    */
   void deleteType(String[] typeIds);
 

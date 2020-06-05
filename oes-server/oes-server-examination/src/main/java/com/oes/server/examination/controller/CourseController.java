@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("course")
 @RequiredArgsConstructor
+@RequestMapping("course")
 public class CourseController {
 
   private final ICourseService courseService;

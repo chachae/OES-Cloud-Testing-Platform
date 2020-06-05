@@ -20,4 +20,24 @@ public interface IQuestionService extends IService<Question> {
    */
   IPage<Question> pageQuestion(QueryParam param, Question question);
 
+  /**
+   * 增加题目
+   *
+   * @param question 题目信息
+   */
+  void createQuestion(Question question);
+
+  /**
+   * 删除题目
+   *
+   * @param questionIds 题目编号集合
+   */
+  void deleteQuestion(String[] questionIds);
+
+  /**
+   * 更新题目
+   *
+   * @param question 题目信息
+   */
+  void updateQuestion(Question question);
 }

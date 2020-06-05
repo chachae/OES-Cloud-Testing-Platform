@@ -18,7 +18,7 @@
            tq.create_time,
            tq.update_time,
            tq.creator_id,
-           tu.username    as teacherName,
+           tu.full_name   as fullName,
            tq.type_id,
            tt.type_name   as typeName,
            tq.course_id,
@@ -31,17 +31,14 @@
     where 1 = 1
   </sql>
 
-  <select id="pageQuestion" parameterType="com.oes.server.examination.entity.system.Question"
-    resultType="com.oes.server.examination.entity.system.Question">
+  <select
+    id="pageQuestion"
+    parameterType="com.oes.server.examination.entity.system.Question"
+    resultType="com.oes.server.examination.entity.system.Question"
+  >
     <include refid="baseSql"/>
     <if test="question.questionName != null and question.questionName != ''">
       and tq.question_name like concat('%',#{question.questionName,jdbcType=VARCHAR},'%')
-    </if>
-    <if test="question.typeIds != null and question.typeIds.length != 0">
-      and tq.type_id in
-      <foreach collection="question.typeIds" open="(" close=")" separator="," item="typeId">
-        #{typeId,jdbcType=BIGINT}
-      </foreach>
     </if>
     <if test="question.typeId != null">
       and tq.type_id = #{question.typeId,jdbcType=BIGINT}
@@ -52,7 +49,9 @@
     <if test="question.creatorId != null">
       and tq.creator_id = #{question.creatorId,jdbcType=BIGINT}
     </if>
-    group by tq.question_id, tq.question_name
+    <if test="question.difficult != null">
+      and tq.difficult = #{question.difficult,jdbcType=INTEGER}
+    </if>
   </select>
 
 </mapper>
