@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.util.Base64Utils;
 
 /**
  * @author chachae
@@ -59,5 +60,9 @@ public class OesCloudResourceServerConfig extends ResourceServerConfigurerAdapte
   public void configure(ResourceServerSecurityConfigurer resources) {
     resources.authenticationEntryPoint(exceptionEntryPoint)
         .accessDeniedHandler(accessDeniedHandler);
+  }
+
+  public static void main(String[] args) {
+    System.out.println(new String((Base64Utils.encode("oes:123456".getBytes()))));
   }
 }

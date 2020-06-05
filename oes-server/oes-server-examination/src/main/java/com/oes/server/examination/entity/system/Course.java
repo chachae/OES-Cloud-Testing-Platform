@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import lombok.Data;
 
 /**
@@ -48,17 +47,12 @@ public class Course implements Serializable {
   private Date updateTime;
 
   /**
-   * 指派教师信息集合
-   */
-  @TableField(exist = false)
-  private List<CourseTeacher> teachers;
-
-  /**
    * 开课单位名称
    */
   @TableField(exist = false)
   private String deptName;
 
-  private transient String teacherIds;
+  @TableField(exist = false)
+  private String teacherIds;
 
 }
