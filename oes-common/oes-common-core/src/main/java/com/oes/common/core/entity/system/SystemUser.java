@@ -56,6 +56,9 @@ public class SystemUser implements Serializable {
    * 性别保密
    */
   public static final String SEX_UNKNOWN = "2";
+
+  public static final String ADMIN_ROLE_ID = "1";
+
   private static final long serialVersionUID = -4352868070794165001L;
   /**
    * 用户 ID

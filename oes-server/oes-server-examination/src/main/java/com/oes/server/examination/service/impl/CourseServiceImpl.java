@@ -16,6 +16,7 @@ import com.oes.server.examination.service.ICourseTeacherService;
 import com.oes.server.examination.service.IQuestionService;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,6 +38,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   public IPage<Course> pageCourse(Course course, QueryParam param) {
     Page<Course> page = new Page<>(param.getPageNum(), param.getPageSize());
     return baseMapper.pageCourse(course, page);
+  }
+
+  @Override
+  public List<Course> getList() {
+    return baseMapper.selectList();
   }
 
   @Override
@@ -68,7 +74,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     String[] teacherIds = StrUtil.split(course.getTeacherIds(), StrUtil.COMMA);
     setCourseTeacher(course.getCourseId(), teacherIds);
   }
-
 
   private void setCourseTeacher(Long courseId, String[] teacherIds) {
     for (String teacherId : teacherIds) {

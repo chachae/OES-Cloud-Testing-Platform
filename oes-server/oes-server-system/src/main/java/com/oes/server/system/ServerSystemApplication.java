@@ -1,7 +1,6 @@
 package com.oes.server.system;
 
 import com.oes.common.security.starter.annotation.EnableOesCloudResourceServer;
-import com.codingapi.txlcn.tc.config.EnableDistributedTransaction;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableDistributedTransaction
+// @EnableDistributedTransaction
 @EnableOesCloudResourceServer
 @MapperScan("com.oes.server.system.mapper")
 public class ServerSystemApplication {

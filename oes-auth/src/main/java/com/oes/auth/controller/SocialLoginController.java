@@ -151,7 +151,7 @@ public class SocialLoginController {
    * 根据用户名获取绑定关系
    *
    * @param username 用户名
-   * @return FebsResponse
+   * @return {@link R<List>}
    */
   @ResponseBody
   @GetMapping("connections/{username}")

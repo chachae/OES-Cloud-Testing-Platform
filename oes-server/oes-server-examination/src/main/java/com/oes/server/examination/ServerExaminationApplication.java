@@ -1,6 +1,5 @@
 package com.oes.server.examination;
 
-import com.codingapi.txlcn.tc.config.EnableDistributedTransaction;
 import com.oes.common.security.starter.annotation.EnableOesCloudResourceServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.WebApplicationType;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableFeignClients
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableDistributedTransaction
+// @EnableDistributedTransaction
 @EnableOesCloudResourceServer
 @MapperScan("com.oes.server.examination.mapper")
 public class ServerExaminationApplication {

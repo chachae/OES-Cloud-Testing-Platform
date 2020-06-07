@@ -4,10 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.oes.common.core.entity.auth.CurrentUser;
+import com.oes.common.core.entity.system.SystemUser;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import java.io.StringReader;
 import java.sql.Connection;
+import java.util.List;
 import java.util.Properties;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +85,11 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
         return originSql;
       }
 
+      List<String> curRoles = StrUtil.split(user.getRoleId(), StrUtil.C_COMMA);
+      if (!dataPermission.limitAdmin() && curRoles.contains(SystemUser.ADMIN_ROLE_ID)) {
+        return originSql;
+      }
+
       CCJSqlParserManager parserManager = new CCJSqlParserManager();
       Select select = (Select) parserManager.parse(new StringReader(originSql));
       PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
@@ -90,9 +97,16 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
 
       String selectTableName =
           fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
-      String dataPermissionSql = String
-          .format("%s.%s in (%s)", selectTableName, dataPermission.field(),
-              StrUtil.blankToDefault(user.getDeptIds(), "'WARNING: WITHOUT PERMISSION!'"));
+
+      // 默认使用用户数据权限进行
+      String dataPermissionSql;
+      if (dataPermission.field().equals("dept_id")) {
+        dataPermissionSql = String
+            .format("%s.%s in (%s)", selectTableName, dataPermission.field(),
+                StrUtil.blankToDefault(user.getDeptIds(), "'WARNING: WITHOUT PERMISSION!'"));
+      } else {
+        dataPermissionSql = String.format("%s = (%s)", dataPermission.field(), user.getUserId());
+      }
 
       if (plainSelect.getWhere() == null) {
         plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));

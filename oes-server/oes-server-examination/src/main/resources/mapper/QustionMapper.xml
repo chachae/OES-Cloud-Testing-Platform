@@ -18,11 +18,12 @@
            tq.create_time,
            tq.update_time,
            tq.creator_id,
-           tu.full_name   as fullName,
+           tq.consumption,
+           tu.full_name,
            tq.type_id,
-           tt.type_name   as typeName,
+           tt.type_name,
            tq.course_id,
-           tc.course_name as courseName,
+           tc.course_name,
            tq.difficult
     from t_question tq
            left join t_user tu on tq.creator_id = tu.user_id

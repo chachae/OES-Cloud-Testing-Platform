@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.server.examination.entity.system.Course;
+import java.util.List;
 
 /**
  * @author chachae
@@ -16,10 +17,16 @@ public interface ICourseService extends IService<Course> {
    *
    * @param course 课程信息
    * @param param  分页数据
-   * @return 分页结果集
+   * @return {@link IPage<Course>} 分页结果集
    */
   IPage<Course> pageCourse(Course course, QueryParam param);
 
+  /**
+   * 获取课程集合（Mapper 携带数据权限）
+   *
+   * @return {@link List<Course>} 课程集合
+   */
+  List<Course> getList();
 
   /**
    * 删除课程信息

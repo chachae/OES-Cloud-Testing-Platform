@@ -1,5 +1,6 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -35,7 +36,7 @@ public class Question implements Serializable {
   /**
    * 题目主键（id）
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   private Long questionId;
   /**
    * 题干
@@ -101,6 +102,10 @@ public class Question implements Serializable {
    * 试题难度
    */
   private Integer difficult;
+  /**
+   * 使用量
+   */
+  private Integer consumption;
 
   /**
    * 出题人姓名

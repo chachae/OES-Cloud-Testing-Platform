@@ -16,7 +16,7 @@ public interface ITypeService extends IService<Type> {
    *
    * @param param 分页参数
    * @param type  模糊条件
-   * @return 分页结果集
+   * @return {@link IPage<Type>} 分页结果集
    */
   IPage<Type> pageType(QueryParam param, Type type);
 
@@ -45,7 +45,7 @@ public interface ITypeService extends IService<Type> {
    * 通过试题类型名称获取实体类型信息
    *
    * @param typeName 试题类型名称
-   * @return Type
+   * @return {@link Type} 试题类型
    */
   Type getByTypeName(String typeName);
 }

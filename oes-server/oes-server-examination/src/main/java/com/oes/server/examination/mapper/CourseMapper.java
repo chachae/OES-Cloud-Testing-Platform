@@ -1,16 +1,19 @@
 package com.oes.server.examination.mapper;
 
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oes.common.datasource.starter.announcation.DataPermission;
 import com.oes.server.examination.entity.system.Course;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
+@DataPermission(methods = {"pageCourse",
+    "selectList"}, field = "tct.teacher_id", limitAdmin = false)
 public interface CourseMapper extends BaseMapper<Course> {
 
   /**
@@ -18,8 +21,14 @@ public interface CourseMapper extends BaseMapper<Course> {
    *
    * @param course 课程信息
    * @param param  分页数据
-   * @return 分页结果集
+   * @return {@link IPage<Course>} 分页结果集
    */
   IPage<Course> pageCourse(@Param("course") Course course, Page<Course> param);
 
+  /**
+   * 获取课程集合（Mapper 携带数据权限）
+   *
+   * @return {@link List<Course> | } 课程数据集合
+   */
+  List<Course> selectList();
 }

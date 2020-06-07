@@ -38,5 +38,12 @@ public @interface DataPermission {
    * @return String
    */
   String field() default "dept_id";
+
+  /**
+   * 限制管理员
+   *
+   * @return {@link Boolean}
+   */
+  boolean limitAdmin() default true;
 }
 

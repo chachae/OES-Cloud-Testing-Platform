@@ -7,6 +7,7 @@ import com.oes.common.core.entity.R;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.examination.entity.system.Type;
 import com.oes.server.examination.service.ITypeService;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -46,6 +47,11 @@ public class TypeController {
   @GetMapping("{typeId}")
   public R<Type> selectOne(@PathVariable Long typeId) {
     return R.ok(this.typeService.getById(typeId));
+  }
+
+  @GetMapping("options")
+  public R<List<Type>> options() {
+    return R.ok(this.typeService.list(null));
   }
 
   @PostMapping

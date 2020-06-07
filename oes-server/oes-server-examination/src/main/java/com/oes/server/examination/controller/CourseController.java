@@ -8,6 +8,7 @@ import com.oes.common.core.entity.R;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.examination.entity.system.Course;
 import com.oes.server.examination.service.ICourseService;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -57,6 +58,12 @@ public class CourseController {
     Course course = courseService
         .getOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseName, courseName));
     return course == null;
+  }
+
+  @GetMapping("options")
+  public R<List<Course>> options() {
+    List<Course> result = this.courseService.getList();
+    return R.ok(result);
   }
 
   @PutMapping

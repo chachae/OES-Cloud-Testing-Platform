@@ -16,7 +16,7 @@ public interface IQuestionService extends IService<Question> {
    *
    * @param param    分页数据
    * @param question 模糊搜索
-   * @return 分页结果集
+   * @return {@link IPage<Question>} 分页结果集
    */
   IPage<Question> pageQuestion(QueryParam param, Question question);
 
