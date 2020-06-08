@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 试卷表实体类
@@ -16,10 +17,17 @@ import lombok.Data;
  * @since 2020-06-03 16:43:16
  */
 @Data
+@NoArgsConstructor
 @TableName("t_paper")
 public class Paper implements Serializable {
 
   private static final long serialVersionUID = 1872442241203732242L;
+
+  public Paper(Long paperId, Integer status, Date updateTime) {
+    this.paperId = paperId;
+    this.status = status;
+    this.updateTime = updateTime;
+  }
 
   /**
    * 是否随机
@@ -79,8 +87,15 @@ public class Paper implements Serializable {
   private Date createTime;
 
   /**
+   * 更新时间
+   */
+  private Date updateTime;
+
+
+  /**
    * 试卷状态（1：启用，0：禁用）
    */
+  @TableField("`status`")
   private Integer status;
 
   /**
