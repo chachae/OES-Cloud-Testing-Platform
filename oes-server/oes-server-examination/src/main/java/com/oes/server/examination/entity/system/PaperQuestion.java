@@ -68,5 +68,16 @@ public class PaperQuestion implements Serializable {
    */
   @TableField(exist = false)
   private String optionF;
+  /**
+   * 正确答案
+   */
+  @TableField(exist = false)
+  private String rightKey;
+  /**
+   * 题目解析
+   */
+  @TableField(exist = false)
+  private String analysis;
+
 
 }

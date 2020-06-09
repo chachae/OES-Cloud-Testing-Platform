@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -138,10 +139,17 @@ public class Paper implements Serializable {
   private String creatorName;
 
   /**
-   * 试卷题目信息
+   * 试卷题目信息（返回给前端）
    */
   @TableField(exist = false)
-  private List<PaperQuestion> paperQuestions;
+  private List<Map<String, Object>> paperQuestions;
+
+  /**
+   * 试卷题目信息（SQL 查询映射时使用）
+   */
+  @JsonIgnore
+  @TableField(exist = false)
+  private List<PaperQuestion> paperQuestionList;
 
   /**
    * 开始时间选择器

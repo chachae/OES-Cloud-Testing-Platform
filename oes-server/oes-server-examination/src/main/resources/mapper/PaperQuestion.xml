@@ -21,13 +21,15 @@
            tpq.question_id,
            tq.question_id,
            question_name,
-           option_a,
-           option_b,
-           option_c,
-           option_d,
-           option_e,
-           option_f,
-           type_id
+           tq.option_a,
+           tq.option_b,
+           tq.option_c,
+           tq.option_d,
+           tq.option_e,
+           tq.option_f,
+           tq.type_id,
+           tq.analysis,
+           tq.right_key
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id
     where 1 = 1

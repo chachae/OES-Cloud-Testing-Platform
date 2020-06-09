@@ -23,7 +23,7 @@
     <result column="creator_name" property="creatorName"/>
     <collection
       column="paper_id"
-      property="paperQuestions"
+      property="paperQuestionList"
       ofType="com.oes.server.examination.entity.system.PaperQuestion"
       select="com.oes.server.examination.mapper.PaperQuestionMapper.selectListByPaperId"
     />
@@ -44,13 +44,13 @@
            tc.course_name,
            tp.type,
            tp.is_random,
-           (select dept_name from t_dept where t_dept.dept_id = tc.dept_id)                   as dept_name,
+           (select dept_name from t_dept where t_dept.dept_id = tc.dept_id) as dept_name,
            (select full_name
             from t_user
-            where t_user.user_id = tp.creator_id)                                                creator_name,
+            where t_user.user_id = tp.creator_id)                              creator_name,
            group_concat((select dept_name
                          from t_dept
-                         where t_dept.dept_id in (tpd.dept_id)))                              as dept_names
+                         where t_dept.dept_id in (tpd.dept_id)))            as dept_names
     from t_paper tp
            left join t_course tc on (tp.course_id = tc.course_id)
            left join t_paper_dept tpd on (tp.paper_id = tpd.paper_id)
