@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.server.examination.entity.system.Question;
+import java.util.List;
 
 /**
  * @author chachae
@@ -19,6 +20,14 @@ public interface IQuestionService extends IService<Question> {
    * @return {@link IPage<Question>} 分页结果集
    */
   IPage<Question> pageQuestion(QueryParam param, Question question);
+
+  /**
+   * 获取题目集合
+   *
+   * @param question 问题数据
+   * @return {@link IPage<Question>} 分页结果集
+   */
+  List<Question> getList(Question question);
 
   /**
    * 增加题目

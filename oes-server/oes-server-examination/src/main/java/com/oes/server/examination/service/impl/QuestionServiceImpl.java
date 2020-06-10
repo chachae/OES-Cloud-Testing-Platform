@@ -1,5 +1,6 @@
 package com.oes.server.examination.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +16,7 @@ import com.oes.server.examination.service.IPaperQuestionService;
 import com.oes.server.examination.service.IQuestionService;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,6 +39,24 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     Page<Question> page = new Page<>(param.getPageNum(), param.getPageSize());
     SortUtil.handlePageSort(param, page, "courseId", SystemConstant.ORDER_ASC, true);
     return baseMapper.pageQuestion(page, question);
+  }
+
+  @Override
+  public List<Question> getList(Question question) {
+    LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+    if (question.getTypeId() != null) {
+      wrapper.eq(Question::getTypeId, question.getTypeId());
+    }
+    if (question.getDifficult() != null) {
+      wrapper.eq(Question::getDifficult, question.getDifficult());
+    }
+    if (question.getCourseId() != null) {
+      wrapper.eq(Question::getCourseId, question.getCourseId());
+    }
+    if (StrUtil.isNotBlank(question.getQuestionName())) {
+      wrapper.like(Question::getQuestionName, question.getQuestionName());
+    }
+    return baseMapper.selectList(wrapper);
   }
 
   @Override

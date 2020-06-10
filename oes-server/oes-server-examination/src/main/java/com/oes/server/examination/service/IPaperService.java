@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.server.examination.entity.system.Paper;
 import com.oes.server.examination.entity.system.PaperType;
-import java.util.List;
 
 /**
  * @author chachae
@@ -39,8 +38,8 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 随机抽取题目组卷
    *
-   * @param paper      组卷数据
-   * @param paperTypes 试卷试题类型分布数据
+   * @param paper     组卷数据
+   * @param paperType 试卷试题类型分布数据
    */
-  void randomCreatePaper(Paper paper, List<PaperType> paperTypes);
+  void randomCreatePaper(Paper paper, PaperType paperType);
 }

@@ -1,5 +1,6 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -49,7 +50,7 @@ public class Paper implements Serializable {
   /**
    * 试卷主键（id）
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   private Long paperId;
 
   /**
