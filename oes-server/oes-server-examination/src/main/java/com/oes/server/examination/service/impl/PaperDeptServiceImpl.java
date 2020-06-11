@@ -26,4 +26,16 @@ public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept
         .selectList(
             new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
   }
+
+  @Override
+  public void deleteBatchByPaperIds(String[] paperIds) {
+    baseMapper
+        .delete(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds
+        )));
+  }
+
+  @Override
+  public void deleteByPaperId(Long paperId) {
+    baseMapper.delete(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
+  }
 }

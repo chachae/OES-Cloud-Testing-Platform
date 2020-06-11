@@ -61,8 +61,8 @@ public class CourseController {
   }
 
   @GetMapping("options")
-  public R<List<Course>> options() {
-    List<Course> result = this.courseService.getList();
+  public R<List<Course>> options(Course course) {
+    List<Course> result = this.courseService.getList(course);
     return R.ok(result);
   }
 

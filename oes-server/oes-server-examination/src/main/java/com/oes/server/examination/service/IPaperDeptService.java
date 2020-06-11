@@ -19,4 +19,18 @@ public interface IPaperDeptService extends IService<PaperDept> {
    */
   List<PaperDept> getByPaperId(String[] paperIds);
 
+  /**
+   * 通过试卷编号批量删除试卷-班级指派信息
+   *
+   * @param paperIds 试卷编号集合
+   */
+  void deleteBatchByPaperIds(String[] paperIds);
+
+  /**
+   * 通过试卷编号删除试卷-班级指派信息
+   *
+   * @param paperId 试卷编号
+   */
+  void deleteByPaperId(Long paperId);
+
 }

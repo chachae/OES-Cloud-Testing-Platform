@@ -14,6 +14,7 @@ import com.oes.server.examination.mapper.CourseMapper;
 import com.oes.server.examination.service.ICourseService;
 import com.oes.server.examination.service.ICourseTeacherService;
 import com.oes.server.examination.service.IQuestionService;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -41,15 +42,25 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   }
 
   @Override
-  public List<Course> getList() {
-    return baseMapper.selectList();
+  public List<Course> getList(Course course) {
+    LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
+    if (StrUtil.isNotBlank(course.getCourseName())) {
+      wrapper.like(Course::getCourseName, course.getCourseName());
+    }
+    if (course.getDeptId() != null) {
+      wrapper.eq(Course::getDeptId, course.getDeptId());
+    }
+    if (course.getCreatorId() != null) {
+      wrapper.eq(Course::getCreatorId, course.getCreatorId());
+    }
+    return baseMapper.selectList(wrapper);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void deleteCourse(String[] courseIds) {
     if (hasCourse(courseIds)) {
-      throw new ApiException("当前题库包含改门课程的题目，请移除相关题目后重试");
+      throw new ApiException("当前题库包含相关课程的题目，请移除相关题目后重试");
     }
     baseMapper.deleteBatchIds(Arrays.asList(courseIds));
   }
@@ -61,8 +72,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     baseMapper.updateById(course);
     // 维护课程-教师数据
     courseTeacherService.deleteByCourseId(course.getCourseId());
-    String[] teacherIds = StrUtil.split(course.getTeacherIds(), StrUtil.COMMA);
-    setCourseTeacher(course.getCourseId(), teacherIds);
+    setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
   }
 
   @Override
@@ -71,14 +81,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     course.setCreateTime(new Date());
     baseMapper.insert(course);
     // 维护课程-教师数据
-    String[] teacherIds = StrUtil.split(course.getTeacherIds(), StrUtil.COMMA);
-    setCourseTeacher(course.getCourseId(), teacherIds);
+    setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
   }
 
   private void setCourseTeacher(Long courseId, String[] teacherIds) {
+    List<CourseTeacher> batchObjs = new ArrayList<>(teacherIds.length);
     for (String teacherId : teacherIds) {
-      courseTeacherService.save(new CourseTeacher(courseId, Long.parseLong(teacherId)));
+      batchObjs.add(new CourseTeacher(courseId, Long.parseLong(teacherId)));
     }
+    courseTeacherService.saveBatch(batchObjs);
   }
 
   private boolean hasCourse(String[] courseIds) {

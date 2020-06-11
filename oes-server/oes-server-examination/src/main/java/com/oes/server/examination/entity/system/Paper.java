@@ -114,7 +114,15 @@ public class Paper implements Serializable {
    * 试卷类型（1：正式，0：模拟考试）
    */
   private Integer type;
-
+  /**
+   * 学期编号
+   */
+  private Long termId;
+  /**
+   * 学期名称
+   */
+  @TableField(exist = false)
+  private String termName;
   /**
    * 课程名称
    */
@@ -126,6 +134,12 @@ public class Paper implements Serializable {
    */
   @TableField(exist = false)
   private String deptName;
+
+  /**
+   * 考试班级集合
+   */
+  @TableField(exist = false)
+  private String deptIds;
 
   /**
    * 考试班级名称集合

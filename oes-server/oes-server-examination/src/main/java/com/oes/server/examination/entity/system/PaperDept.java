@@ -1,8 +1,12 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 试卷-部门中间表实体类
@@ -11,6 +15,8 @@ import lombok.Data;
  * @since 2020-06-03 16:43:16
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("t_paper_dept")
 public class PaperDept implements Serializable {
 
@@ -19,10 +25,12 @@ public class PaperDept implements Serializable {
   /**
    * 试卷编号（id）
    */
+  @TableId(type = IdType.INPUT)
   private Long paperId;
   /**
    * 部门编号（id）
    */
+  @TableId(type = IdType.INPUT)
   private Long deptId;
 
 }

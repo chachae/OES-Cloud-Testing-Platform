@@ -19,8 +19,11 @@
     <result column="type" property="type"/>
     <result column="course_name" property="courseName"/>
     <result column="dept_name" property="deptName"/>
+    <result column="dept_ids" property="deptIds"/>
     <result column="dept_names" property="deptNames"/>
     <result column="creator_name" property="creatorName"/>
+    <result column="term_id" property="termId"/>
+    <result column="term_name" property="termName"/>
     <collection
       column="paper_id"
       property="paperQuestionList"
@@ -44,16 +47,20 @@
            tc.course_name,
            tp.type,
            tp.is_random,
+           tp.term_id,
+           tt.term_name,
            (select dept_name from t_dept where t_dept.dept_id = tc.dept_id) as dept_name,
            (select full_name
             from t_user
             where t_user.user_id = tp.creator_id)                              creator_name,
+           group_concat(tpd.dept_id)                                        as dept_ids,
            group_concat((select dept_name
                          from t_dept
                          where t_dept.dept_id in (tpd.dept_id)))            as dept_names
     from t_paper tp
            left join t_course tc on (tp.course_id = tc.course_id)
            left join t_paper_dept tpd on (tp.paper_id = tpd.paper_id)
+           left join t_term tt on tp.term_id = tt.term_id
     where 1 = 1
   </sql>
 

@@ -1,5 +1,7 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
@@ -29,10 +31,12 @@ public class PaperType implements Serializable {
   /**
    * 模板主键
    */
+  @TableId(type = IdType.INPUT)
   private Long paperId;
   /**
    * 试题类型编号（id）
    */
+  @TableId(type = IdType.INPUT)
   private Long typeId;
   /**
    * 题目分值

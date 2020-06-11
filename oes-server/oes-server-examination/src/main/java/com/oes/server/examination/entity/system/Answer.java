@@ -1,5 +1,6 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class Answer implements Serializable {
   /**
    * 学生答题主键（id）
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   private Long answerId;
   /**
    * 学生答题数据

@@ -45,10 +45,4 @@
     tc.course_id
   </select>
 
-  <select id="selectList" resultMap="baseMap">
-    <include refid="baseSql"/>
-    GROUP BY
-    tc.course_id
-  </select>
-
 </mapper>

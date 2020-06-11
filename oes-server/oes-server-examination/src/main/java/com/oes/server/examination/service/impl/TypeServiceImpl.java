@@ -1,5 +1,6 @@
 package com.oes.server.examination.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,7 +37,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   public IPage<Type> pageType(QueryParam param, Type type) {
     Page<Type> page = new Page<>(param.getPageNum(), param.getPageSize());
     LambdaQueryWrapper<Type> wrapper = new LambdaQueryWrapper<>();
-    if (type.getTypeName() != null) {
+    if (StrUtil.isNotBlank(type.getTypeName())) {
       wrapper.like(Type::getTypeName, type.getTypeName());
     }
     SortUtil.handlePageSort(param, page, "typeId", SystemConstant.ORDER_ASC, true);

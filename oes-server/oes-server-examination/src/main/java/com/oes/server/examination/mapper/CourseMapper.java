@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import com.oes.server.examination.entity.system.Course;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -24,11 +23,4 @@ public interface CourseMapper extends BaseMapper<Course> {
    * @return {@link IPage<Course>} 分页结果集
    */
   IPage<Course> pageCourse(@Param("course") Course course, Page<Course> param);
-
-  /**
-   * 获取课程集合（Mapper 携带数据权限）
-   *
-   * @return {@link List<Course> | } 课程数据集合
-   */
-  List<Course> selectList();
 }

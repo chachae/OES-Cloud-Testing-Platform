@@ -1,5 +1,6 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public class Score implements Serializable {
   /**
    * 成绩编号（id）
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   private Long scoreId;
   /**
    * 成绩

@@ -24,9 +24,10 @@ public interface ICourseService extends IService<Course> {
   /**
    * 获取课程集合（Mapper 携带数据权限）
    *
+   * @param course 课程信息
    * @return {@link List<Course>} 课程集合
    */
-  List<Course> getList();
+  List<Course> getList(Course course);
 
   /**
    * 删除课程信息

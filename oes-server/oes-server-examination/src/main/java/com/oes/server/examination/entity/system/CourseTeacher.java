@@ -1,6 +1,8 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
@@ -22,13 +24,13 @@ public class CourseTeacher implements Serializable {
   /**
    * 课程编号（id）
    */
-  @TableField("course_id")
+  @TableId(type = IdType.INPUT)
   private Long courseId;
 
   /**
    * 教师编号（id）
    */
-  @TableField("teacher_id")
+  @TableId(type = IdType.INPUT)
   private Long teacherId;
 
   /**

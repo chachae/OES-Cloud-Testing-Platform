@@ -1,6 +1,8 @@
 package com.oes.server.examination.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -30,10 +32,12 @@ public class PaperQuestion implements Serializable {
   /**
    * 试卷编号（id）
    */
+  @TableId(type = IdType.INPUT)
   private Long paperId;
   /**
    * 试题编号（id)
    */
+  @TableId(type = IdType.INPUT)
   private Long questionId;
   /**
    * 试题名称

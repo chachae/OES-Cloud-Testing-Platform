@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.examination.entity.system.Paper;
+import com.oes.server.examination.entity.system.PaperDept;
 import com.oes.server.examination.entity.system.PaperQuestion;
 import com.oes.server.examination.entity.system.PaperType;
 import com.oes.server.examination.entity.system.Question;
@@ -60,6 +61,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   public void updatePaper(Paper paper) {
     paper.setUpdateTime(new Date());
     baseMapper.updateById(paper);
+    if (StrUtil.isNotBlank(paper.getDeptIds())) {
+      // 维护试卷-课程数据
+      paperDeptService.deleteByPaperId(paper.getPaperId());
+      setPaperDept(paper.getPaperId(), paper.getDeptIds().split(StrUtil.COMMA));
+    }
   }
 
   @Override
@@ -67,6 +73,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   public void deletePaper(String[] paperIds) {
     if (canDeleted(paperIds)) {
       baseMapper.deleteBatchIds(Arrays.asList(paperIds));
+      paperDeptService.deleteBatchByPaperIds(paperIds);
     }
   }
 
@@ -105,11 +112,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       if (questions.size() != questionNum) {
         Collections.shuffle(questions);
       }
-      List<PaperQuestion> result = new ArrayList<>(questionNum);
+      List<PaperQuestion> batchObjs = new ArrayList<>(questionNum);
       for (int c = 0; c < questionNum; c++) {
-        result.add(new PaperQuestion(paper.getPaperId(), questions.get(c).getQuestionId()));
+        batchObjs.add(new PaperQuestion(paper.getPaperId(), questions.get(c).getQuestionId()));
       }
-      this.paperQuestionService.saveBatch(result);
+      this.paperQuestionService.saveBatch(batchObjs);
     }
   }
 
@@ -122,7 +129,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
               Integer.parseInt(numArray[i])));
     }
     this.paperTypeService.saveBatch(objects);
+  }
 
+  private void setPaperDept(Long paperId, String[] deptIdArray) {
+    ArrayList<PaperDept> batchObjs = new ArrayList<>(deptIdArray.length);
+    for (String deptId : deptIdArray) {
+      batchObjs.add(new PaperDept(paperId, Long.parseLong(deptId)));
+    }
+    this.paperDeptService.saveBatch(batchObjs);
   }
 
   private boolean canDeleted(String[] paperIds) {
