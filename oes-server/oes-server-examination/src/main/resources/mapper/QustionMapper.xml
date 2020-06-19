@@ -34,8 +34,8 @@
 
   <select
     id="pageQuestion"
-    parameterType="com.oes.server.examination.entity.system.Question"
-    resultType="com.oes.server.examination.entity.system.Question"
+    parameterType="com.oes.common.core.entity.examination.Question"
+    resultType="com.oes.common.core.entity.examination.Question"
   >
     <include refid="baseSql"/>
     <if test="question.questionName != null and question.questionName != ''">

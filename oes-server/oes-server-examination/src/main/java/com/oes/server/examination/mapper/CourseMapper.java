@@ -3,16 +3,15 @@ package com.oes.server.examination.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oes.common.core.entity.examination.Course;
 import com.oes.common.datasource.starter.announcation.DataPermission;
-import com.oes.server.examination.entity.system.Course;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-@DataPermission(methods = {"pageCourse",
-    "selectList"}, field = "tct.teacher_id", limitAdmin = false)
+@DataPermission(methods = {"pageCourse"}, field = "tct.teacher_id", limitAdmin = false)
 public interface CourseMapper extends BaseMapper<Course> {
 
   /**

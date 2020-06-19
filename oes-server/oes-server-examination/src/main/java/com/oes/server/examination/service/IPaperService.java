@@ -3,8 +3,8 @@ package com.oes.server.examination.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
-import com.oes.server.examination.entity.system.Paper;
-import com.oes.server.examination.entity.system.PaperType;
+import com.oes.common.core.entity.examination.Paper;
+import com.oes.common.core.entity.examination.PaperType;
 
 /**
  * @author chachae

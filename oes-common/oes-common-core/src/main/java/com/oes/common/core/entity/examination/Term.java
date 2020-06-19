@@ -1,4 +1,4 @@
-package com.oes.server.examination.entity.system;
+package com.oes.common.core.entity.examination;
 
 /**
  * @author chachae

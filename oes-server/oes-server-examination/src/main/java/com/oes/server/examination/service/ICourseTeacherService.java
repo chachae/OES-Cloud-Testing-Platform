@@ -1,7 +1,7 @@
 package com.oes.server.examination.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.server.examination.entity.system.CourseTeacher;
+import com.oes.common.core.entity.examination.CourseTeacher;
 
 /**
  * @author chachae

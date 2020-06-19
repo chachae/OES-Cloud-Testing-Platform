@@ -102,10 +102,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Transactional(rollbackFor = Exception.class)
   public void updateUser(SystemUser user) {
     // 更新用户
-    user.setPassword(null);
-    user.setUsername(null);
-    user.setCreateTime(null);
-    user.setUpdateTime(new Date());
+    user
+        .setPassword(null)
+        .setUsername(null)
+        .setCreateTime(null)
+        .setUpdateTime(new Date());
     updateById(user);
     // 维护用户角色信息
     String[] userIds = {String.valueOf(user.getUserId())};
@@ -175,21 +176,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
         .collect(Collectors.groupingBy(SystemUser::getDeptId)).values();
 
     List<OptionTree<SystemUser>> result = new ArrayList<>();
-
     for (List<SystemUser> list : values) {
-      OptionTree<SystemUser> parent = new OptionTree<>();
-      parent.setValue((String.valueOf(list.get(0).getDeptId())));
-      parent.setLabel(list.get(0).getDeptName());
-
       List<OptionTree<SystemUser>> children = new ArrayList<>();
-      for (SystemUser systemUser : list) {
-        OptionTree<SystemUser> child = new OptionTree<>();
-        child.setValue((String.valueOf(systemUser.getUserId())));
-        child.setLabel(systemUser.getFullName());
-        children.add(child);
-      }
-      parent.setChildren(children);
-      result.add(parent);
+      list.forEach(cur -> children.add(new OptionTree<>(cur.getUserId(), cur.getFullName())));
+      result.add(new OptionTree<>(list.get(0).getDeptId(), list.get(0).getDeptName(), children));
     }
 
     return result;
@@ -197,24 +187,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
 
   private void setUserRoles(SystemUser user, String[] roles) {
     List<UserRole> userRoles = new ArrayList<>();
-    for (String roleId : roles) {
-      UserRole userRole = new UserRole();
-      userRole.setUserId(user.getUserId());
-      userRole.setRoleId(Long.valueOf(roleId));
-      userRoles.add(userRole);
+    for (String id : roles) {
+      userRoles.add(new UserRole(user.getUserId(), Long.valueOf(id)));
     }
     userRoleService.saveBatch(userRoles);
   }
 
   private void setUserDataPermissions(SystemUser user, String[] deptIds) {
-    List<UserDataPermission> userDataPermissions = new ArrayList<>();
-    for (String deptId : deptIds) {
-      UserDataPermission permission = new UserDataPermission();
-      permission.setUserId(user.getUserId());
-      permission.setDeptId(Long.valueOf(deptId));
-      userDataPermissions.add(permission);
+    List<UserDataPermission> udps = new ArrayList<>();
+    for (String id : deptIds) {
+      udps.add(new UserDataPermission(user.getUserId(), Long.valueOf(id)));
     }
-    userDataPermissionService.saveBatch(userDataPermissions);
+    userDataPermissionService.saveBatch(udps);
   }
 
   private boolean hasCurrentUser(String[] userIds) {

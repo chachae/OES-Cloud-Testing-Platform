@@ -1,7 +1,7 @@
 package com.oes.server.examination.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oes.server.examination.entity.system.PaperType;
+import com.oes.common.core.entity.examination.PaperType;
 
 /**
  * @author chachae

@@ -4,8 +4,8 @@ package com.oes.server.examination.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oes.common.core.entity.examination.Paper;
 import com.oes.common.datasource.starter.announcation.DataPermission;
-import com.oes.server.examination.entity.system.Paper;
 import org.apache.ibatis.annotations.Param;
 
 /**

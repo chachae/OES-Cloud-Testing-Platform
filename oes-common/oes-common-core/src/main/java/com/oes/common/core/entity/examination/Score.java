@@ -1,4 +1,4 @@
-package com.oes.server.examination.entity.system;
+package com.oes.common.core.entity.examination;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

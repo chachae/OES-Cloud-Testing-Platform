@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.examination.mapper.CourseMapper">
 
-  <resultMap id="baseMap" type="com.oes.server.examination.entity.system.Course">
+  <resultMap id="baseMap" type="com.oes.common.core.entity.examination.Course">
     <id column="course_id" property="courseId"/>
     <result column="course_name" property="courseName"/>
     <result column="dept_id" property="deptId"/>
@@ -29,7 +29,7 @@
     WHERE 1 = 1
   </sql>
 
-  <select id="pageCourse" parameterType="com.oes.server.examination.entity.system.Course"
+  <select id="pageCourse" parameterType="com.oes.common.core.entity.examination.Course"
     resultMap="baseMap">
     <include refid="baseSql"/>
     <if test="course.courseId != null">

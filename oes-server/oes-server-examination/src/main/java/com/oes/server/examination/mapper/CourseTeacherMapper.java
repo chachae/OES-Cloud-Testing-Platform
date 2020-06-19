@@ -2,7 +2,7 @@ package com.oes.server.examination.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oes.server.examination.entity.system.CourseTeacher;
+import com.oes.common.core.entity.examination.CourseTeacher;
 
 /**
  * @author chachae

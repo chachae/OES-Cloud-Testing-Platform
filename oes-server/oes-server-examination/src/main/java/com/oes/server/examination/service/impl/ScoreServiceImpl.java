@@ -2,7 +2,7 @@ package com.oes.server.examination.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.server.examination.entity.system.Score;
+import com.oes.common.core.entity.examination.Score;
 import com.oes.server.examination.mapper.ScoreMapper;
 import com.oes.server.examination.service.IScoreService;
 import java.util.Arrays;

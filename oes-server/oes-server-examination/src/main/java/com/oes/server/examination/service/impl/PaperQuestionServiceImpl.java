@@ -1,7 +1,7 @@
 package com.oes.server.examination.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.server.examination.entity.system.PaperQuestion;
+import com.oes.common.core.entity.examination.PaperQuestion;
 import com.oes.server.examination.mapper.PaperQuestionMapper;
 import com.oes.server.examination.service.IPaperQuestionService;
 import org.springframework.stereotype.Service;

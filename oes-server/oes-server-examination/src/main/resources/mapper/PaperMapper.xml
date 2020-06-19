@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.examination.mapper.PaperMapper">
 
-  <resultMap id="baseMap" type="com.oes.server.examination.entity.system.Paper">
+  <resultMap id="baseMap" type="com.oes.common.core.entity.examination.Paper">
     <result column="paper_id" property="paperId"/>
     <result column="paper_name" property="paperName"/>
     <result column="paper_score" property="paperScore"/>
@@ -27,7 +27,7 @@
     <collection
       column="paper_id"
       property="paperQuestionList"
-      ofType="com.oes.server.examination.entity.system.PaperQuestion"
+      ofType="com.oes.common.core.entity.examination.PaperQuestion"
       select="com.oes.server.examination.mapper.PaperQuestionMapper.selectListByPaperId"
     />
   </resultMap>
@@ -64,11 +64,14 @@
     where 1 = 1
   </sql>
 
-  <select id="pagePaper" parameterType="com.oes.server.examination.entity.system.Paper"
+  <select id="pagePaper" parameterType="com.oes.common.core.entity.examination.Paper"
     resultMap="baseMap">
     <include refid="baseSql"/>
     <if test="paper.paperName != null and paper.paperName != ''">
       and tp.paper_name like concat('%',#{paper.paperName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="paper.termId != null">
+      and tt.term_id = #{paper.termId,jdbcType=BIGINT}
     </if>
     GROUP BY tp.paper_id
   </select>

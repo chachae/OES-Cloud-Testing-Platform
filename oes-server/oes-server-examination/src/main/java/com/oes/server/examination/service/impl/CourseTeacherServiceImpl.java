@@ -2,7 +2,7 @@ package com.oes.server.examination.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.server.examination.entity.system.CourseTeacher;
+import com.oes.common.core.entity.examination.CourseTeacher;
 import com.oes.server.examination.mapper.CourseTeacherMapper;
 import com.oes.server.examination.service.ICourseTeacherService;
 import org.springframework.stereotype.Service;

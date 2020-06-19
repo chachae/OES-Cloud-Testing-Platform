@@ -1,11 +1,12 @@
 package com.oes.server.examination.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
+import com.oes.common.core.entity.examination.Term;
 import com.oes.common.core.util.PageUtil;
-import com.oes.server.examination.entity.system.Term;
 import com.oes.server.examination.service.ITermService;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,12 @@ public class TermController {
   public R<List<Term>> options() {
     List<Term> result = this.termService.list();
     return R.ok(result);
+  }
+
+  @GetMapping("check/{termName}")
+  public Boolean check(@PathVariable String termName) {
+    return termService.getOne(new LambdaQueryWrapper<Term>().eq(Term::getTermName, termName))
+        == null;
   }
 
   @PutMapping
