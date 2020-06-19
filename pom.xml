@@ -40,6 +40,7 @@
     <spring-admin.version>2.2.2</spring-admin.version>
     <logstash-logback-encoder.version>6.3</logstash-logback-encoder.version>
     <p6spy.version>3.8.5</p6spy.version>
+    <jjwt.version>0.9.1</jjwt.version>
     <hutool.version>5.3.5</hutool.version>
     <fastjson.version>1.2.70</fastjson.version>
     <mybatis-plus.version>3.3.1</mybatis-plus.version>

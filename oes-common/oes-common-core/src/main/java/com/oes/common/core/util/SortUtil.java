@@ -10,7 +10,7 @@ import com.oes.common.core.entity.QueryParam;
 /**
  * 处理排序工具类
  *
- * @author MrBird
+ * @author chachae
  */
 public class SortUtil {
 

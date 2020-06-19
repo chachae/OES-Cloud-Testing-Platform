@@ -1,6 +1,8 @@
 spring:
   application:
     name: OES-Gateway
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       config:

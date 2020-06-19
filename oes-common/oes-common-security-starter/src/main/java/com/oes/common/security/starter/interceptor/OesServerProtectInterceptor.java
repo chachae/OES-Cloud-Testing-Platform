@@ -1,7 +1,8 @@
 package com.oes.common.security.starter.interceptor;
 
-import com.oes.common.core.entity.R;
+import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.constant.GatewayConstant;
+import com.oes.common.core.entity.R;
 import com.oes.common.core.util.HttpUtil;
 import com.oes.common.security.starter.properties.OesCloudSecurityProperties;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class OesServerProtectInterceptor implements HandlerInterceptor {
     String token = request.getHeader(GatewayConstant.TOKEN_HEADER);
     String gatewayToken = new String(
         Base64Utils.encode(GatewayConstant.TOKEN_VALUE.getBytes()));
-    if (gatewayToken.equals(token)) {
+    if (StrUtil.equals(gatewayToken, token)) {
       return true;
     } else {
       HttpUtil.makeJsonResponse(response, HttpServletResponse.SC_FORBIDDEN,

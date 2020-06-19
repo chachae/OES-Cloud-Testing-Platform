@@ -3,6 +3,7 @@ package com.oes.common.core.util;
 import static com.alibaba.fastjson.JSON.toJSONBytes;
 
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.google.common.net.HttpHeaders;
 import com.oes.common.core.entity.UserAgent;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -30,6 +32,7 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
 
   private HttpUtil() {
   }
+
 
   private static final String[] LOCALHOST = {"unknown", "127.0.0.1", "0:0:0:0:0:0:0:1"};
 
@@ -175,6 +178,41 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
       ip = NetUtil.getLocalhostStr();
     }
     return ip;
+  }
+
+  /**
+   * 获取请求IP
+   *
+   * @param request ServerHttpRequest
+   * @return String IP
+   */
+  public static String getIpAddress(ServerHttpRequest request) {
+    org.springframework.http.HttpHeaders headers = request.getHeaders();
+    String ip = headers.getFirst("x-forwarded-for");
+    if (ip != null && ip.length() != 0 && !LOCALHOST[0].equalsIgnoreCase(ip)) {
+      if (ip.contains(StrUtil.COMMA)) {
+        ip = ip.split(StrUtil.COMMA)[0];
+      }
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = headers.getFirst("Proxy-Client-IP");
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = headers.getFirst("WL-Proxy-Client-IP");
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = headers.getFirst("HTTP_CLIENT_IP");
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = headers.getFirst("HTTP_X_FORWARDED_FOR");
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = headers.getFirst("X-Real-IP");
+    }
+    if (ip == null || ip.length() == 0 || LOCALHOST[0].equalsIgnoreCase(ip)) {
+      ip = Objects.requireNonNull(request.getRemoteAddress()).getAddress().getHostAddress();
+    }
+    return LOCALHOST[2].equals(ip) ? LOCALHOST[1] : ip;
   }
 
   /**

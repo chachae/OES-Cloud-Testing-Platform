@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 /**
- * @author MrBird
+ * @author chachae
  */
 @Component
 public class OesWebLoginFailureHandler implements AuthenticationFailureHandler {

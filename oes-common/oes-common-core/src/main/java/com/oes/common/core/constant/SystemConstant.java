@@ -44,4 +44,6 @@ public interface SystemConstant {
    */
   Long REGISTER_ROLE_ID = 2L;
 
+  String LOCALHOST = "localhost";
+  String LOCALHOST_IP = "127.0.0.1";
 }

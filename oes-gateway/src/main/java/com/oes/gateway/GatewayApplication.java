@@ -3,7 +3,6 @@ package com.oes.gateway;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * Gateway 网关启动器
@@ -15,7 +14,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @see <a href="https://juejin.im/post/5dd1f6fdf265da0bb854bc5d">🔥外行人都能看懂的WebFlux</a>
  * @since 2020/4/26 13:33
  */
-@EnableDiscoveryClient
 @SpringBootApplication
 public class GatewayApplication {
 
