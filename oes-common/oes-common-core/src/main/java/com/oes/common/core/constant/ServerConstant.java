@@ -29,7 +29,7 @@ public interface ServerConstant {
   String OES_SERVER_DEMO = "OES-Server-Demo";
 
   /**
-   * Server-EXAMINATION 微服务名
+   * Server-EXAM-BASIC 微服务名
    */
-  String OES_SERVER_EXAMINATION = "OES-Server-Examination";
+  String OES_SERVER_EXAM_BASIC = "OES-Server-Exam-Basic";
 }

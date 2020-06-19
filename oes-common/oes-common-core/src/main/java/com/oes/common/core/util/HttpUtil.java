@@ -3,6 +3,7 @@ package com.oes.common.core.util;
 import static com.alibaba.fastjson.JSON.toJSONBytes;
 
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.google.common.net.HttpHeaders;
 import com.oes.common.core.entity.UserAgent;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,6 +63,31 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
   }
 
   /**
+   * 设置成功响应
+   *
+   * @param response HttpServletResponse
+   * @param value    响应内容
+   * @throws IOException IOException
+   */
+  public static void makeSuccessResponse(HttpServletResponse response, Object value)
+      throws IOException {
+    makeResponse(response, MediaType.APPLICATION_JSON_VALUE, HttpServletResponse.SC_OK, value);
+  }
+
+  /**
+   * 设置失败响应
+   *
+   * @param response HttpServletResponse
+   * @param value    响应内容
+   * @throws IOException IOException
+   */
+  public static void makeFailureResponse(HttpServletResponse response, Object value)
+      throws IOException {
+    makeResponse(response, MediaType.APPLICATION_JSON_VALUE,
+        HttpServletResponse.SC_INTERNAL_SERVER_ERROR, value);
+  }
+
+  /**
    * 设置webflux模型响应
    *
    * @param response    ServerHttpResponse
@@ -78,6 +103,17 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
     DataBuffer dataBuffer = response.bufferFactory()
         .wrap(toJSONBytes(value));
     return response.writeWith(Mono.just(dataBuffer));
+  }
+
+  /**
+   * 判断是否为 ajax请求
+   *
+   * @param request HttpServletRequest
+   * @return boolean
+   */
+  public static boolean isAjaxRequest(HttpServletRequest request) {
+    return (request.getHeader("X-Requested-With") != null
+        && "XMLHttpRequest".equals(request.getHeader("X-Requested-With")));
   }
 
   /**
@@ -148,103 +184,7 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
    */
   public static UserAgent getUserAgent() {
     String userAgent = getHeader(HttpHeaders.USER_AGENT);
-    return parseUserAgent(userAgent);
-  }
-
-  private static UserAgent parseUserAgent(String ua) {
-    try {
-      StringBuilder userAgent = new StringBuilder("[");
-      userAgent.append(ua);
-      userAgent.append("]");
-      int indexOfMac = userAgent.indexOf("Mac OS X");
-      int indexOfWindows = userAgent.indexOf("Windows NT");
-      int indexOfIe = userAgent.indexOf("MSIE");
-      int indexOfIe11 = userAgent.indexOf("rv:");
-      int indexOfFirefox = userAgent.indexOf("Firefox");
-      int indexOfSogou = userAgent.indexOf("MetaSr");
-      int indexOfChrome = userAgent.indexOf("Chrome");
-      int indexOfSafari = userAgent.indexOf("Safari");
-      int indexOfEdge = userAgent.indexOf("Edg");
-      boolean isMac = indexOfMac > 0;
-      boolean isWindows = indexOfWindows > 0;
-      boolean isLinux = userAgent.indexOf("Linux") > 0;
-      boolean containIe = indexOfIe > 0 || (isWindows && (indexOfIe11 > 0));
-      boolean containFireFox = indexOfFirefox > 0;
-      boolean containSogou = indexOfSogou > 0;
-      boolean containChrome = indexOfChrome > 0;
-      boolean containSafari = indexOfSafari > 0;
-      boolean containEdge = indexOfEdge > 0;
-      String browser = "";
-      if (containSogou) {
-        if (containIe) {
-          browser = "搜狗" + userAgent.substring(indexOfIe, indexOfIe + "IE x.x".length());
-        } else if (containChrome) {
-          browser = "搜狗" + userAgent.substring(indexOfChrome, indexOfChrome + "Chrome/xx".length());
-        }
-      } else if (containEdge) {
-        browser = userAgent.substring(indexOfEdge, indexOfEdge + "Edg/xx".length());
-        browser = browser.replace("Edg", "Microsoft Edge");
-      } else if (containChrome) {
-        browser = userAgent.substring(indexOfChrome, indexOfChrome + "Chrome/xx".length());
-      } else if (containSafari) {
-        int indexOfSafariVersion = userAgent.indexOf("Version");
-        browser = "Safari "
-            + userAgent
-            .substring(indexOfSafariVersion, indexOfSafariVersion + "Version/x.x.x.x".length());
-      } else if (containFireFox) {
-        browser = userAgent.substring(indexOfFirefox, indexOfFirefox + "Firefox/xx".length());
-      } else if (containIe) {
-        if (indexOfIe11 > 0) {
-          browser = "IE 11";
-        } else {
-          browser = userAgent.substring(indexOfIe, indexOfIe + "IE x.x".length());
-        }
-      }
-      String os = "";
-      if (isMac) {
-        os = userAgent.substring(indexOfMac, indexOfMac + "MacOS X xxxxxxxx".length());
-        os = os.replace("_", ".");
-      } else if (isLinux) {
-        os = "Linux";
-      } else if (isWindows) {
-        os = "Windows ";
-        String version = userAgent.substring(indexOfWindows + "Windows NT".length(), indexOfWindows
-            + "Windows NTx.x".length());
-        version = version.trim();
-        switch (version) {
-          case "5.0":
-            os += "2000";
-            break;
-          case "5.1":
-            os += "XP";
-            break;
-          case "5.2":
-            os += "2003";
-            break;
-          case "6.0":
-            os += "Vista";
-            break;
-          case "6.1":
-            os += "7";
-            break;
-          case "6.2":
-            os += "8";
-            break;
-          case "6.3":
-            os += "8.1";
-            break;
-          case "10":
-            os += "10";
-            break;
-          default:
-            os = os;
-        }
-      }
-      return new UserAgent(StringUtils.replace(browser, "/", " "), os);
-    } catch (Exception e) {
-      final String unknown = "未知";
-      log.error("获取登录信息失败：{}", e.getMessage());
-      return new UserAgent(unknown, unknown);
-    }
+    cn.hutool.http.useragent.UserAgent parseObj = UserAgentUtil.parse(userAgent);
+    return new UserAgent(parseObj.getBrowser().getName(), parseObj.getOs().getName());
   }
 }

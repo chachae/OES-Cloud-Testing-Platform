@@ -1,6 +1,8 @@
 package com.oes.auth.config;
 
-import com.oes.auth.filter.PswGrantFilter;
+import com.oes.auth.filter.ValidateCodeFilter;
+import com.oes.auth.handler.OesWebLoginFailureHandler;
+import com.oes.auth.handler.OesWebLoginSuccessHandler;
 import com.oes.common.core.constant.EndpointConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +27,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final PswGrantFilter captchaFilter;
+  private final ValidateCodeFilter validateCodeFilter;
   private final UserDetailsService userDetailService;
+  private final OesWebLoginSuccessHandler successHandler;
+  private final OesWebLoginFailureHandler failureHandler;
   private final PasswordEncoder passwordEncoder;
 
   @Bean
@@ -36,22 +40,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
+  protected void configure(HttpSecurity http) throws Exception {
+    http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        .requestMatchers()
+        .antMatchers(EndpointConstant.OAUTH_ALL, EndpointConstant.LOGIN)
+        .and()
+        .authorizeRequests()
+        .antMatchers(EndpointConstant.OAUTH_ALL).authenticated()
+        .and()
+        .formLogin()
+        .loginPage(EndpointConstant.LOGIN)
+        .loginProcessingUrl(EndpointConstant.LOGIN)
+        .successHandler(successHandler)
+        .failureHandler(failureHandler)
+        .permitAll()
+        .and().csrf().disable()
+        .httpBasic().disable();
   }
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http
-        //访问资源之前过滤密码模式的认证授权
-        .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class)
-        .requestMatchers()
-        .antMatchers(EndpointConstant.OAUTH_ALL)
-        .and()
-        .authorizeRequests()
-        // OAUTH 对外暴露接口全部需要认证
-        .antMatchers(EndpointConstant.OAUTH_ALL).authenticated()
-        .and()
-        .csrf().disable();
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
   }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.exam.basic.mapper.CourseMapper">
+
+  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Course">
+    <id column="course_id" property="courseId"/>
+    <result column="course_name" property="courseName"/>
+    <result column="dept_id" property="deptId"/>
+    <result column="creator_id" property="creatorId"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="dept_name" property="deptName"/>
+    <result column="teacher_ids" property="teacherIds"/>
+  </resultMap>
+
+  <sql id="baseSql">
+    SELECT tc.course_id,
+           tc.course_name,
+           tc.dept_id,
+           tc.creator_id,
+           tc.create_time,
+           tc.update_time,
+           td.dept_name,
+           GROUP_CONCAT(tct.teacher_id ORDER BY tct.course_id) AS teacher_ids
+    FROM t_course tc
+           LEFT JOIN t_dept td ON tc.dept_id = td.dept_id
+           LEFT JOIN t_course_teacher tct ON tc.course_id = tct.course_id
+    WHERE 1 = 1
+  </sql>
+
+  <select id="pageCourse" parameterType="com.oes.common.core.entity.exam.Course"
+    resultMap="baseMap">
+    <include refid="baseSql"/>
+    <if test="course.courseId != null">
+      AND tc.course_id = #{course.courseId,jdbcType=BIGINT}
+    </if>
+    <if test="course.courseName != null and course.courseName != ''">
+      AND tc.course_name LIKE CONCAT('%',#{course.courseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="course.deptId != null">
+      AND tc.dept_id = #{course.deptId,jdbcType=BIGINT}
+    </if>
+    GROUP BY
+    tc.course_id
+  </select>
+
+</mapper>

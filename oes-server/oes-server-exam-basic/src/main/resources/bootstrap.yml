@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: OES-Server-Exam-Basic
+  cloud:
+    nacos:
+      config:
+        server-addr: ${nacos.url}
+        group: DEFAULT_GROUP
+        prefix: ${spring.application.name}
+        file-extension: yaml
+      discovery:
+        server-addr: ${nacos.url}
+
+logging:
+  level:
+    com:
+      alibaba:
+        nacos:
+          client:
+            config:
+              impl:
+                ClientWorker: error
+    org:
+      springframework:
+        boot:
+          actuate:
+            endpoint:
+              EndpointId: error

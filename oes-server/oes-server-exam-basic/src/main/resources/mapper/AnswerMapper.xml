@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.exam.basic.mapper.AnswerMapper">
+
+  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Answer">
+    <result column="answer_id" property="answerId"/>
+    <result column="answer_content" property="answerContent"/>
+    <result column="student_id" property="studentId"/>
+    <result column="full_name" property="studentName"/>
+    <result column="paper_id" property="paperId"/>
+    <result column="paper_name" property="paperName"/>
+    <result column="question_id" property="questionId"/>
+    <result column="question_name" property="questionName"/>
+    <result column="right_key" property="rightKey"/>
+    <result column="score" property="score"/>
+    <result column="status" property="status"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+  </resultMap>
+
+  <sql id="baseSql">
+    SELECT ta.answer_id,
+           ta.answer_content,
+           ta.student_id,
+           ta.paper_id,
+           ta.question_id,
+           ta.score,
+           ta.status,
+           ta.create_time,
+           ta.update_time,
+           tq.question_name,
+           tq.right_key,
+           tu.full_name,
+           tp.paper_name
+    FROM t_answer ta
+           LEFT JOIN t_question tq on ta.question_id = tq.question_id
+           LEFT JOIN t_user tu on ta.student_id = tu.user_id
+           LEFT JOIN t_paper tp on ta.paper_id = tp.paper_id
+    WHERE 1 = 1
+  </sql>
+
+  <select
+    id="pageAnswer"
+    parameterType="com.oes.common.core.entity.exam.Answer"
+    resultMap="baseMap"
+  >
+    <include refid="baseSql"/>
+    <if test="answer.paperName != null and answer.paperName != ''">
+      AND tp.paper_name LIKE concat('%',#{answer.paperName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="answer.termId != null">
+      AND tp.term_id = #{answer.termId,jdbcType=BIGINT}
+    </if>
+    <if test="answer.deptName != null and answer.deptName != ''">
+      AND tu.dept_id in (SELECT t_dept.dept_id FROM t_dept where t_dept.dept_name LIKE
+      concat('%',#{answer.deptName,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="answer.studentName != null and answer.studentName != ''">
+      AND tu.full_name LIKE concat('%',#{answer.studentName,jdbcType=VARCHAR},'%')
+    </if>
+    GROUP BY ta.answer_id,ta.student_id
+  </select>
+
+</mapper>

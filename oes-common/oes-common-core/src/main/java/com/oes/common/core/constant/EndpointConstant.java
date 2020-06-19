@@ -23,4 +23,6 @@ public interface EndpointConstant {
   String OAUTH_TOKEN_KEY = "/oauth/token_key";
 
   String OAUTH_ERROR = "/oauth/error";
+
+  String LOGIN = "/login";
 }

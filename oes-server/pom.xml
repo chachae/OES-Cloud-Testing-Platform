@@ -11,13 +11,15 @@
 
   <artifactId>oes-server</artifactId>
   <name>${project.artifactId}</name>
+  <packaging>pom</packaging>
   <description>OES 服务提供聚合工程</description>
+
   <modules>
     <module>oes-server-system</module>
     <module>oes-server-demo</module>
-    <module>oes-server-examination</module>
+    <module>oes-server-exam-basic</module>
+    <module>oes-server-exam-online</module>
   </modules>
-  <packaging>pom</packaging>
 
   <dependencies>
     <dependency>
