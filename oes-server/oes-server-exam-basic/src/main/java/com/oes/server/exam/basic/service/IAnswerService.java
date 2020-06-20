@@ -34,14 +34,6 @@ public interface IAnswerService extends IService<Answer> {
   void deleteAnswer(Long userId, Long paperId);
 
   /**
-   * 删除学生答案数据
-   *
-   * @param answerIds 问题答案编号数组
-   */
-  void deleteAnswer(String[] answerIds);
-
-
-  /**
    * 更新学生答案数据
    *
    * @param answer 学生答案信息

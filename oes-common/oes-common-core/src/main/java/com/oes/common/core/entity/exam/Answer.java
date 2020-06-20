@@ -21,6 +21,10 @@ public class Answer implements Serializable {
 
   private static final long serialVersionUID = -2379218847487357896L;
 
+  public static final Integer STATUS_CORRECT = 1;
+
+  public static final Integer STATUS_NOT_CORRECT = 0;
+
   /**
    * 学生答题主键（id）
    */
@@ -69,6 +73,11 @@ public class Answer implements Serializable {
   @TableField(exist = false)
   private String questionName;
   /**
+   * 题目类型编号
+   */
+  @TableField(exist = false)
+  private Integer typeId;
+  /**
    * 正确答案
    */
   @TableField(exist = false)
@@ -76,9 +85,13 @@ public class Answer implements Serializable {
   /**
    * 学生姓名
    */
-  @JsonIgnore
   @TableField(exist = false)
   private String studentName;
+  /**
+   * 学期名称
+   */
+  @TableField(exist = false)
+  private String termName;
   /**
    * 学期
    */

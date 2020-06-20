@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Score;
 import com.oes.server.exam.basic.mapper.ScoreMapper;
-import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
@@ -24,21 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements IScoreService {
 
-  private final IAnswerService answerService;
-
   @Override
   public IPage<Score> pageScore(Score score, QueryParam param) {
     return baseMapper.pageScore(score, new Page<>(param.getPageNum(), param.getPageSize()));
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
-  public void deleteScore(String[] scoreIds) {
-    for (String scoreId : scoreIds) {
-      baseMapper.deleteById(scoreId);
-      Score score = baseMapper.selectById(scoreId);
-      answerService.deleteAnswer(score.getStudentId(), score.getPaperId());
-    }
+  public Score getScore(Long userId, Long paperId) {
+    LambdaQueryWrapper<Score> wrapper = new LambdaQueryWrapper<>();
+    wrapper
+        .eq(Score::getStudentId, userId)
+        .eq(Score::getPaperId, paperId);
+    return baseMapper.selectOne(wrapper);
   }
 
   @Override

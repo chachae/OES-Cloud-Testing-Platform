@@ -9,4 +9,21 @@ import com.oes.common.core.entity.exam.PaperType;
  */
 public interface IPaperTypeService extends IService<PaperType> {
 
+  /**
+   * 分数校验
+   *
+   * @param paperType 试卷分数数据
+   * @return {@link Boolean}
+   */
+  Boolean checkScore(PaperType paperType);
+
+  /**
+   * 获取试卷-题目类型数据
+   *
+   * @param paperId 试卷编号
+   * @param typeId  类型编号
+   * @return {@link PaperType} 试卷-题目类型数据
+   */
+  PaperType getPaperType(Long paperId, Long typeId);
+
 }

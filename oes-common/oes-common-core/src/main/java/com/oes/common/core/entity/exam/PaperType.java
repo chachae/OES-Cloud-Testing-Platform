@@ -1,9 +1,11 @@
 package com.oes.common.core.entity.exam;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -32,11 +34,13 @@ public class PaperType implements Serializable {
    * 模板主键
    */
   @TableId(type = IdType.INPUT)
+  @NotNull(message = "{required}")
   private Long paperId;
   /**
    * 试题类型编号（id）
    */
   @TableId(type = IdType.INPUT)
+  @NotNull(message = "{required}")
   private Long typeId;
   /**
    * 题目分值
@@ -51,21 +55,25 @@ public class PaperType implements Serializable {
    * 试题类型编号（id）
    */
   @JsonIgnore
+  @TableField(exist = false)
   private String typeIds;
   /**
    * 题目分值
    */
   @JsonIgnore
+  @TableField(exist = false)
   private String scores;
   /**
    * 题目数量
    */
   @JsonIgnore
+  @TableField(exist = false)
   private String nums;
 
   /**
    * 题目难度
    */
+  @TableField(exist = false)
   private Integer difficult;
 
 }

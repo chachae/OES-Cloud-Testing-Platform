@@ -21,11 +21,13 @@ public interface IScoreService extends IService<Score> {
   IPage<Score> pageScore(Score score, QueryParam param);
 
   /**
-   * 删除学期数据
+   * 通过分数信息查询分数
    *
-   * @param scoreIds 分数编号集合
+   * @param paperId 试卷编号
+   * @param userId  用户编号
+   * @return 分数列表
    */
-  void deleteScore(String[] scoreIds);
+  Score getScore(Long userId, Long paperId);
 
   /**
    * 删除学期数据

@@ -52,7 +52,7 @@ public class TermController {
   }
 
   @GetMapping("check/{termName}")
-  public Boolean check(@PathVariable String termName) {
+  public Boolean check(@NotBlank(message = "{required}") @PathVariable String termName) {
     return termService.getOne(new LambdaQueryWrapper<Term>().eq(Term::getTermName, termName))
         == null;
   }

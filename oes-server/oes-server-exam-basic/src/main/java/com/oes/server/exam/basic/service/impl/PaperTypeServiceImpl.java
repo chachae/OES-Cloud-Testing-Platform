@@ -1,5 +1,6 @@
 package com.oes.server.exam.basic.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.exam.PaperType;
 import com.oes.server.exam.basic.mapper.PaperTypeMapper;
@@ -17,4 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType> implements
     IPaperTypeService {
 
+  @Override
+  public Boolean checkScore(PaperType paperType) {
+    if (paperType.getScore() == null) {
+      return false;
+    }
+    PaperType res = getPaperType(paperType.getPaperId(), paperType.getTypeId());
+    return res != null && res.getScore() >= paperType.getScore();
+  }
+
+  @Override
+  public PaperType getPaperType(Long paperId, Long typeId) {
+    return baseMapper.selectOne(new LambdaQueryWrapper<PaperType>()
+        .eq(PaperType::getPaperId, paperId)
+        .eq(PaperType::getTypeId, typeId));
+  }
 }

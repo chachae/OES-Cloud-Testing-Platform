@@ -8,7 +8,6 @@ import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Answer;
 import com.oes.server.exam.basic.mapper.AnswerMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
-import java.util.Arrays;
 import java.util.Date;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,15 +43,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void deleteAnswer(String[] answerIds) {
-    baseMapper
-        .delete(new LambdaQueryWrapper<Answer>().in(Answer::getAnswerId, Arrays.asList(answerIds)));
-  }
-
-  @Override
-  @Transactional(rollbackFor = Exception.class)
   public void updateAnswer(Answer answer) {
     answer.setUpdateTime(new Date());
+    answer.setStatus(Answer.STATUS_CORRECT);
     baseMapper.updateById(answer);
   }
 
