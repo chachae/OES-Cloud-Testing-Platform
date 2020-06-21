@@ -2,6 +2,7 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.exam.PaperType;
+import java.util.List;
 
 /**
  * @author chachae
@@ -16,6 +17,14 @@ public interface IPaperTypeService extends IService<PaperType> {
    * @return {@link Boolean}
    */
   Boolean checkScore(PaperType paperType);
+
+  /**
+   * 获取试卷-类型数据集合
+   *
+   * @param paperId 试卷编号
+   * @return {@link List<PaperType>} 试卷类型集合
+   */
+  List<PaperType> getList(Long paperId);
 
   /**
    * 获取试卷-题目类型数据

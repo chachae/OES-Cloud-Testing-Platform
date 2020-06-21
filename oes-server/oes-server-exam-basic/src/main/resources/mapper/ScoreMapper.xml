@@ -11,6 +11,49 @@
     <result column="time" property="time"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
+    <result column="paper_name" property="paperName"/>
+    <result column="paper_score" property="paperScore"/>
+    <result column="full_name" property="fullName"/>
+    <result column="username" property="username"/>
+    <result column="term_name" property="termName"/>
+    <result column="course_name" property="courseName"/>
   </resultMap>
+
+  <sql id="baseSql">
+    SELECT ts.score_id,
+           ts.score,
+           ts.paper_id,
+           ts.student_id,
+           ts.time,
+           ts.create_time,
+           ts.update_time,
+           tp.paper_name,
+           tp.paper_score,
+           tu.full_name,
+           tu.username,
+           tt.term_name,
+           tc.course_name
+    FROM t_score ts
+           LEFT JOIN t_paper tp ON ts.paper_id = tp.paper_id
+           LEFT JOIN t_user tu ON ts.student_id = tu.user_id
+           LEFT JOIN t_term tt ON tp.term_id = tt.term_id
+           LEFT JOIN t_course tc on tp.course_id = tc.course_id
+    WHERE 1 = 1
+  </sql>
+
+  <select
+    id="pageScore"
+    parameterType="com.oes.common.core.entity.exam.query.QueryScoreDto"
+    resultMap="baseMap"
+  >
+    <include refid="baseSql"/>
+    <if test="score.key != null and score.key != ''">
+      AND (tu.username LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')
+      OR (tu.full_name LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')))
+    </if>
+    <if test="score.termId != null">
+      AND tt.term_id = #{score.termId,jdbcType=BIGINT}
+    </if>
+  </select>
 
 </mapper>

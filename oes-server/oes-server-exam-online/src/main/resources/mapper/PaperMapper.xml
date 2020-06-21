@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oes.server.exam.online.mapper.PaperMapper">
+
+  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Paper">
+    <result column="paper_id" property="paperId"/>
+    <result column="paper_name" property="paperName"/>
+    <result column="paper_score" property="paperScore"/>
+    <result column="start_time" property="startTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="minute" property="minute"/>
+    <result column="creator_id" property="courseId"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="status" property="status"/>
+    <result column="course_id" property="courseId"/>
+    <result column="is_random" property="isRandom"/>
+    <result column="type" property="type"/>
+    <result column="term_id" property="termId"/>
+    <result column="term_name" property="termName"/>
+    <result column="course_name" property="courseName"/>
+  </resultMap>
+
+  <sql id="baseSql">
+    select tp.paper_id,
+           tp.paper_name,
+           tp.paper_score,
+           tp.start_time,
+           tp.end_time,
+           tp.minute,
+           tp.creator_id,
+           tp.create_time,
+           tp.update_time,
+           tp.status,
+           tp.course_id,
+           tc.course_name,
+           tp.type,
+           tp.is_random,
+           tp.term_id,
+           tt.term_name
+    from t_paper tp
+           left join t_course tc on (tp.course_id = tc.course_id)
+           left join t_paper_dept tpd on (tp.paper_id = tpd.paper_id)
+           left join t_term tt on tp.term_id = tt.term_id
+    where 1 = 1
+  </sql>
+
+  <select id="pagePaper" parameterType="com.oes.common.core.entity.exam.Paper" resultMap="baseMap">
+    <include refid="baseSql"/>
+    AND tpd.dept_id in (#{paper.deptIds,jdbcType=VARCHAR})
+    AND tp.type = #{paper.type,jdbcType=INTEGER}
+    AND tp.status = #{paper.status,jdbcType=INTEGER}
+    AND (tp.start_time &lt;= now() AND tp.end_time &gt;= now() )
+    group by tp.paper_id
+  </select>
+
+</mapper>

@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.entity.exam.Question;
+import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
+@DataPermission(methods = {"pageQuestion"}, field = "course_id")
 public interface QuestionMapper extends BaseMapper<Question> {
 
   /**

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.entity.exam.query.QueryAnswerDto;
 import com.oes.server.exam.basic.mapper.AnswerMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.Date;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements IAnswerService {
 
   @Override
-  public IPage<Answer> pageAnswer(Answer answer, QueryParam param) {
+  public IPage<Answer> pageAnswer(QueryAnswerDto answer, QueryParam param) {
     return baseMapper.pageAnswer(answer, new Page<>(param.getPageNum(), param.getPageSize()));
   }
 

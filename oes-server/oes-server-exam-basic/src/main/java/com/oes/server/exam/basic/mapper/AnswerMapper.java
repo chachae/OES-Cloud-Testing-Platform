@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.entity.exam.query.QueryAnswerDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-06-03 16:43:13
  */
-@DataPermission(methods = {"pageAnswer"}, field = "tp.course_id", limitAdmin = false)
+@DataPermission(methods = {"pageAnswer"}, field = "paper_id")
 public interface AnswerMapper extends BaseMapper<Answer> {
 
   /**
@@ -21,6 +22,6 @@ public interface AnswerMapper extends BaseMapper<Answer> {
    * @param page   分页数据
    * @return 分页结果集
    */
-  IPage<Answer> pageAnswer(@Param("answer") Answer answer, Page<Answer> page);
+  IPage<Answer> pageAnswer(@Param("answer") QueryAnswerDto answer, Page<Answer> page);
 
 }

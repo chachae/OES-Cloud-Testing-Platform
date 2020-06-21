@@ -44,6 +44,6 @@ public @interface DataPermission {
    *
    * @return {@link Boolean}
    */
-  boolean limitAdmin() default true;
+  boolean filterAdmin() default false;
 }
 

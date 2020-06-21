@@ -16,4 +16,12 @@ public interface ICourseTeacherService extends IService<CourseTeacher> {
    */
   void deleteByCourseId(Long courseId);
 
+  /**
+   * 通过教师编号获取课程数据
+   *
+   * @param teacherId 教师编号
+   * @return 课程编号集合
+   */
+  String getByTeacherId(Long teacherId);
+
 }

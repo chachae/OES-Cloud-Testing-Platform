@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.entity.exam.query.QueryScoreDto;
 import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Date;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements IScoreService {
 
   @Override
-  public IPage<Score> pageScore(Score score, QueryParam param) {
+  public IPage<Score> pageScore(QueryScoreDto score, QueryParam param) {
     return baseMapper.pageScore(score, new Page<>(param.getPageNum(), param.getPageSize()));
   }
 

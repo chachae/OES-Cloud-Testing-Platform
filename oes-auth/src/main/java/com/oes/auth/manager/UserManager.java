@@ -1,10 +1,15 @@
 package com.oes.auth.manager;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oes.auth.mapper.CourseTeacherMapper;
 import com.oes.auth.mapper.MenuMapper;
+import com.oes.auth.mapper.PaperMapper;
 import com.oes.auth.mapper.UserMapper;
 import com.oes.auth.mapper.UserRoleMapper;
 import com.oes.common.core.constant.SystemConstant;
+import com.oes.common.core.entity.exam.CourseTeacher;
+import com.oes.common.core.entity.exam.Paper;
 import com.oes.common.core.entity.system.Menu;
 import com.oes.common.core.entity.system.SystemUser;
 import com.oes.common.core.entity.system.UserDataPermission;
@@ -30,6 +35,8 @@ public class UserManager {
   private final UserMapper userMapper;
   private final MenuMapper menuMapper;
   private final UserRoleMapper userRoleMapper;
+  private final PaperMapper paperMapper;
+  private final CourseTeacherMapper courseTeacherMapper;
 
   /**
    * 通过用户名查询用户信息
@@ -40,6 +47,7 @@ public class UserManager {
   public SystemUser findByName(String username) {
     SystemUser user = userMapper.selectByName(username);
     if (user != null) {
+      // 权限数据
       List<UserDataPermission> permissions = userMapper.selectUserDataPermissions(user.getUserId());
       String deptIds = permissions.stream().map(p -> String.valueOf(p.getDeptId()))
           .collect(Collectors.joining(
@@ -58,6 +66,34 @@ public class UserManager {
   public String findUserPermissions(String username) {
     List<Menu> userPermissions = menuMapper.selectUserPermissions(username);
     return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));
+  }
+
+  /**
+   * 获取用户课程编号信息
+   *
+   * @param userId 用户编号
+   * @return 课程编号信息
+   */
+  public String findUserCourse(Long userId) {
+    List<CourseTeacher> cts = courseTeacherMapper.selectList(
+        new LambdaQueryWrapper<CourseTeacher>().eq(CourseTeacher::getTeacherId, userId));
+
+    return cts.stream().map(ct -> String.valueOf(ct.getCourseId()))
+        .collect(Collectors.joining(StrUtil.COMMA));
+  }
+
+  /**
+   * 获取试卷信息
+   *
+   * @param userId 用户编号
+   * @return 试卷编号数据
+   */
+  public String finaPaper(Long userId) {
+    List<Paper> papers = paperMapper
+        .selectList(new LambdaQueryWrapper<Paper>().eq(Paper::getCreatorId, userId));
+
+    return papers.stream().map(paper -> String.valueOf(paper.getPaperId()))
+        .collect(Collectors.joining(StrUtil.COMMA));
   }
 
   /**

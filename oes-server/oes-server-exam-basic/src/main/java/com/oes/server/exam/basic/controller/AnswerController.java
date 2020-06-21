@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.entity.exam.query.QueryAnswerDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class AnswerController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('answer:view')")
-  public R<Map<String, Object>> pageAnswer(Answer answer, QueryParam param) {
+  public R<Map<String, Object>> pageAnswer(QueryAnswerDto answer, QueryParam param) {
     // 模糊条件班级、试卷名、学期、姓名
     IPage<Answer> result = answerService.pageAnswer(answer, param);
     return R.ok(PageUtil.toPage(result));

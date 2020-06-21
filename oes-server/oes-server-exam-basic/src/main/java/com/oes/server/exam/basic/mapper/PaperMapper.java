@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-@DataPermission(methods = {"pagePaper"}, field = "tp.creator_id", limitAdmin = false)
+@DataPermission(methods = {"pagePaper"}, field = "creator_id")
 public interface PaperMapper extends BaseMapper<Paper> {
 
   /**

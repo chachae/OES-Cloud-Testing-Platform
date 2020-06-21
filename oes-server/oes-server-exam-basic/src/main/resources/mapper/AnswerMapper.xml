@@ -47,7 +47,7 @@
 
   <select
     id="pageAnswer"
-    parameterType="com.oes.common.core.entity.exam.Answer"
+    parameterType="com.oes.common.core.entity.exam.query.QueryAnswerDto"
     resultMap="baseMap"
   >
     <include refid="baseSql"/>

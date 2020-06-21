@@ -51,4 +51,40 @@ public class Score implements Serializable {
    */
   private Date updateTime;
 
+  /**
+   * 试卷名称
+   */
+  @TableField(exist = false)
+  private String paperName;
+
+  /**
+   * 试卷分数
+   */
+  @TableField(exist = false)
+  private Integer paperScore;
+
+  /**
+   * 学生姓名
+   */
+  @TableField(exist = false)
+  private String fullName;
+
+  /**
+   * 用户名（学号）
+   */
+  @TableField(exist = false)
+  private String username;
+
+  /**
+   * 学期
+   */
+  @TableField(exist = false)
+  private String termName;
+
+  /**
+   * 课程名称
+   */
+  @TableField(exist = false)
+  private String courseName;
+
 }

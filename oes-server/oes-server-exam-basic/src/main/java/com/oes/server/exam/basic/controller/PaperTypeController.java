@@ -1,8 +1,11 @@
 package com.oes.server.exam.basic.controller;
 
+import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.exam.PaperType;
 import com.oes.server.exam.basic.service.IPaperTypeService;
+import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaperTypeController {
 
   private final IPaperTypeService paperTypeService;
+
+  @GetMapping("options")
+  public R<List<PaperType>> options(@NotNull(message = "{required}") Long paperId) {
+    return R.ok(paperTypeService.getList(paperId));
+  }
 
   @GetMapping("check")
   public Boolean check(@Valid PaperType paperType) {

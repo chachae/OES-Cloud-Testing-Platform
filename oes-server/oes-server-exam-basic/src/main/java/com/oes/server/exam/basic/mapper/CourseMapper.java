@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-@DataPermission(methods = {"pageCourse"}, field = "tct.teacher_id", limitAdmin = false)
+@DataPermission(methods = {"pageCourse"}, field = "course_id")
 public interface CourseMapper extends BaseMapper<Course> {
 
   /**

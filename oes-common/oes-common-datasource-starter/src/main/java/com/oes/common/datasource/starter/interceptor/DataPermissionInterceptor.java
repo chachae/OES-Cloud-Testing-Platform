@@ -86,7 +86,7 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
       }
 
       List<String> curRoles = StrUtil.split(user.getRoleId(), StrUtil.C_COMMA);
-      if (!dataPermission.limitAdmin() && curRoles.contains(SystemUser.ADMIN_ROLE_ID)) {
+      if (!dataPermission.filterAdmin() && curRoles.contains(SystemUser.ADMIN_ROLE_ID)) {
         return originSql;
       }
 
@@ -101,11 +101,16 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
       // 默认使用用户数据权限进行
       String dataPermissionSql;
       if (dataPermission.field().equals("dept_id")) {
-        dataPermissionSql = String
-            .format("%s.%s in (%s)", selectTableName, dataPermission.field(),
-                StrUtil.blankToDefault(user.getDeptIds(), "'WARNING: WITHOUT PERMISSION!'"));
+        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getDeptIds());
+      } else if (dataPermission.field().equals("course_id")) {
+        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getCourseIds());
+      } else if (dataPermission.field().equals("paper_id")) {
+        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getPaperIds());
+      } else if (dataPermission.field().equals("creator_id")) {
+        dataPermissionSql = formatSql(selectTableName, dataPermission.field(),
+            String.valueOf(user.getUserId()));
       } else {
-        dataPermissionSql = String.format("%s = (%s)", dataPermission.field(), user.getUserId());
+        dataPermissionSql = originSql;
       }
 
       if (plainSelect.getWhere() == null) {
@@ -119,6 +124,12 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
       log.warn("get data permission sql fail: {}", e.getMessage());
       return originSql;
     }
+  }
+
+  private String formatSql(String tableName, String field, String filter) {
+    return String
+        .format("%s.%s in (%s)", tableName, field,
+            StrUtil.blankToDefault(filter, "'WARNING: WITHOUT PERMISSION!'"));
   }
 
   private DataPermission getDataPermission(MappedStatement mappedStatement) {

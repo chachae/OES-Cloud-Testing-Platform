@@ -44,6 +44,8 @@ public class AuthUser extends User {
   private String avatar;
   private String description;
   private String deptIds;
+  private String courseIds;
+  private String paperIds;
 
   public AuthUser(String username, String password, boolean enabled, boolean accountNonExpired,
       boolean credentialsNonExpired, boolean accountNonLocked,

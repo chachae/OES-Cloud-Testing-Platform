@@ -44,4 +44,6 @@ public class CurrentUser implements Serializable {
   private String avatar;
   private String description;
   private String deptIds;
+  private String courseIds;
+  private String paperIds;
 }

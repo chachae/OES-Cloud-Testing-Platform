@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.entity.exam.query.QueryAnswerDto;
 
 /**
  * @author chachae
@@ -19,7 +20,7 @@ public interface IAnswerService extends IService<Answer> {
    * @param answer 模糊条件
    * @return {@link IPage<Answer>} 分页结果集
    */
-  IPage<Answer> pageAnswer(Answer answer, QueryParam param);
+  IPage<Answer> pageAnswer(QueryAnswerDto answer, QueryParam param);
 
   /**
    * 删除学生答案数据
