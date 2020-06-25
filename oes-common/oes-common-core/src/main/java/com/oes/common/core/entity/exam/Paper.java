@@ -32,6 +32,12 @@ public class Paper implements Serializable {
   }
 
   /**
+   * 试题 HashMap 键
+   */
+  public static final String TYPE_ID_KEY = "typeId";
+  public static final String QUESTION_KEY = "list";
+
+  /**
    * 是否随机
    */
   public static final Integer IS_RANDOM = 1;
@@ -162,7 +168,6 @@ public class Paper implements Serializable {
   /**
    * 试卷题目信息（SQL 查询映射时使用）
    */
-  @JsonIgnore
   @TableField(exist = false)
   private List<PaperQuestion> paperQuestionList;
 
@@ -179,6 +184,15 @@ public class Paper implements Serializable {
   @JsonIgnore
   @TableField(exist = false)
   private String endTimeTo;
+
+  @TableField(exist = false)
+  private Boolean isEnd;
+
+  @TableField(exist = false)
+  private Boolean isStart;
+
+  @TableField(exist = false)
+  private Boolean isBetween;
 
   /**
    * 考试状态：已经开始
@@ -213,7 +227,7 @@ public class Paper implements Serializable {
    * @return {@link Boolean}
    */
   private boolean checkIsStart() {
-    return !getType().equals(TYPE_NORMAL) || getStartTime().before(new Date());
+    return getStartTime().before(new Date());
   }
 
   /**
@@ -222,7 +236,7 @@ public class Paper implements Serializable {
    * @return {@link Boolean}
    */
   private boolean checkIsEnd() {
-    return !getType().equals(TYPE_NORMAL) || getEndTime().before(new Date());
+    return getEndTime().before(new Date());
   }
 
   /**

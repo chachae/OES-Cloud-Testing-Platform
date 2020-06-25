@@ -22,4 +22,14 @@ public class QueryScoreDto {
    */
   private String key;
 
+  /**
+   * 试卷编号
+   */
+  private Long paperId;
+
+  /**
+   * 学生编号
+   */
+  private Long studentId;
+
 }

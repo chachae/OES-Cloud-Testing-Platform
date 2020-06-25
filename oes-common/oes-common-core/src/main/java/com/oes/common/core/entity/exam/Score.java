@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -19,6 +20,9 @@ import lombok.Data;
 public class Score implements Serializable {
 
   private static final long serialVersionUID = 4708290388061842475L;
+
+  public static final Integer DEFAULT_SCORE = 0;
+
   /**
    * 成绩编号（id）
    */
@@ -28,7 +32,7 @@ public class Score implements Serializable {
    * 成绩
    */
   @TableField("`score`")
-  private Integer score;
+  private Integer studentScore;
   /**
    * 试卷编号（id）
    */
@@ -86,5 +90,19 @@ public class Score implements Serializable {
    */
   @TableField(exist = false)
   private String courseName;
+
+  /**
+   * 学期
+   */
+  @JsonIgnore
+  @TableField(exist = false)
+  private Long termId;
+
+  /**
+   * 用户名或学号
+   */
+  @JsonIgnore
+  @TableField(exist = false)
+  private String key;
 
 }

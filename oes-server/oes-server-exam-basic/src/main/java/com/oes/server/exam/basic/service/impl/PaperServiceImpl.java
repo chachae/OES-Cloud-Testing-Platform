@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
+import com.oes.common.core.entity.exam.Answer;
 import com.oes.common.core.entity.exam.Paper;
 import com.oes.common.core.entity.exam.PaperDept;
 import com.oes.common.core.entity.exam.PaperQuestion;
@@ -13,7 +15,9 @@ import com.oes.common.core.entity.exam.PaperType;
 import com.oes.common.core.entity.exam.Question;
 import com.oes.common.core.entity.exam.Score;
 import com.oes.common.core.exception.ApiException;
+import com.oes.server.exam.basic.cache.PaperCacheService;
 import com.oes.server.exam.basic.mapper.PaperMapper;
+import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IPaperDeptService;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import com.oes.server.exam.basic.service.IPaperService;
@@ -41,9 +45,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
 
   private final IScoreService scoreService;
+  private final IAnswerService answerService;
   private final IQuestionService questionService;
   private final IPaperTypeService paperTypeService;
   private final IPaperDeptService paperDeptService;
+  private final PaperCacheService paperCacheService;
   private final IPaperQuestionService paperQuestionService;
 
   @Override
@@ -52,9 +58,33 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     IPage<Paper> result = baseMapper.pagePaper(page, paper);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
-      page.getRecords().forEach(PaperUtil::sortQuestions);
+      page.getRecords().forEach(PaperUtil::groupQuestions);
+      paper.setPaperQuestionList(null);
     }
     return result;
+  }
+
+  @Override
+  public Paper getByPaperId(Long paperId) {
+    // 从缓存中取出试卷
+    Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
+    if (paper == null) {
+      paper = baseMapper.selectByPaperId(paperId);
+    }
+    // 题目顺序随机
+    Collections.shuffle(paper.getPaperQuestionList());
+    for (PaperQuestion obj : paper.getPaperQuestionList()) {
+      Answer answer = answerService.getAnswer(null, paperId, obj.getQuestionId());
+      obj.setAnswerId(answer.getAnswerId());
+      obj.setAnswerContent(answer.getAnswerContent());
+      obj.setAnalysis(null);
+      obj.setRightKey(null);
+    }
+    PaperUtil.groupQuestions(paper);
+    // 缓存试卷
+    paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
+    paper.setPaperQuestionList(null);
+    return paper;
   }
 
   @Override

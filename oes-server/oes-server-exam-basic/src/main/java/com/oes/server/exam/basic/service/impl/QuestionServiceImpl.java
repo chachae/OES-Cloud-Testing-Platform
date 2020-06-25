@@ -9,6 +9,7 @@ import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.PaperQuestion;
 import com.oes.common.core.entity.exam.Question;
+import com.oes.common.core.entity.exam.Type;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SortUtil;
 import com.oes.server.exam.basic.mapper.QuestionMapper;
@@ -62,6 +63,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createQuestion(Question question) {
+    sortMulChoiceRightKey(question);
     question.setCreateTime(new Date());
     baseMapper.insert(question);
   }
@@ -78,8 +80,17 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateQuestion(Question question) {
+    sortMulChoiceRightKey(question);
     question.setUpdateTime(new Date());
     baseMapper.updateById(question);
+  }
+
+  private void sortMulChoiceRightKey(Question question) {
+    if (String.valueOf(question.getTypeId()).equals(Type.DEFAULT_TYPE_ID_ARRAY[1])) {
+      String[] rightKeyArray = question.getRightKey().split(StrUtil.COMMA);
+      Arrays.sort(rightKeyArray);
+      question.setRightKey(String.join(StrUtil.COMMA, rightKeyArray));
+    }
   }
 
   private boolean hasQuestion(String[] questionIds) {

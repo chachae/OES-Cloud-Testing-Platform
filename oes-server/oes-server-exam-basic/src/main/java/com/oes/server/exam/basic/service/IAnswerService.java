@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.exam.Answer;
 import com.oes.common.core.entity.exam.query.QueryAnswerDto;
+import java.util.List;
 
 /**
  * @author chachae
@@ -21,6 +22,25 @@ public interface IAnswerService extends IService<Answer> {
    * @return {@link IPage<Answer>} 分页结果集
    */
   IPage<Answer> pageAnswer(QueryAnswerDto answer, QueryParam param);
+
+  /**
+   * 获取学生答题集合
+   *
+   * @param studentId 学生编号
+   * @param paperId   试卷编号
+   * @return {@link List<Answer>} 分页结果集
+   */
+  List<Answer> getAnswer(Long studentId, Long paperId);
+
+  /**
+   * 获取学生答题数据
+   *
+   * @param studentId  学生编号
+   * @param paperId    试卷编号
+   * @param questionId 问题编号
+   * @return {@link Answer} 信息
+   */
+  Answer getAnswer(Long studentId, Long paperId, Long questionId);
 
   /**
    * 删除学生答案数据

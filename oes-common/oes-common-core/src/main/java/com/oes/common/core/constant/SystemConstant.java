@@ -30,6 +30,22 @@ public interface SystemConstant {
   String CAPTCHA_PREFIX = "oes:captcha:";
 
   /**
+   * 试卷缓存前缀，后跟：试卷编号
+   */
+  String PAPER_PREFIX = "oes:paper:";
+
+
+  /**
+   * 试卷答案缓存前置，后跟：试卷编号
+   */
+  String PAPER_QUESTION_PREFIX = "oes:paper-question:";
+
+  /**
+   * 默认缓存时效（秒）
+   */
+  Long DEFAULT_EXPIRED = 2 * 3600L;
+
+  /**
    * 异步线程池名称
    */
   String ASYNC_POOL = "oes-async-thread-pool";

@@ -115,9 +115,21 @@ public class RedisService {
    * @return true成功 false 失败
    */
   public Boolean set(String key, Object value, Long time) {
+    return set(key, value, time, TimeUnit.SECONDS);
+  }
+
+  /**
+   * 普通缓存放入并设置时间和时间单位
+   *
+   * @param key   键
+   * @param value 值
+   * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
+   * @return true成功 false 失败
+   */
+  public Boolean set(String key, Object value, Long time, TimeUnit timeUnit) {
     try {
       if (time > 0) {
-        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key, value, time, timeUnit);
       } else {
         set(key, value);
       }

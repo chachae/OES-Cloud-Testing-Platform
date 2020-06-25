@@ -22,6 +22,15 @@ public interface IPaperService extends IService<Paper> {
   IPage<Paper> pagePaper(Paper paper, QueryParam param);
 
   /**
+   * 通过试卷编号获取试卷信息
+   *
+   * @param paperId 试卷编号
+   * @return {@link Paper} 试卷数据
+   */
+  Paper getByPaperId(Long paperId);
+
+
+  /**
    * 更新试卷信息
    *
    * @param paper 试卷信息

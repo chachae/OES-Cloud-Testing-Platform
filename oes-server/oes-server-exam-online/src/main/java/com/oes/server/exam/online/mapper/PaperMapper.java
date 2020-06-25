@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Param;
 public interface PaperMapper extends BaseMapper<Paper> {
 
   IPage<Paper> pagePaper(@Param("paper") Paper paper, Page<Paper> page);
-
+  
 }

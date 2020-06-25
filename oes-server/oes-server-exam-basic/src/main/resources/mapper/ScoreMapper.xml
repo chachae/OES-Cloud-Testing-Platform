@@ -5,7 +5,7 @@
 
   <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Score">
     <result column="score_id" property="scoreId"/>
-    <result column="score" property="score"/>
+    <result column="score" property="studentScore"/>
     <result column="paper_id" property="paperId"/>
     <result column="student_id" property="studentId"/>
     <result column="time" property="time"/>
@@ -43,7 +43,7 @@
 
   <select
     id="pageScore"
-    parameterType="com.oes.common.core.entity.exam.query.QueryScoreDto"
+    parameterType="com.oes.common.core.entity.exam.Score"
     resultMap="baseMap"
   >
     <include refid="baseSql"/>

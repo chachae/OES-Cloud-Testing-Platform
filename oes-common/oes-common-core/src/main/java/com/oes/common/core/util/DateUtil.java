@@ -27,6 +27,11 @@ public class DateUtil {
 
   public static final String CST_TIME_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
 
+  public static final String DAY = "天";
+  public static final String HOUR = "小时";
+  public static final String MINUTE = "分钟";
+  public static final String SECOND = "秒";
+
   /**
    * 格式化时间，格式为 yyyyMMddHHmmss
    *
@@ -76,6 +81,38 @@ public class DateUtil {
   }
 
   /**
+   * Date 转 LocalDateTime
+   *
+   * @param instant instant
+   * @return LocalDateTime
+   */
+  public static LocalDateTime instantToLocalDateTime(Instant instant) {
+    return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+  }
+
+  /**
+   * 获取 Date 毫秒数
+   *
+   * @param date date
+   * @return long
+   */
+  public static Long toEpochMilli(Date date) {
+    return instantToLocalDateTime(date.toInstant()).atZone(ZoneId.systemDefault()).toInstant()
+        .toEpochMilli();
+  }
+
+  /**
+   * 获取 LocalDateTime 毫秒数
+   *
+   * @param localDateTime localDateTime
+   * @return long
+   */
+  public static Long toEpochMilli(LocalDateTime localDateTime) {
+    return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+  }
+
+
+  /**
    * 格式化 Instant
    *
    * @param instant Instant
@@ -83,8 +120,7 @@ public class DateUtil {
    * @return 格式化后的字符串
    */
   public static String formatInstant(Instant instant, String format) {
-    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-    return localDateTime.format(DateTimeFormatter.ofPattern(format));
+    return instantToLocalDateTime(instant).format(DateTimeFormatter.ofPattern(format));
   }
 
   /**

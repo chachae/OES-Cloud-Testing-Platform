@@ -44,6 +44,12 @@ public class PaperController {
     return R.ok(PageUtil.toPage(result));
   }
 
+  @GetMapping("one")
+  public R<Paper> getOne(Long paperId) {
+    Paper result = paperService.getByPaperId(paperId);
+    return R.ok(result);
+  }
+
   @PutMapping
   @PreAuthorize("hasAuthority('paper:update')")
   public void updateStatus(@Valid Paper paper) {

@@ -4,10 +4,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
+import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.PaperMapper;
+import com.oes.server.exam.online.remote.IRemotePaperService;
 import com.oes.server.exam.online.service.IPaperService;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
+public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
+    IPaperService {
+
+  private final IRemotePaperService remotePaperService;
 
   @Override
   public IPage<Paper> getNormalPaper(QueryParam param, Paper paper) {
@@ -33,6 +41,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   public IPage<Paper> getImitatePaper(QueryParam param, Paper paper) {
     paper.setType(Paper.TYPE_IMITATE);
     return filterPaper(param, paper);
+  }
+
+  @Override
+  public List<Map<String, Object>> getByPaperId(Long paperId) {
+    R<Paper> res = remotePaperService.getOne(paperId);
+    if (res.getData() == null) {
+      throw new ApiException("获取试卷失败");
+    }
+    Paper paper = res.getData();
+    return paper.getPaperQuestions();
   }
 
   private IPage<Paper> filterPaper(QueryParam param, Paper paper) {

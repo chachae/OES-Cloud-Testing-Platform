@@ -25,6 +25,11 @@
       <version>${oes.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-redis-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>

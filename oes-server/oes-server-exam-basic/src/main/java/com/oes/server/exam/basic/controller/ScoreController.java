@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.exam.Score;
-import com.oes.common.core.entity.exam.query.QueryScoreDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Map;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +34,15 @@ public class ScoreController {
 
   private final IScoreService scoreService;
 
+  @GetMapping("one")
+  @PreAuthorize("hasAuthority('score:view')")
+  public R<Score> getOne(Score score) {
+    return R.ok(scoreService.getScore(score.getStudentId(), score.getPaperId()));
+  }
+
   @GetMapping
   @PreAuthorize("hasAuthority('score:view')")
-  public R<Map<String, Object>> pageAnswer(QueryScoreDto score, QueryParam param) {
+  public R<Map<String, Object>> pageAnswer(Score score, QueryParam param) {
     IPage<Score> result = scoreService.pageScore(score, param);
     return R.ok(PageUtil.toPage(result));
   }
@@ -49,7 +55,7 @@ public class ScoreController {
 
   @PostMapping
   @PreAuthorize("hasAuthority('score:add')")
-  public void add(@Valid Score score) {
+  public void add(@Valid @RequestBody Score score) {
     this.scoreService.createScore(score);
   }
 

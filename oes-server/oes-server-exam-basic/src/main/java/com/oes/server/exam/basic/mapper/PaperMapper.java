@@ -24,4 +24,12 @@ public interface PaperMapper extends BaseMapper<Paper> {
    */
   IPage<Paper> pagePaper(Page<Paper> page, @Param("paper") Paper paper);
 
+  /**
+   * 通过试卷编号获取试卷信息
+   *
+   * @param paperId 试卷编号
+   * @return {@link Paper} 试卷数据
+   */
+  Paper selectByPaperId(@Param("paperId") Long paperId);
+
 }

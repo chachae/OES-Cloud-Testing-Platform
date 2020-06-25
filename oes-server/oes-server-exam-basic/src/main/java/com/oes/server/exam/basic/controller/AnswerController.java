@@ -7,6 +7,7 @@ import com.oes.common.core.entity.exam.Answer;
 import com.oes.common.core.entity.exam.query.QueryAnswerDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IAnswerService;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,12 @@ public class AnswerController {
     // 模糊条件班级、试卷名、学期、姓名
     IPage<Answer> result = answerService.pageAnswer(answer, param);
     return R.ok(PageUtil.toPage(result));
+  }
+
+  @GetMapping("one")
+  @PreAuthorize("hasAuthority('answer:view')")
+  public R<List<Answer>> pageAnswer(Answer answer) {
+    return R.ok(answerService.getAnswer(answer.getStudentId(), answer.getPaperId()));
   }
 
   @PutMapping

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.exam.PaperQuestion;
 import com.oes.server.exam.basic.mapper.PaperQuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,4 +19,8 @@ public class PaperQuestionServiceImpl extends
     ServiceImpl<PaperQuestionMapper, PaperQuestion> implements
     IPaperQuestionService {
 
+  @Override
+  public List<PaperQuestion> selectList(Long paperId) {
+    return baseMapper.selectListByPaperId(paperId);
+  }
 }

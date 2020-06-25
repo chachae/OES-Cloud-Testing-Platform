@@ -90,5 +90,21 @@ public class PaperQuestion implements Serializable {
   @TableField(exist = false)
   private String analysis;
 
+  /**
+   * 学生答案编号
+   */
+  @TableField(exist = false)
+  private Long answerId;
 
+  /**
+   * 学生答案
+   */
+  @TableField(exist = false)
+  private String answerContent;
+
+  /**
+   * 分值
+   */
+  @TableField(exist = false)
+  private Integer score;
 }
