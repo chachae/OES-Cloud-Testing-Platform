@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Course;
+import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.ICourseService;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.oes.server.exam.online.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.exam.entity.Answer;
 import java.util.List;
 
 /**

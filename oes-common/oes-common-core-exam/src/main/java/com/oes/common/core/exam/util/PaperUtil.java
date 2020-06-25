@@ -1,7 +1,7 @@
-package com.oes.server.exam.basic.util;
+package com.oes.common.core.exam.util;
 
-import com.oes.common.core.entity.exam.Paper;
-import com.oes.common.core.entity.exam.PaperQuestion;
+import com.oes.common.core.exam.entity.Paper;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

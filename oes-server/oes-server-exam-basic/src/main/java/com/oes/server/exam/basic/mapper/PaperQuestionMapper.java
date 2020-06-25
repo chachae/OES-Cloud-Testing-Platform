@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oes.common.core.entity.exam.PaperQuestion;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

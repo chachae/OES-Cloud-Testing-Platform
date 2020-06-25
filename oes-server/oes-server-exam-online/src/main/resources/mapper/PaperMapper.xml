@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.online.mapper.PaperMapper">
 
-  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Paper">
+  <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Paper">
     <result column="paper_id" property="paperId"/>
     <result column="paper_name" property="paperName"/>
     <result column="paper_score" property="paperScore"/>
@@ -46,7 +46,7 @@
     where 1 = 1
   </sql>
 
-  <select id="pagePaper" parameterType="com.oes.common.core.entity.exam.Paper" resultMap="baseMap">
+  <select id="pagePaper" parameterType="com.oes.common.core.exam.entity.Paper" resultMap="baseMap">
     <include refid="baseSql"/>
     AND tpd.dept_id in (#{paper.deptIds,jdbcType=VARCHAR})
     AND tp.type = #{paper.type,jdbcType=INTEGER}

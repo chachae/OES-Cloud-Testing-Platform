@@ -2,7 +2,7 @@ package com.oes.server.exam.online.cache;
 
 import com.oes.common.core.cache.ICacheService;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.entity.exam.PaperQuestion;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.redis.starter.service.RedisService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

@@ -16,6 +16,17 @@
   <dependencies>
     <dependency>
       <groupId>com.oes</groupId>
+      <artifactId>oes-common-core-exam</artifactId>
+      <version>${oes.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.oes</groupId>
+          <artifactId>oes-common=core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
       <artifactId>oes-common-datasource-starter</artifactId>
       <version>${oes.version}</version>
     </dependency>
@@ -32,11 +43,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>${apache-common-text.version}</version>
     </dependency>
     <dependency>
       <groupId>com.codingapi.txlcn</groupId>

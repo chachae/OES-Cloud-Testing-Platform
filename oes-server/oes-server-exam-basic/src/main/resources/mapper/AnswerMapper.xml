@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.basic.mapper.AnswerMapper">
 
-  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Answer">
+  <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Answer">
     <result column="answer_id" property="answerId"/>
     <result column="answer_content" property="answerContent"/>
     <result column="student_id" property="studentId"/>
@@ -47,7 +47,7 @@
 
   <select
     id="pageAnswer"
-    parameterType="com.oes.common.core.entity.exam.query.QueryAnswerDto"
+    parameterType="com.oes.common.core.exam.entity.query.QueryAnswerDto"
     resultMap="baseMap"
   >
     <include refid="baseSql"/>

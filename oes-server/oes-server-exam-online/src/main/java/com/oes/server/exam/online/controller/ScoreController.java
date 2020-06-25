@@ -1,6 +1,6 @@
 package com.oes.server.exam.online.controller;
 
-import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.exam.entity.Score;
 import com.oes.server.exam.online.service.IScoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.oes.server.exam.online.controller;
 
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Answer;
+import com.oes.common.core.exam.entity.Answer;
 import com.oes.server.exam.online.service.IAnswerService;
 import java.util.List;
 import javax.validation.Valid;

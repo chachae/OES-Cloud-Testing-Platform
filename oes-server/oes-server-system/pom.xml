@@ -13,10 +13,6 @@
   <name>${project.artifactId}</name>
   <description>OES 微服务基础能力子系统</description>
 
-  <properties>
-    <oes.version>1.0-SNAPSHOT</oes.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.oes</groupId>

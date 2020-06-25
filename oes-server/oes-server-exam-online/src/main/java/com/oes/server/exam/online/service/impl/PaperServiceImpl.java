@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.PaperMapper;

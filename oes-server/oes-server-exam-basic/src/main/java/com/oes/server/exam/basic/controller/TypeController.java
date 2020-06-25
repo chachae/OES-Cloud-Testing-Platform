@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Type;
+import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.ITypeService;
 import java.util.List;

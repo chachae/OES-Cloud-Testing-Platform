@@ -3,8 +3,8 @@ package com.oes.server.exam.basic.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.oes.common.core.entity.exam.Answer;
-import com.oes.common.core.entity.exam.query.QueryAnswerDto;
+import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.cache;
 
 import com.oes.common.core.cache.ICacheService;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.redis.starter.service.RedisService;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;

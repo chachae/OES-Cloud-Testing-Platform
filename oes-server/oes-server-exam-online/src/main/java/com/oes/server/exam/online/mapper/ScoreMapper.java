@@ -1,7 +1,7 @@
 package com.oes.server.exam.online.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.exam.entity.Score;
 
 /**
  * @author chachae

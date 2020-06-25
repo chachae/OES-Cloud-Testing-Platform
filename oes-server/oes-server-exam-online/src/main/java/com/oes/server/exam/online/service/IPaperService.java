@@ -3,7 +3,7 @@ package com.oes.server.exam.online.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 import java.util.List;
 import java.util.Map;
 

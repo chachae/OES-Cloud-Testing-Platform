@@ -2,7 +2,7 @@ package com.oes.auth.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 
 /**
  * @author chachae

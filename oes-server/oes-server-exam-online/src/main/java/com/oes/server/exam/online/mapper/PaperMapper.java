@@ -3,7 +3,7 @@ package com.oes.server.exam.online.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Param;
 public interface PaperMapper extends BaseMapper<Paper> {
 
   IPage<Paper> pagePaper(@Param("paper") Paper paper, Page<Paper> page);
-  
+
 }

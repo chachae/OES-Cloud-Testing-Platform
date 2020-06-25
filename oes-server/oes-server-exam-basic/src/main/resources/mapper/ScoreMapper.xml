@@ -3,12 +3,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.basic.mapper.ScoreMapper">
 
-  <resultMap id="baseMap" type="com.oes.common.core.entity.exam.Score">
+  <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Score">
     <result column="score_id" property="scoreId"/>
     <result column="score" property="studentScore"/>
     <result column="paper_id" property="paperId"/>
     <result column="student_id" property="studentId"/>
-    <result column="time" property="time"/>
+    <result column="times" property="times"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
     <result column="paper_name" property="paperName"/>
@@ -24,7 +24,7 @@
            ts.score,
            ts.paper_id,
            ts.student_id,
-           ts.time,
+           ts.times,
            ts.create_time,
            ts.update_time,
            tp.paper_name,
@@ -43,7 +43,7 @@
 
   <select
     id="pageScore"
-    parameterType="com.oes.common.core.entity.exam.Score"
+    parameterType="com.oes.common.core.exam.entity.Score"
     resultMap="baseMap"
   >
     <include refid="baseSql"/>

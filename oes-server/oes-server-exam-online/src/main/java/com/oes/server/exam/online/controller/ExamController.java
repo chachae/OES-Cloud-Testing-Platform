@@ -2,8 +2,8 @@ package com.oes.server.exam.online.controller;
 
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Paper;
-import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.exam.entity.Paper;
+import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.online.service.IPaperService;
 import com.oes.server.exam.online.service.IScoreService;

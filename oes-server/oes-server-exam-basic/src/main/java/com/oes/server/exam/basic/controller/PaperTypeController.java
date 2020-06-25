@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.controller;
 
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.PaperType;
+import com.oes.common.core.exam.entity.PaperType;
 import com.oes.server.exam.basic.service.IPaperTypeService;
 import java.util.List;
 import javax.validation.Valid;

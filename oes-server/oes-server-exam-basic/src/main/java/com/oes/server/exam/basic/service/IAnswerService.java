@@ -3,8 +3,8 @@ package com.oes.server.exam.basic.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
-import com.oes.common.core.entity.exam.Answer;
-import com.oes.common.core.entity.exam.query.QueryAnswerDto;
+import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import java.util.List;
 
 /**

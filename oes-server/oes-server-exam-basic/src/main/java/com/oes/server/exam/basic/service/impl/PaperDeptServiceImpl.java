@@ -2,7 +2,7 @@ package com.oes.server.exam.basic.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.entity.exam.PaperDept;
+import com.oes.common.core.exam.entity.PaperDept;
 import com.oes.server.exam.basic.mapper.PaperDeptMapper;
 import com.oes.server.exam.basic.service.IPaperDeptService;
 import java.util.Arrays;

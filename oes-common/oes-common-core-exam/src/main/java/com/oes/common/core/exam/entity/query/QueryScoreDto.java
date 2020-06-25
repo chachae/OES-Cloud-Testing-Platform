@@ -1,4 +1,4 @@
-package com.oes.common.core.entity.exam.query;
+package com.oes.common.core.exam.entity.query;
 
 import lombok.Data;
 

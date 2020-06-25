@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.QueryParam;
-import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.exam.entity.Score;
 import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Date;

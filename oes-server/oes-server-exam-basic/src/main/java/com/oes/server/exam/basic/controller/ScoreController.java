@@ -3,7 +3,7 @@ package com.oes.server.exam.basic.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Score;
+import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Map;

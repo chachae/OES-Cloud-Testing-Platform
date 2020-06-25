@@ -2,7 +2,7 @@ package com.oes.server.exam.online.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.exam.PaperDept;
+import com.oes.common.core.exam.entity.PaperDept;
 
 /**
  * @author chachae

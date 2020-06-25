@@ -19,6 +19,7 @@
     <module>oes-server-demo</module>
     <module>oes-server-exam-basic</module>
     <module>oes-server-exam-online</module>
+    <module>oes-server-job</module>
   </modules>
 
   <dependencies>

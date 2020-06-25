@@ -16,6 +16,17 @@
   <dependencies>
     <dependency>
       <groupId>com.oes</groupId>
+      <artifactId>oes-common-core-exam</artifactId>
+      <version>${oes.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.oes</groupId>
+          <artifactId>oes-common=core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
       <artifactId>oes-common-datasource-starter</artifactId>
       <version>${oes.version}</version>
     </dependency>

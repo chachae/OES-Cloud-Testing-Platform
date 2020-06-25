@@ -2,7 +2,7 @@ package com.oes.server.exam.online.remote;
 
 import com.oes.common.core.constant.ServerConstant;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.entity.exam.Paper;
+import com.oes.common.core.exam.entity.Paper;
 import com.oes.server.exam.online.remote.fallback.RemotePaperServiceFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,9 +1,9 @@
-package com.oes.server.exam.online.util;
+package com.oes.common.core.exam.util;
 
 import cn.hutool.core.util.StrUtil;
-import com.oes.common.core.entity.exam.Answer;
-import com.oes.common.core.entity.exam.PaperQuestion;
-import com.oes.common.core.entity.exam.Type;
+import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.PaperQuestion;
+import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.util.DateUtil;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -159,7 +159,7 @@ public class ScoreUtil {
    * @param creteTime 创建时间
    * @return 成绩
    */
-  public static String calTime(Date creteTime) {
+  public static String calTimes(Date creteTime) {
     long btw = DateUtil.toEpochMilli(LocalDateTime.now()) - DateUtil.toEpochMilli(creteTime);
     int msc = (int) btw;
     int day = msc / 1000 / 60 / 60 / 24;

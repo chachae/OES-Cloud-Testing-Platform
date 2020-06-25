@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.entity.exam.PaperQuestion;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.basic.mapper.PaperQuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.oes.server.exam.online.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.entity.exam.PaperQuestion;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.online.cache.PaperQuestionCacheService;
 import com.oes.server.exam.online.mapper.PaperQuestionMapper;
 import com.oes.server.exam.online.service.IPaperQuestionService;
