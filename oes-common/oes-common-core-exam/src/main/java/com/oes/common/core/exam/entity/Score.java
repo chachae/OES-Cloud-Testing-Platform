@@ -23,6 +23,9 @@ public class Score implements Serializable {
 
   public static final Integer DEFAULT_SCORE = 0;
 
+  public static final Integer STATUS_HAS_SUBMIT = 1;
+  public static final Integer STATUS_NOT_SUBMIT = 0;
+
   /**
    * 成绩编号（id）
    */
@@ -54,6 +57,11 @@ public class Score implements Serializable {
    * 更新时间
    */
   private Date updateTime;
+
+  /**
+   * 试卷提交状态（1：已提交，0：未提交）
+   */
+  private Integer status;
 
   /**
    * 试卷名称

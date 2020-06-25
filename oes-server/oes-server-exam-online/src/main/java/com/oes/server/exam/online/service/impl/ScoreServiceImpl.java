@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.util.ScoreUtil;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.ScoreMapper;
 import com.oes.server.exam.online.service.IAnswerService;
 import com.oes.server.exam.online.service.IScoreService;
@@ -28,6 +29,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
   @Override
   public Score getScore(Long userId, Long paperId) {
+    if (userId == null) {
+      userId = SecurityUtil.getCurrentUser().getUserId();
+    }
     LambdaQueryWrapper<Score> wrapper = new LambdaQueryWrapper<>();
     wrapper
         .eq(Score::getStudentId, userId)
@@ -40,6 +44,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   public void createScore(Score score) {
     // 默认分数
     score.setStudentScore(Score.DEFAULT_SCORE);
+    score.setStatus(Score.STATUS_NOT_SUBMIT);
     score.setCreateTime(new Date());
     baseMapper.insert(score);
   }
@@ -54,6 +59,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     // 计算成绩
     List<Answer> answers = answerService.getAnswer(score.getStudentId(), score.getPaperId());
     score.setStudentScore(ScoreUtil.calScore(answers));
+    score.setStatus(Score.STATUS_HAS_SUBMIT);
     baseMapper
         .update(score, new LambdaQueryWrapper<Score>().eq(Score::getStudentId, score.getStudentId())
             .eq(Score::getPaperId, score.getPaperId()));

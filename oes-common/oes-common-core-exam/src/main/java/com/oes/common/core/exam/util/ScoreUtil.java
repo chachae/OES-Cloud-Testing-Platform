@@ -3,6 +3,7 @@ package com.oes.common.core.exam.util;
 import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
+import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.util.DateUtil;
 import java.time.LocalDateTime;
@@ -70,7 +71,7 @@ public class ScoreUtil {
   private static void markChoice(Answer answer, PaperQuestion paperQuestion) {
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
-      answer.setScore(0);
+      answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
     for (String rk : paperQuestion.getRightKey().split(StrUtil.COMMA)) {
@@ -79,7 +80,7 @@ public class ScoreUtil {
         return;
       }
     }
-    answer.setScore(0);
+    answer.setScore(Score.DEFAULT_SCORE);
   }
 
   /**
@@ -91,7 +92,7 @@ public class ScoreUtil {
   private static void markMulChoice(Answer answer, PaperQuestion paperQuestion) {
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
-      answer.setScore(0);
+      answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
 
@@ -120,12 +121,12 @@ public class ScoreUtil {
   private static void markNormalMark(Answer answer, PaperQuestion paperQuestion) {
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
-      answer.setScore(0);
+      answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
     List<String> rightKeys = StrUtil.split(paperQuestion.getRightKey(), StrUtil.C_COMMA);
     if (!rightKeys.contains(answer.getAnswerContent())) {
-      answer.setScore(0);
+      answer.setScore(Score.DEFAULT_SCORE);
     } else {
       answer.setScore(paperQuestion.getScore());
     }
@@ -140,7 +141,7 @@ public class ScoreUtil {
   private static void subjectiveMark(Answer answer, PaperQuestion paperQuestion) {
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
-      answer.setScore(0);
+      answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
     // 相似系数

@@ -51,7 +51,7 @@
     AND tpd.dept_id in (#{paper.deptIds,jdbcType=VARCHAR})
     AND tp.type = #{paper.type,jdbcType=INTEGER}
     AND tp.status = #{paper.status,jdbcType=INTEGER}
-    AND (tp.start_time &lt;= now() AND tp.end_time &gt;= now() )
+    AND (tp.end_time &gt;= now())
     group by tp.paper_id
   </select>
 

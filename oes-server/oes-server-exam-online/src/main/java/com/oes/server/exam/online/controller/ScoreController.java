@@ -5,6 +5,7 @@ import com.oes.server.exam.online.service.IScoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScoreController {
 
   private final IScoreService scoreService;
+
+  @GetMapping("check")
+  public Boolean checkScore(Score score) {
+    Integer status = scoreService.getScore(null, score.getPaperId()).getStatus();
+    return status != null && status == 0;
+  }
 
   @PostMapping
   public void add(Score score) {
