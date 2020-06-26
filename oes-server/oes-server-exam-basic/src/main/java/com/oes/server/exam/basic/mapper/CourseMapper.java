@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Course;
+import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,5 +22,5 @@ public interface CourseMapper extends BaseMapper<Course> {
    * @param param  分页数据
    * @return {@link IPage<Course>} 分页结果集
    */
-  IPage<Course> pageCourse(@Param("course") Course course, Page<Course> param);
+  IPage<Course> pageCourse(@Param("course") QueryCourseDto course, Page<Course> param);
 }

@@ -29,12 +29,9 @@
     WHERE 1 = 1
   </sql>
 
-  <select id="pageCourse" parameterType="com.oes.common.core.exam.entity.Course"
+  <select id="pageCourse" parameterType="com.oes.common.core.exam.entity.query.QueryCourseDto"
     resultMap="baseMap">
     <include refid="baseSql"/>
-    <if test="course.courseId != null">
-      AND tc.course_id = #{course.courseId,jdbcType=BIGINT}
-    </if>
     <if test="course.courseName != null and course.courseName != ''">
       AND tc.course_name LIKE CONCAT('%',#{course.courseName,jdbcType=VARCHAR},'%')
     </if>

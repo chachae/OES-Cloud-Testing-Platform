@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oes.server.exam.basic.mapper.ScoreMapper">
+<mapper namespace="com.oes.server.exam.online.mapper.ScoreMapper">
 
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Score">
     <result column="score_id" property="scoreId"/>
@@ -49,20 +49,14 @@
     resultMap="baseMap"
   >
     <include refid="baseSql"/>
-    <if test="score.key != null and score.key != ''">
-      AND (tu.username LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')
-      OR (tu.full_name LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')))
+    <if test="score.studentId != null">
+      AND ts.student_id = #{param1.studentId,jdbcType=BIGINT}
     </if>
     <if test="score.termId != null">
       AND tt.term_id = #{score.termId,jdbcType=BIGINT}
     </if>
-    <if test="score.status != null">
-      AND ts.status = #{score.status,jdbcType=INTEGER}
-    </if>
-    <if test="score.deptName != null and score.deptName != ''">
-      AND tu.dept_id in (SELECT t_dept.dept_id FROM t_dept WHERE t_dept.dept_name LIKE
-      CONCAT('%',#{score.deptName,jdbcType=VARCHAR},'%'))
-    </if>
+    # 默认成绩状态恒等有效，无效成绩不予显示
+    AND ts.status = 1
   </select>
 
 </mapper>

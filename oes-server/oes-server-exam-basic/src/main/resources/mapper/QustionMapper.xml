@@ -34,7 +34,7 @@
 
   <select
     id="pageQuestion"
-    parameterType="com.oes.common.core.exam.entity.Question"
+    parameterType="com.oes.common.core.exam.entity.query.QueryQuestionDto"
     resultType="com.oes.common.core.exam.entity.Question"
   >
     <include refid="baseSql"/>
@@ -46,12 +46,6 @@
     </if>
     <if test="question.courseId != null">
       and tq.course_id = #{question.courseId,jdbcType=BIGINT}
-    </if>
-    <if test="question.creatorId != null">
-      and tq.creator_id = #{question.creatorId,jdbcType=BIGINT}
-    </if>
-    <if test="question.difficult != null">
-      and tq.difficult = #{question.difficult,jdbcType=INTEGER}
     </if>
   </select>
 

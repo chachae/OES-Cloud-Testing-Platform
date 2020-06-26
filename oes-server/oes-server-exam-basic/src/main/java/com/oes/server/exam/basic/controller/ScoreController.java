@@ -1,9 +1,9 @@
 package com.oes.server.exam.basic.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Map;
@@ -34,16 +34,10 @@ public class ScoreController {
 
   private final IScoreService scoreService;
 
-  @GetMapping("one")
-  @PreAuthorize("hasAuthority('score:view')")
-  public R<Score> getOne(Score score) {
-    return R.ok(scoreService.getScore(score.getStudentId(), score.getPaperId()));
-  }
-
   @GetMapping
   @PreAuthorize("hasAuthority('score:view')")
-  public R<Map<String, Object>> pageAnswer(Score score, QueryParam param) {
-    IPage<Score> result = scoreService.pageScore(score, param);
+  public R<Map<String, Object>> pageAnswer(QueryScoreDto score) {
+    IPage<Score> result = scoreService.pageScore(score);
     return R.ok(PageUtil.toPage(result));
   }
 

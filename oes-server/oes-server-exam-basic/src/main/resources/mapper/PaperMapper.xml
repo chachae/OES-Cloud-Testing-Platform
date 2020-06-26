@@ -64,12 +64,9 @@
     where 1 = 1
   </sql>
 
-  <select id="pagePaper" parameterType="com.oes.common.core.exam.entity.Paper"
+  <select id="pagePaper" parameterType="com.oes.common.core.exam.entity.query.QueryPaperDto"
     resultMap="baseMap">
     <include refid="baseSql"/>
-    <if test="paper.paperId != null">
-      and tp.paper_id = #{paper.paperId,jdbcType=BIGINT}
-    </if>
     <if test="paper.paperName != null and paper.paperName != ''">
       and tp.paper_name like concat('%',#{paper.paperName,jdbcType=VARCHAR},'%')
     </if>

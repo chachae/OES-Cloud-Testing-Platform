@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.query.QueryTypeDto;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SortUtil;
 import com.oes.server.exam.basic.mapper.TypeMapper;
@@ -34,13 +34,13 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   private final IQuestionService questionService;
 
   @Override
-  public IPage<Type> pageType(QueryParam param, Type type) {
-    Page<Type> page = new Page<>(param.getPageNum(), param.getPageSize());
+  public IPage<Type> pageType(QueryTypeDto type) {
+    Page<Type> page = new Page<>(type.getPageNum(), type.getPageSize());
     LambdaQueryWrapper<Type> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(type.getTypeName())) {
       wrapper.like(Type::getTypeName, type.getTypeName());
     }
-    SortUtil.handlePageSort(param, page, "typeId", SystemConstant.ORDER_ASC, true);
+    SortUtil.handlePageSort(type, page, "typeId", SystemConstant.ORDER_ASC, true);
     return baseMapper.selectPage(page, wrapper);
   }
 

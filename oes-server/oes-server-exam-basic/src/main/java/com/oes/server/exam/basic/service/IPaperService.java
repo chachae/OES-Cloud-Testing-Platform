@@ -2,9 +2,9 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperType;
+import com.oes.common.core.exam.entity.query.QueryPaperDto;
 
 /**
  * @author chachae
@@ -15,11 +15,10 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 分页查询试卷信息
    *
-   * @param param 分页条件
    * @param paper 模糊搜索条件
    * @return {@link IPage<Paper>} 分页结果集
    */
-  IPage<Paper> pagePaper(Paper paper, QueryParam param);
+  IPage<Paper> pagePaper(QueryPaperDto paper);
 
   /**
    * 通过试卷编号获取试卷信息

@@ -2,9 +2,9 @@ package com.oes.server.exam.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.query.QueryTypeDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.ITypeService;
 import java.util.List;
@@ -39,8 +39,8 @@ public class TypeController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('type:view')")
-  public R<Map<String, Object>> pageType(QueryParam param, Type type) {
-    IPage<Type> result = this.typeService.pageType(param, type);
+  public R<Map<String, Object>> pageType(QueryTypeDto type) {
+    IPage<Type> result = this.typeService.pageType(type);
     return R.ok(PageUtil.toPage(result));
   }
 

@@ -28,7 +28,7 @@ public class AnswerController {
   private final IAnswerService answerService;
 
   @GetMapping("one")
-  public R<List<Answer>> pageAnswer(Answer answer) {
+  public R<List<Answer>> listAnswer(Answer answer) {
     return R.ok(answerService.getAnswer(answer.getStudentId(), answer.getPaperId()));
   }
 

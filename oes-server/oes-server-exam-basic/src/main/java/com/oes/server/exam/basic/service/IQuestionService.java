@@ -2,8 +2,8 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Question;
+import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import java.util.List;
 
 /**
@@ -15,11 +15,10 @@ public interface IQuestionService extends IService<Question> {
   /**
    * 分页搜索题目
    *
-   * @param param    分页数据
    * @param question 模糊搜索
    * @return {@link IPage<Question>} 分页结果集
    */
-  IPage<Question> pageQuestion(QueryParam param, Question question);
+  IPage<Question> pageQuestion(QueryQuestionDto question);
 
   /**
    * 获取题目集合

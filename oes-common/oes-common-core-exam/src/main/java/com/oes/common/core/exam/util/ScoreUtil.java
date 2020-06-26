@@ -6,7 +6,6 @@ import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.util.DateUtil;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.text.similarity.JaccardSimilarity;
@@ -69,6 +68,7 @@ public class ScoreUtil {
    * @param paperQuestion 当前题目的答案信息
    */
   private static void markChoice(Answer answer, PaperQuestion paperQuestion) {
+    answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
@@ -90,6 +90,7 @@ public class ScoreUtil {
    * @param paperQuestion 当前题目的答案信息
    */
   private static void markMulChoice(Answer answer, PaperQuestion paperQuestion) {
+    answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
@@ -119,6 +120,7 @@ public class ScoreUtil {
    * @param paperQuestion 当前题目的答案信息
    */
   private static void markNormalMark(Answer answer, PaperQuestion paperQuestion) {
+    answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
@@ -139,13 +141,15 @@ public class ScoreUtil {
    * @param paperQuestion 当前题目的答案信息
    */
   private static void subjectiveMark(Answer answer, PaperQuestion paperQuestion) {
+    // 相似系数判断默认未批改
+    answer.setStatus(Answer.STATUS_NOT_CORRECT);
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
     // 相似系数
-    Double ratio = JACCARD.apply(answer.getAnswerContent(), paperQuestion.getRightKey());
+    Double ratio = calSimilarity(answer.getAnswerContent(), paperQuestion.getRightKey());
     double calScore = ratio * paperQuestion.getScore();
     // 文本长度阈值
     if (answer.getAnswerContent().length() < paperQuestion.getRightKey().length() / 1.1) {
@@ -161,7 +165,18 @@ public class ScoreUtil {
    * @return 成绩
    */
   public static String calTimes(Date creteTime) {
-    long btw = DateUtil.toEpochMilli(LocalDateTime.now()) - DateUtil.toEpochMilli(creteTime);
+    return calTimes(creteTime, new Date());
+  }
+
+  /**
+   * 计算耗时
+   *
+   * @param startTime 开始时间
+   * @param endTime   结束时间
+   * @return 时间（%s天%s小时%s分%s秒）
+   */
+  public static String calTimes(Date startTime, Date endTime) {
+    long btw = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
     int msc = (int) btw;
     int day = msc / 1000 / 60 / 60 / 24;
     int hr = msc / 1000 / 60 / 60 % 24;

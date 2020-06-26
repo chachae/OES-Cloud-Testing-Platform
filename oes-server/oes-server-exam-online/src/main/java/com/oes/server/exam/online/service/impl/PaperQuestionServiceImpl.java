@@ -36,9 +36,7 @@ public class PaperQuestionServiceImpl extends
     }
     List<PaperQuestion> paperQuestions = baseMapper.selectByPaperId(paperId);
     Map<String, PaperQuestion> pqMap = new HashMap<>(paperQuestions.size());
-    for (PaperQuestion paperQuestion : paperQuestions) {
-      pqMap.put(String.valueOf(paperQuestion.getQuestionId()), paperQuestion);
-    }
+    paperQuestions.forEach(pq -> pqMap.put(String.valueOf(pq.getQuestionId()), pq));
     paperQuestionCacheService
         .save(SystemConstant.PAPER_QUESTION_PREFIX + paperId, pqMap);
     return pqMap;

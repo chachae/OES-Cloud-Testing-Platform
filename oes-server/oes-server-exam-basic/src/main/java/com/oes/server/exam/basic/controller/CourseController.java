@@ -3,9 +3,9 @@ package com.oes.server.exam.basic.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Course;
+import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.ICourseService;
 import java.util.List;
@@ -42,8 +42,8 @@ public class CourseController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('course:view')")
-  public R<Map<String, Object>> pageCourse(Course course, QueryParam param) {
-    IPage<Course> result = courseService.pageCourse(course, param);
+  public R<Map<String, Object>> pageCourse(QueryCourseDto course) {
+    IPage<Course> result = courseService.pageCourse(course);
     return R.ok(PageUtil.toPage(result));
   }
 
@@ -61,7 +61,7 @@ public class CourseController {
   }
 
   @GetMapping("options")
-  public R<List<Course>> options(Course course) {
+  public R<List<Course>> options(QueryCourseDto course) {
     List<Course> result = this.courseService.getList(course);
     return R.ok(result);
   }

@@ -2,8 +2,8 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.query.QueryTypeDto;
 
 /**
  * @author chachae
@@ -14,11 +14,10 @@ public interface ITypeService extends IService<Type> {
   /**
    * 分页查询题目类型
    *
-   * @param param 分页参数
-   * @param type  模糊条件
+   * @param type 模糊条件
    * @return {@link IPage<Type>} 分页结果集
    */
-  IPage<Type> pageType(QueryParam param, Type type);
+  IPage<Type> pageType(QueryTypeDto type);
 
   /**
    * 增加题型

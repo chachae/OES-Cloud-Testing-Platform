@@ -24,21 +24,21 @@ public class QueryParam implements Serializable {
   /**
    * 页号，默认第1页
    */
-  private Long pageNum = 1L;
+  protected Long pageNum = 1L;
 
   /**
    * 每页数据量，默认10条
    */
-  private Long pageSize = 10L;
+  protected Long pageSize = 10L;
 
   /**
    * 排序字段
    */
-  private String field;
+  protected String field;
 
   /**
    * 排序规则，asc升序，desc降序
    */
-  private String order;
+  protected String order;
 
 }

@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.CourseTeacher;
 import com.oes.common.core.exam.entity.Question;
+import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.exam.basic.mapper.CourseMapper;
 import com.oes.server.exam.basic.service.ICourseService;
@@ -36,13 +36,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   private final IQuestionService questionService;
 
   @Override
-  public IPage<Course> pageCourse(Course course, QueryParam param) {
-    Page<Course> page = new Page<>(param.getPageNum(), param.getPageSize());
-    return baseMapper.pageCourse(course, page);
+  public IPage<Course> pageCourse(QueryCourseDto course) {
+    return baseMapper.pageCourse(course, new Page<>(course.getPageNum(), course.getPageSize()));
   }
 
   @Override
-  public List<Course> getList(Course course) {
+  public List<Course> getList(QueryCourseDto course) {
     LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(course.getCourseName())) {
       wrapper.like(Course::getCourseName, course.getCourseName());

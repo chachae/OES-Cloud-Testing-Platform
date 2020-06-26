@@ -44,6 +44,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public Long updateAnswer(Answer answer) {
     // 处理多选题
     checkAndHandleMulChoice(answer);
@@ -69,7 +70,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
    */
   private void checkAndHandleMulChoice(Answer answer) {
     if (String.valueOf(answer.getTypeId()).equals(Type.DEFAULT_TYPE_ID_ARRAY[1])
-        && answer.getAnswerContent() != null) {
+        && StrUtil.isNotBlank(answer.getAnswerContent())) {
       String[] contents = answer.getAnswerContent().split(StrUtil.COMMA);
       Arrays.sort(contents);
       answer.setAnswerContent(String.join(StrUtil.COMMA, contents));

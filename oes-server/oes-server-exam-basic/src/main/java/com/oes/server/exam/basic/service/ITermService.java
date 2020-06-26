@@ -2,8 +2,8 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Term;
+import com.oes.common.core.exam.entity.query.QueryTermDto;
 
 /**
  * @author chachae
@@ -15,11 +15,10 @@ public interface ITermService extends IService<Term> {
   /**
    * 分页查询学期数据
    *
-   * @param param 分页参数
-   * @param term  模糊条件
+   * @param term 模糊条件
    * @return {@link IPage<Term>} 分页结果集
    */
-  IPage<Term> pageTerm(Term term, QueryParam param);
+  IPage<Term> pageTerm(QueryTermDto term);
 
   /**
    * 通过学期名查询学期信息

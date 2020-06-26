@@ -1,9 +1,12 @@
 package com.oes.server.exam.online.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.ScoreMapper;
@@ -26,6 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements IScoreService {
 
   private final IAnswerService answerService;
+
+  @Override
+  public IPage<Score> getScore(QueryScoreDto score) {
+    if (score.getStudentId() == null) {
+      score.setStudentId(SecurityUtil.getCurrentUser().getUserId());
+    }
+    return baseMapper.pageScore(score, new Page<>(score.getPageNum(), score.getPageSize()));
+  }
 
   @Override
   public Score getScore(Long userId, Long paperId) {

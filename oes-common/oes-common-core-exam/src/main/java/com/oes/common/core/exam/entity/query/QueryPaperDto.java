@@ -7,22 +7,21 @@ import lombok.EqualsAndHashCode;
 /**
  * @author chachae
  * @version v1.0
- * @date 2020/6/21 18:14
+ * @date 2020/6/26 17:49
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryAnswerDto extends QueryParam {
+public class QueryPaperDto extends QueryParam {
 
-  private static final long serialVersionUID = -4631054172498714743L;
+  private static final long serialVersionUID = 3863446215830044928L;
 
+  /**
+   * 试卷名称
+   */
   private String paperName;
 
-  private String deptName;
-
-  private Long termId;
-
-  private Integer status;
-
-  private String studentName;
-
+  /**
+   * 学期
+   */
+  private String termId;
 }

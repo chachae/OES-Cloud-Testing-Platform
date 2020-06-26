@@ -2,8 +2,8 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Course;
+import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import java.util.List;
 
 /**
@@ -16,10 +16,9 @@ public interface ICourseService extends IService<Course> {
    * 分页查询课程信息
    *
    * @param course 课程信息
-   * @param param  分页数据
    * @return {@link IPage<Course>} 分页结果集
    */
-  IPage<Course> pageCourse(Course course, QueryParam param);
+  IPage<Course> pageCourse(QueryCourseDto course);
 
   /**
    * 获取课程集合（Mapper 携带数据权限）
@@ -27,7 +26,7 @@ public interface ICourseService extends IService<Course> {
    * @param course 课程信息
    * @return {@link List<Course>} 课程集合
    */
-  List<Course> getList(Course course);
+  List<Course> getList(QueryCourseDto course);
 
   /**
    * 删除课程信息

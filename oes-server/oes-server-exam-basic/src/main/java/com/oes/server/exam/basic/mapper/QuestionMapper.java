@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Question;
+import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,6 +22,6 @@ public interface QuestionMapper extends BaseMapper<Question> {
    * @param question 模糊搜索条件
    * @return 分页结果集
    */
-  IPage<Question> pageQuestion(Page<Question> page, @Param("question") Question question);
+  IPage<Question> pageQuestion(Page<Question> page, @Param("question") QueryQuestionDto question);
 
 }

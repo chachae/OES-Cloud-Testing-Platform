@@ -1,6 +1,8 @@
 package com.oes.common.core.exam.entity.query;
 
+import com.oes.common.core.entity.QueryParam;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 分数查询条件实体类
@@ -10,7 +12,10 @@ import lombok.Data;
  * @date 2020/6/21 11:02
  */
 @Data
-public class QueryScoreDto {
+@EqualsAndHashCode(callSuper = true)
+public class QueryScoreDto extends QueryParam {
+
+  private static final long serialVersionUID = -4013485999672960436L;
 
   /**
    * 学期
@@ -31,5 +36,15 @@ public class QueryScoreDto {
    * 学生编号
    */
   private Long studentId;
+
+  /**
+   * 部门名称
+   */
+  private String deptName;
+
+  /**
+   * 成绩状态
+   */
+  private Integer status;
 
 }

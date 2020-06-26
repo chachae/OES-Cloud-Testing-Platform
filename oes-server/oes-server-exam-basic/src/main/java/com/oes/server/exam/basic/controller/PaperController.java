@@ -2,10 +2,10 @@ package com.oes.server.exam.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperType;
+import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IPaperService;
 import java.util.Map;
@@ -39,8 +39,8 @@ public class PaperController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('paper:view')")
-  public R<Map<String, Object>> pageCourse(Paper paper, QueryParam param) {
-    IPage<Paper> result = paperService.pagePaper(paper, param);
+  public R<Map<String, Object>> pageCourse(QueryPaperDto paper) {
+    IPage<Paper> result = paperService.pagePaper(paper);
     return R.ok(PageUtil.toPage(result));
   }
 

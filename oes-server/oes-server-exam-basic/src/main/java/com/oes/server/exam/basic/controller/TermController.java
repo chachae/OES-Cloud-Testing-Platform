@@ -3,9 +3,9 @@ package com.oes.server.exam.basic.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Term;
+import com.oes.common.core.exam.entity.query.QueryTermDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.ITermService;
 import java.util.List;
@@ -40,8 +40,8 @@ public class TermController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('term:view')")
-  public R<Map<String, Object>> pageCourse(Term term, QueryParam param) {
-    IPage<Term> result = termService.pageTerm(term, param);
+  public R<Map<String, Object>> pageCourse(QueryTermDto term) {
+    IPage<Term> result = termService.pageTerm(term);
     return R.ok(PageUtil.toPage(result));
   }
 

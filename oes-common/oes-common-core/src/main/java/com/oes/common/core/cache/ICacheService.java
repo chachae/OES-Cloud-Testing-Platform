@@ -9,6 +9,8 @@ public interface ICacheService<E> {
 
   void save(String key, E e);
 
-  E get(String key);
+  default E get(String key) {
+    return null;
+  }
 
 }

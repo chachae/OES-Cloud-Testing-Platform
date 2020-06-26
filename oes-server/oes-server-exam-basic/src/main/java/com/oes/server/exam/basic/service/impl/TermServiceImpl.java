@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.Term;
+import com.oes.common.core.exam.entity.query.QueryTermDto;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.exam.basic.mapper.TermMapper;
 import com.oes.server.exam.basic.service.IPaperService;
@@ -33,12 +33,12 @@ public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements
   private final IPaperService paperService;
 
   @Override
-  public IPage<Term> pageTerm(Term term, QueryParam param) {
+  public IPage<Term> pageTerm(QueryTermDto term) {
     LambdaQueryWrapper<Term> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(term.getTermName())) {
       wrapper.like(Term::getTermName, term.getTermName());
     }
-    return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), wrapper);
+    return baseMapper.selectPage(new Page<>(term.getPageNum(), term.getPageSize()), wrapper);
   }
 
   @Override

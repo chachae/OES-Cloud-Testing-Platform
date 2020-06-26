@@ -2,9 +2,9 @@ package com.oes.server.exam.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Question;
+import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IQuestionService;
 import java.util.Map;
@@ -38,8 +38,8 @@ public class QuestionController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('question:view')")
-  public R<Map<String, Object>> pageType(QueryParam param, Question question) {
-    IPage<Question> result = this.questionService.pageQuestion(param, question);
+  public R<Map<String, Object>> pageType(QueryQuestionDto question) {
+    IPage<Question> result = this.questionService.pageQuestion(question);
     return R.ok(PageUtil.toPage(result));
   }
 

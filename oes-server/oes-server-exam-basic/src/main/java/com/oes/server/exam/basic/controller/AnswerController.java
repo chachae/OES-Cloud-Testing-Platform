@@ -1,13 +1,11 @@
 package com.oes.server.exam.basic.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IAnswerService;
-import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +35,9 @@ public class AnswerController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('answer:view')")
-  public R<Map<String, Object>> pageAnswer(QueryAnswerDto answer, QueryParam param) {
-    // 模糊条件班级、试卷名、学期、姓名
-    IPage<Answer> result = answerService.pageAnswer(answer, param);
+  public R<Map<String, Object>> pageAnswer(QueryAnswerDto answer) {
+    IPage<Answer> result = answerService.pageAnswer(answer);
     return R.ok(PageUtil.toPage(result));
-  }
-
-  @GetMapping("one")
-  @PreAuthorize("hasAuthority('answer:view')")
-  public R<List<Answer>> pageAnswer(Answer answer) {
-    return R.ok(answerService.getAnswer(answer.getStudentId(), answer.getPaperId()));
   }
 
   @PutMapping

@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SortUtil;
 import com.oes.server.exam.basic.mapper.QuestionMapper;
@@ -36,9 +36,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   private final IPaperQuestionService paperQuestionService;
 
   @Override
-  public IPage<Question> pageQuestion(QueryParam param, Question question) {
-    Page<Question> page = new Page<>(param.getPageNum(), param.getPageSize());
-    SortUtil.handlePageSort(param, page, "courseId", SystemConstant.ORDER_ASC, true);
+  public IPage<Question> pageQuestion(QueryQuestionDto question) {
+    Page<Question> page = new Page<>(question.getPageNum(), question.getPageSize());
+    SortUtil.handlePageSort(question, page, "courseId", SystemConstant.ORDER_ASC, true);
     return baseMapper.pageQuestion(page, question);
   }
 

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperDept;
@@ -14,6 +13,7 @@ import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.exam.util.PaperUtil;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.exam.basic.cache.PaperCacheService;
@@ -53,13 +53,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   private final IPaperQuestionService paperQuestionService;
 
   @Override
-  public IPage<Paper> pagePaper(Paper paper, QueryParam param) {
-    Page<Paper> page = new Page<>(param.getPageNum(), param.getPageSize());
+  public IPage<Paper> pagePaper(QueryPaperDto paper) {
+    Page<Paper> page = new Page<>(paper.getPageNum(), paper.getPageSize());
     IPage<Paper> result = baseMapper.pagePaper(page, paper);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
-      page.getRecords().forEach(PaperUtil::groupQuestions);
-      paper.setPaperQuestionList(null);
+      result.getRecords().forEach(PaperUtil::groupQuestions);
     }
     return result;
   }

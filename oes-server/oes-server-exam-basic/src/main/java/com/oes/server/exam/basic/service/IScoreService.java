@@ -2,8 +2,8 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryScoreDto;
 
 /**
  * @author chachae
@@ -14,11 +14,10 @@ public interface IScoreService extends IService<Score> {
   /**
    * 分页查询分数数据
    *
-   * @param param 分页参数
    * @param score 模糊条件
    * @return {@link IPage<Score>} 分页结果集
    */
-  IPage<Score> pageScore(Score score, QueryParam param);
+  IPage<Score> pageScore(QueryScoreDto score);
 
   /**
    * 通过分数信息查询分数

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Paper;
+import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,7 +23,7 @@ public interface PaperMapper extends BaseMapper<Paper> {
    * @param paper 模糊搜索条件
    * @return {@link IPage<Paper>} 分页结果集
    */
-  IPage<Paper> pagePaper(Page<Paper> page, @Param("paper") Paper paper);
+  IPage<Paper> pagePaper(Page<Paper> page, @Param("paper") QueryPaperDto paper);
 
   /**
    * 通过试卷编号获取试卷信息
