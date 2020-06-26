@@ -22,6 +22,7 @@
     <module>oes-apm</module>
     <module>oes-server</module>
     <module>oes-tx-manager</module>
+    <module>oes-oss</module>
   </modules>
 
   <name>${project.artifactId}</name>
