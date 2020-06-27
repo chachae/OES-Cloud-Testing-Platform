@@ -62,4 +62,7 @@ public interface SystemConstant {
 
   String LOCALHOST = "localhost";
   String LOCALHOST_IP = "127.0.0.1";
+
+  String START_WITH_HTTP = "http://";
+  String START_WITH_HTTPS = "https://";
 }

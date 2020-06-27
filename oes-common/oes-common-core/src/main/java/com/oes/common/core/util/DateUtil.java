@@ -43,6 +43,15 @@ public class DateUtil {
   }
 
   /**
+   * 格式化当前时间，格式为 yyyyMMddHHmmss
+   *
+   * @return 格式化后的字符串
+   */
+  public static String formatFullTimeNow() {
+    return formatFullTime(LocalDateTime.now(), FULL_TIME_PATTERN);
+  }
+
+  /**
    * 根据传入的格式，格式化时间
    *
    * @param localDateTime LocalDateTime

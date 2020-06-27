@@ -69,6 +69,7 @@ public class TreeUtil {
     routes.forEach(route -> {
       String parentId = route.getParentId();
       if (parentId == null || TOP_NODE_ID.equals(parentId)) {
+        route.setRedirect(VueRouter.NO_REDIRECT);
         topRoutes.add(route);
         return;
       }

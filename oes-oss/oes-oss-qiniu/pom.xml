@@ -13,4 +13,27 @@
   <name>${project.artifactId}</name>
   <description>OES 七牛云OSS对象存储服务子系统</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-core</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-datasource-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
+      <artifactId>oes-common-security-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <!--七牛云存储-->
+    <dependency>
+      <groupId>com.qiniu</groupId>
+      <artifactId>qiniu-java-sdk</artifactId>
+      <version>${qiniu-java-sdk.version}</version>
+    </dependency>
+  </dependencies>
 </project>

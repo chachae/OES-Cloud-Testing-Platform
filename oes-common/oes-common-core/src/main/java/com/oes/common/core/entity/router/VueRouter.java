@@ -20,6 +20,8 @@ public class VueRouter<T> implements Serializable {
 
   private static final long serialVersionUID = -3327478146308500708L;
 
+  public static final String NO_REDIRECT = "noRedirect";
+
   @JsonIgnore
   private String id;
   @JsonIgnore
