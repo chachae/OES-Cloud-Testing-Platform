@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 七牛云配置
+ * <p>
+ * 远端调用示例：http://domian:port/oss-qiniu/config | http://OES-OSS-Qiniu/oss-qiniu/config
+ * </p>
+ *
  * @author chachae
  * @version v1.0
  * @date 2020/6/27 14:18

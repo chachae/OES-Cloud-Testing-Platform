@@ -23,8 +23,11 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author chachae
  * @since 2020-06-27 13:21:53
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -47,9 +51,15 @@ public class QiNiuContentServiceImpl extends
 
   private final IQiNiuConfigService qiNiuConfigService;
 
+  /**
+   * 文件最大上传数
+   */
   @Value("${qiNiu.max-size}")
   private Long maxSize;
 
+  /**
+   * token超时时间
+   */
   @Value("${qiNiu.expire-in-second}")
   private Long expire;
 
@@ -63,11 +73,16 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
+  public List<QiNiuContent> getByIds(String[] ids) {
+    return baseMapper.selectBatchIds(Arrays.asList(ids));
+  }
+
+  @Override
   @Transactional(rollbackFor = Exception.class)
   public QiNiuContent upload(MultipartFile file, QiNiuConfig qiNiuConfig) {
     FileUtil.checkSize(maxSize, file.getSize());
     if (qiNiuConfigService.getConfig() == null) {
-      throw new ApiException("请先添加相其七牛云对象存储配置后再操作");
+      throw new ApiException("请先添加七牛云对象存储配置后再操作");
     }
     // 构造一个带指定Zone对象的配置类
     Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiNiuConfig.getZone()));
@@ -92,7 +107,9 @@ public class QiNiuContentServiceImpl extends
         qiniuContent.setName(FileUtil.getFileNameNoEx(putRet.key));
         qiniuContent.setUrl(qiNiuConfig.getHost() + "/" + putRet.key);
         qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize() + "")));
+        qiniuContent.setUpdateTime(new Date());
         baseMapper.insert(qiniuContent);
+        return qiniuContent;
       }
       return content;
     } catch (Exception e) {
@@ -115,34 +132,22 @@ public class QiNiuContentServiceImpl extends
   @Override
   public String download(QiNiuContent content, QiNiuConfig config) {
     String finalUrl;
-    String type = "公开";
-    if (type.equals(content.getType())) {
+    if (QiNiuConfig.OPEN_ZONE.equals(content.getType())) {
       finalUrl = content.getUrl();
     } else {
       // 私有空间
       Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
       finalUrl = auth.privateDownloadUrl(content.getUrl(), expire);
     }
-
     return finalUrl;
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void delete(QiNiuContent content, QiNiuConfig config) {
-    if (content.getContentId() == null) {
-      throw new ApiException("文件不存在");
-    }
-    //构造一个带指定Zone对象的配置类
-    Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
-    Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
-    BucketManager bucketManager = new BucketManager(auth, cfg);
-    try {
-      bucketManager.delete(content.getBucket(), content.getName() + "." + content.getSuffix());
-      baseMapper.deleteById(content.getContentId());
-    } catch (QiniuException ex) {
-      baseMapper.deleteById(content.getContentId());
-    }
+  public void delete(String[] contentIds, QiNiuConfig config) {
+    baseMapper.deleteBatchIds(Arrays.asList(contentIds));
+    List<QiNiuContent> contents = getByIds(contentIds);
+    deleteOssFiles(contents, config);
   }
 
   @Override
@@ -185,10 +190,22 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
-  public void deleteAll(Long[] ids, QiNiuConfig config) {
-    for (Long id : ids) {
-      delete(getById(id), config);
-    }
+  public void deleteAll(String[] ids, QiNiuConfig config) {
+    delete(ids, config);
   }
 
+  @Override
+  public void deleteOssFiles(List<QiNiuContent> contents, QiNiuConfig config) {
+    Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
+    Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
+    BucketManager bucketManager = new BucketManager(auth, cfg);
+    for (QiNiuContent content : contents) {
+      try {
+        bucketManager.delete(content.getBucket(), content.getName() + "." + content.getSuffix());
+      } catch (QiniuException e) {
+        log.error("QiNiuException", e);
+        throw new ApiException("七牛云对象存储服务异常");
+      }
+    }
+  }
 }

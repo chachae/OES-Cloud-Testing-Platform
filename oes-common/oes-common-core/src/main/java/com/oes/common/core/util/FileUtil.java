@@ -1,6 +1,7 @@
 package com.oes.common.core.util;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.exception.ApiException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,11 +82,12 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
    * 获取文件扩展名，不带 .
    */
   public static String getExtensionName(String filename) {
-    if ((filename != null) && (filename.length() > 0)) {
-      int dot = filename.lastIndexOf('.');
-      if ((dot > -1) && (dot < (filename.length() - 1))) {
-        return filename.substring(dot + 1);
-      }
+    if (StrUtil.isBlank(filename)) {
+      return null;
+    }
+    int dot = filename.lastIndexOf('.');
+    if ((dot > -1) && (dot < (filename.length() - 1))) {
+      return filename.substring(dot + 1);
     }
     return filename;
   }

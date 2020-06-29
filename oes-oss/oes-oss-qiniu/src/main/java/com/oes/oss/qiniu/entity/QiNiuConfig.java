@@ -18,6 +18,10 @@ public class QiNiuConfig implements Serializable {
 
   private static final long serialVersionUID = -1387173587113205878L;
 
+  public static final String OPEN_ZONE = "公开";
+
+  public static final String PRIVATE_ZONE = "私有";
+
   /**
    * ID
    */
