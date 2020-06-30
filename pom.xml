@@ -23,6 +23,7 @@
     <module>oes-server</module>
     <module>oes-tx-manager</module>
     <module>oes-oss</module>
+    <module>oes-ai</module>
   </modules>
 
   <name>${project.artifactId}</name>

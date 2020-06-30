@@ -61,8 +61,17 @@ public interface SystemConstant {
   Long REGISTER_ROLE_ID = 2L;
 
   String LOCALHOST = "localhost";
+
   String LOCALHOST_IP = "127.0.0.1";
 
   String START_WITH_HTTP = "http://";
+
   String START_WITH_HTTPS = "https://";
+
+  String JSON_HEADER = "application/json; charset=UTF-8";
+
+  String FORM_ENCODED = "application/x-www-form-urlencoded;charset=utf-8";
+
+  String BASE64_JPG_HEAD = "data:image/jpg;base64,";
+
 }

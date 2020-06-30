@@ -49,7 +49,6 @@ public class QiNiuContentController {
   @PostMapping
   public R<QiNiuContent> upload(@RequestParam MultipartFile file) {
     QiNiuContent content = qiNiuContentService.upload(file, qiNiuConfigService.getConfig());
-    System.out.println(content);
     return R.ok(content);
   }
 
