@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @version v1.0
  * @date 2020/6/29 15:55
  */
-@FeignClient(name = "BaiduOcrRemoteService", url = "${oes.ocr.baidu.ocr-url}"
-    , configuration = BaiduOcrInterceptorConfig.class,
-    fallbackFactory = RemoteBaiduOcrServiceFallback.class)
+@FeignClient(
+    name = "BaiduOcrRemoteService",
+    url = "${oes.ocr.baidu.ocr-url}",
+    configuration = BaiduOcrInterceptorConfig.class,
+    fallbackFactory = RemoteBaiduOcrServiceFallback.class
+)
 public interface IRemoteBaiduOcrService {
 
   /**

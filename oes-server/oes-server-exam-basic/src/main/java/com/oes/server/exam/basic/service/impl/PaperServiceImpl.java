@@ -104,6 +104,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     if (canDeleted(paperIds)) {
       baseMapper.deleteBatchIds(Arrays.asList(paperIds));
       paperDeptService.deleteBatchByPaperIds(paperIds);
+    } else {
+      throw new ApiException("试卷存在考试成绩等关联信息，无法删除");
     }
   }
 

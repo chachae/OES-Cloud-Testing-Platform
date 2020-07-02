@@ -53,6 +53,9 @@
       AND (tu.username LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')
       OR (tu.full_name LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')))
     </if>
+    <if test="score.paperName">
+      AND (tp.paper_name LIKE CONCAT('%',#{score.paperName},'%'))
+    </if>
     <if test="score.termId != null">
       AND tt.term_id = #{score.termId,jdbcType=BIGINT}
     </if>

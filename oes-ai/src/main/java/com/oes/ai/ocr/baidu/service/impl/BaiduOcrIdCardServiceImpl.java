@@ -1,5 +1,6 @@
 package com.oes.ai.ocr.baidu.service.impl;
 
+import cn.hutool.core.codec.Base64;
 import com.oes.ai.ocr.baidu.IdCardNumTypeEnum;
 import com.oes.ai.ocr.baidu.IdCardStatusEnum;
 import com.oes.ai.ocr.baidu.constant.BaiduOcrConstant;
@@ -10,6 +11,7 @@ import com.oes.ai.ocr.baidu.util.ResultUtil;
 import com.oes.ai.ocr.common.entity.BaseOcrEntity;
 import com.oes.ai.ocr.common.entity.IdCardInfo;
 import com.oes.common.core.exception.ApiException;
+import com.oes.common.core.util.FileUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -32,14 +34,19 @@ public class BaiduOcrIdCardServiceImpl implements IBaiduOcrIdCardService {
   private final IAccessTokenService accessTokenService;
   private final IRemoteBaiduOcrService remoteBaiduOcrService;
 
-
   public IdCardInfo ocrIdCard(BaseOcrEntity entity) {
+    // 获取接口资源访问权限 AccessToken
     String accessToken = accessTokenService.getAccessToken();
 
-    String imgParam = "";
+    // 获取 MultipartFile 对象，转 File 之后进行 Base64 编码
+    String encode = Base64.encode(FileUtil.toFile(entity.getFile()));
+
+    // 完成编码后的 Base64 字符串
+    String imgParam;
     try {
-      imgParam = URLEncoder.encode(entity.getImage(), StandardCharsets.UTF_8.name());
-    } catch (UnsupportedEncodingException ignored) {
+      imgParam = URLEncoder.encode(encode, StandardCharsets.UTF_8.name());
+    } catch (UnsupportedEncodingException e) {
+      imgParam = "";
     }
 
     String side = entity.getSide();
@@ -56,7 +63,6 @@ public class BaiduOcrIdCardServiceImpl implements IBaiduOcrIdCardService {
     Map<String, Object> body = res.getBody();
 
     if (body != null) {
-
       // 判断识别状态是否正常（双面均需要识别）
       String status = body.get(BaiduOcrConstant.KEY_IMAGE_STATUS) + "";
       if (!IdCardStatusEnum.isNormal(status)) {

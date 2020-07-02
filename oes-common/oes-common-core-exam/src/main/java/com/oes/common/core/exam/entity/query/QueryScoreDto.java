@@ -47,4 +47,9 @@ public class QueryScoreDto extends QueryParam {
    */
   private Integer status;
 
+  /**
+   * 试卷名称
+   */
+  private String paperName;
+
 }

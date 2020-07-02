@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.exception.ApiException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -26,9 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
  * @version v1.0
  * @date 2020/6/27 11:53
  */
+@Slf4j
 public class FileUtil extends cn.hutool.core.io.FileUtil {
 
-  private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
+  private FileUtil() {
+  }
+
   /**
    * 系统临时目录
    * <br>
@@ -174,24 +175,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     return null;
   }
 
-  public static String getFileType(String type) {
-    String documents = "txt doc pdf ppt pps xlsx xls docx";
-    String music = "mp3 wav wma mpa ram ra aac aif m4a";
-    String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
-    String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
-    if (image.contains(type)) {
-      return "图片";
-    } else if (documents.contains(type)) {
-      return "文档";
-    } else if (music.contains(type)) {
-      return "音乐";
-    } else if (video.contains(type)) {
-      return "视频";
-    } else {
-      return "其他";
-    }
-  }
-
   public static void checkSize(long maxSize, long size) {
     // 1M
     int len = 1024 * 1024;
@@ -206,7 +189,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
   public static boolean check(File file1, File file2) {
     String img1Md5 = getMd5(file1);
     String img2Md5 = getMd5(file2);
-    return img1Md5.equals(img2Md5);
+    return StrUtil.equals(img1Md5, img2Md5);
   }
 
   /**
@@ -218,19 +201,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
   private static byte[] getByte(File file) {
     // 得到文件长度
-    byte[] b = new byte[(int) file.length()];
-    try {
-      InputStream in = new FileInputStream(file);
-      try {
-        System.out.println(in.read(b));
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
-      }
-    } catch (FileNotFoundException e) {
-      log.error(e.getMessage(), e);
-      return null;
-    }
-    return b;
+    return new byte[(int) file.length()];
   }
 
   private static String getMd5(byte[] bytes) {

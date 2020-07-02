@@ -1,6 +1,7 @@
 package com.oes.ai.ocr.baidu.remote;
 
 import com.oes.ai.ocr.baidu.entity.AccessTokenInfo;
+import com.oes.ai.ocr.baidu.remote.fallback.RemoteAccessTokenServiceFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @version v1.0
  * @date 2020/6/29 15:55
  */
-@FeignClient(name = "BaiduAccessToken", url = "${oes.ocr.baidu.auth-url}")
+@FeignClient(
+    name = "BaiduAccessToken",
+    url = "${oes.ocr.baidu.auth-url}",
+    fallbackFactory = RemoteAccessTokenServiceFallback.class
+)
 public interface IRemoteAccessTokenService {
 
   /**

@@ -5,6 +5,7 @@ import com.oes.ai.ocr.baidu.constant.BaiduOcrConstant;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author chachae
@@ -16,8 +17,9 @@ public class BaseOcrEntity implements Serializable {
 
   private static final long serialVersionUID = 9141477772203967657L;
 
-  @NotBlank(message = "{required}")
   private String image;
+
+  private transient MultipartFile file;
 
   @NotBlank(message = "{required}")
   private String side = BaiduOcrConstant.SIDE_FRONT;

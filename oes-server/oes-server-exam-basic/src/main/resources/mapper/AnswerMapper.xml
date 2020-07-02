@@ -65,8 +65,8 @@
       AND ta.status = #{answer.status,jdbcType=INTEGER}
     </if>
     <if test="answer.studentName != null and answer.studentName != ''">
-      AND (tu.full_name LIKE concat('%',#{answer.studentName,jdbcType=VARCHAR},'%') OR (tu.username
-      LIKE concat('%',#{param1.studentName,jdbcType=VARCHAR},'%')))
+      AND ((tu.full_name LIKE concat('%',#{answer.studentName,jdbcType=VARCHAR},'%') OR (tu.username
+      LIKE concat('%',#{param1.studentName,jdbcType=VARCHAR},'%'))))
     </if>
     GROUP BY ta.answer_id,ta.student_id
   </select>
