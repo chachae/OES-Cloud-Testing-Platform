@@ -35,3 +35,41 @@ OES-Cloud 是一个基于分布式微服务架构的高性能高校在线考试�
     <td align="center" style="background: #fff"><img src="images/oes-cloud-framework-1.png"/></td>
   </tr>
 </table>
+
+### 项目地址
+
+ 平台  | 地址
+---|---
+服务端 | [https://github.com/chachae/oes-cloud](https://github.com/chachae/oes-cloud)
+PC端 | [https://github.com/chachae/oes-web](https://github.com/chachae/oes-web)
+小程序 | [https://github.com/chachae/oes-cloud-weapp](https://github.com/chachae/oes-cloud-weapp)
+
+### 服务模块
+
+OES-Cloud模块：
+
+服务名称 | 端口 | 描述
+---|---|---
+OES-AI| 9700| 图像识别与生物检测系统
+OES-Auth| 9200| 微服务认证服务器 
+OES-Server-System| 9500 | 微服务子系统，系统核心模块
+OES-Server-Exam-Basic| 9502 | 微服务子系统，系在线考试基础能力模块
+OES-Server-Exam-Online| 9503 | 微服务子系统，在线考试模块
+OES-Server-Demo|9501 | 微服务子系统，演示模块
+OES-Server-Job|9504 | 微服务子系统，任务调度模块
+OES-Gateway|8301|微服务网关
+OES-Admin|8400|微服务监控子系统
+OES-Tx-Manager|8501|微服务分布式事务控制系统
+
+
+第三方模块：
+
+服务名称 | 端口 | 描述
+---|---|---
+NACOS| 8300 |注册中心与配置中心 
+MySQL| 3306 |MySQL 数据库 
+Redis| 6379 | K-V 缓存数据库 
+Elasticsearch|9200 | 日志存储
+Logstash|4560|日志收集
+Kibana|5601|日志展示
+Prometheus|8403~8409|Prometheus APM

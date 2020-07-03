@@ -52,4 +52,9 @@ public class QueryScoreDto extends QueryParam {
    */
   private String paperName;
 
+  /**
+   * 试卷类型
+   */
+  private Integer paperType;
+
 }

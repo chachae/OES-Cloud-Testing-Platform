@@ -11,6 +11,7 @@ import com.oes.server.exam.basic.service.IPaperService;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,9 +45,10 @@ public class PaperController {
     return R.ok(PageUtil.toPage(result));
   }
 
-  @GetMapping("one")
-  public R<Paper> getOne(Long paperId) {
-    Paper result = paperService.getByPaperId(paperId);
+  @GetMapping("{paperId}")
+  public R<Paper> getOne(@PathVariable("paperId") Long paperId,
+      @NotNull(message = "{required}") Long studentId) {
+    Paper result = paperService.getPaper(paperId, studentId);
     return R.ok(result);
   }
 

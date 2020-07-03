@@ -9,10 +9,12 @@ import com.oes.server.exam.online.service.IPaperService;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,13 +33,23 @@ public class ExamController {
   private final IPaperService paperService;
   private final IScoreService scoreService;
 
-  @GetMapping("one")
-  public R<List<Map<String, Object>>> getExam(Score score) {
-    Score res = scoreService.getScore(score.getStudentId(), score.getPaperId());
+  /**
+   * <pre>
+   *   How to curl cur api
+   *   for example:exam/one/11?studentId=1
+   * </pre>
+   */
+  @GetMapping("one/{paperId}")
+  public R<List<Map<String, Object>>> getExam(@PathVariable Long paperId,
+      @NotNull(message = "{required}") Long studentId) {
+    Score res = scoreService.getScore(studentId, paperId);
     if (res == null) {
+      Score score = new Score();
+      score.setStudentId(studentId);
+      score.setPaperId(paperId);
       scoreService.createScore(score);
     }
-    return R.ok(paperService.getByPaperId(score.getPaperId()));
+    return R.ok(paperService.getByPaperIdAndStudentId(paperId, studentId));
   }
 
   @GetMapping("normal")

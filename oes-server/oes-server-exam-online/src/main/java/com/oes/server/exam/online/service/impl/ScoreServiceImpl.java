@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
+import com.oes.common.core.util.SortUtil;
 import com.oes.server.exam.online.mapper.ScoreMapper;
 import com.oes.server.exam.online.service.IAnswerService;
 import com.oes.server.exam.online.service.IScoreService;
@@ -35,7 +37,10 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     if (score.getStudentId() == null) {
       score.setStudentId(SecurityUtil.getCurrentUser().getUserId());
     }
-    return baseMapper.pageScore(score, new Page<>(score.getPageNum(), score.getPageSize()));
+    Page<Score> page = new Page<>(score.getPageNum(), score.getPageSize());
+    // 根据学期降序排序
+    SortUtil.handlePageSort(score, page, "termId", SystemConstant.ORDER_DESC, true);
+    return baseMapper.pageScore(score, page);
   }
 
   @Override

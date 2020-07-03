@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
+import java.util.List;
 
 /**
  * @author chachae
@@ -31,16 +32,25 @@ public interface IAnswerService extends IService<Answer> {
   Answer getAnswer(Long studentId, Long paperId, Long questionId);
 
   /**
+   * 获取学生答题数据
+   *
+   * @param studentId 学生编号
+   * @param paperId   试卷编号
+   * @return {@link Answer} 信息
+   */
+  List<Answer> getAnswer(Long studentId, Long paperId);
+
+  /**
    * 删除学生答案数据
    * <p>
    * 1. 数据全部传入：删除该学生该门考试的答案 2. 只传 studentId：删除该名学生的全部答案数据，适用于删除学生信息 3. 只传
    * paperId：删除某门试卷的答案信息，适用于删除试卷信息
    * </p>
    *
-   * @param userId  学生编号
-   * @param paperId 试卷编号
+   * @param studentId 学生编号
+   * @param paperId   试卷编号
    */
-  void deleteAnswer(Long userId, Long paperId);
+  void deleteAnswer(Long studentId, Long paperId);
 
   /**
    * 更新学生答案数据

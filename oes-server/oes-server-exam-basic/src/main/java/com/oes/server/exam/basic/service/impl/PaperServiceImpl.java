@@ -1,5 +1,6 @@
 package com.oes.server.exam.basic.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,18 +19,20 @@ import com.oes.common.core.exam.util.PaperUtil;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.exam.basic.cache.PaperCacheService;
 import com.oes.server.exam.basic.mapper.PaperMapper;
+import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IPaperDeptService;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import com.oes.server.exam.basic.service.IPaperService;
 import com.oes.server.exam.basic.service.IPaperTypeService;
 import com.oes.server.exam.basic.service.IQuestionService;
-import com.oes.server.exam.basic.service.IScoreService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
 
-  private final IScoreService scoreService;
+  private final ScoreMapper scoreMapper;
   private final IAnswerService answerService;
   private final IQuestionService questionService;
   private final IPaperTypeService paperTypeService;
@@ -64,24 +67,41 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public Paper getByPaperId(Long paperId) {
+  public Paper getPaper(Long paperId, Long studentId) {
     // 从缓存中取出试卷
+    boolean hasCache = true;
     Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
     if (paper == null) {
+      hasCache = false;
       paper = baseMapper.selectByPaperId(paperId);
     }
     // 题目顺序随机
     Collections.shuffle(paper.getPaperQuestionList());
-    for (PaperQuestion obj : paper.getPaperQuestionList()) {
-      Answer answer = answerService.getAnswer(null, paperId, obj.getQuestionId());
-      obj.setAnswerId(answer.getAnswerId());
-      obj.setAnswerContent(answer.getAnswerContent());
-      obj.setAnalysis(null);
-      obj.setRightKey(null);
+
+    // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力
+    List<Answer> answers = answerService.getAnswer(studentId, paperId);
+    Map<Long, Answer> answerMap = new HashMap<>(answers.size());
+    if (CollUtil.isNotEmpty(answers)) {
+      answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
     }
+
+    for (PaperQuestion paperQuestion : paper.getPaperQuestionList()) {
+      // 判断 Map 存在元素情况，为空说明没有答题记录直接略过 set 操作
+      if (!answerMap.isEmpty()) {
+        Answer answer = answerMap.get(paperQuestion.getQuestionId());
+        if (answer != null) {
+          paperQuestion.setAnswerId(answer.getAnswerId());
+          paperQuestion.setAnswerContent(answer.getAnswerContent());
+        }
+      }
+    }
+
+    // 试卷题型分类
     PaperUtil.groupQuestions(paper);
-    // 缓存试卷
-    paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
+    if (!hasCache) {
+      // 缓存试卷
+      paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
+    }
     paper.setPaperQuestionList(null);
     return paper;
   }
@@ -176,6 +196,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     // 已指派班级 / 存在成绩数据：false，其余情况允许删除
     return paperDeptService
         .count(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, paperIdList)) == 0 ||
-        scoreService.count(new LambdaQueryWrapper<Score>().in(Score::getPaperId, paperIdList)) == 0;
+        scoreMapper.selectCount(new LambdaQueryWrapper<Score>().in(Score::getPaperId, paperIdList))
+            == 0;
   }
 }

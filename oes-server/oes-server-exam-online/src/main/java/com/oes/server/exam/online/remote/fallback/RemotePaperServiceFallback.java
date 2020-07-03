@@ -17,7 +17,7 @@ public class RemotePaperServiceFallback implements FallbackFactory<IRemotePaperS
 
   @Override
   public IRemotePaperService create(Throwable throwable) {
-    return paperId -> {
+    return (paperId, studentId) -> {
       log.error("远程调用失败", throwable);
       return null;
     };

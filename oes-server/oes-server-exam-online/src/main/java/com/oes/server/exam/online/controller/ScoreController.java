@@ -1,7 +1,12 @@
 package com.oes.server.exam.online.controller;
 
+import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryScoreDto;
+import com.oes.common.core.util.PageUtil;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.service.IScoreService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +33,12 @@ public class ScoreController {
   public Boolean checkScore(Score score) {
     Integer status = scoreService.getScore(null, score.getPaperId()).getStatus();
     return status != null && status == 0;
+  }
+
+  @GetMapping
+  public R<Map<String, Object>> pageScore(QueryScoreDto score) {
+    score.setStudentId(SecurityUtil.getCurrentUser().getUserId());
+    return R.ok(PageUtil.toPage(scoreService.getScore(score)));
   }
 
   @PostMapping

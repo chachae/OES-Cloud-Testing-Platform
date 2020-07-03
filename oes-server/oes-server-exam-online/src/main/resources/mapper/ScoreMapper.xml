@@ -49,14 +49,20 @@
     resultMap="baseMap"
   >
     <include refid="baseSql"/>
+    # 默认成绩状态恒等有效，无效成绩不予显示
+    AND ts.status = 1
+    <if test="score.paperName != null and score.paperName != ''">
+      AND tp.paper_name LIKE CONCAT('%',#{score.paperName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="score.paperType != null">
+      AND tp.type = #{score.paperType,jdbcType=INTEGER}
+    </if>
     <if test="score.studentId != null">
-      AND ts.student_id = #{param1.studentId,jdbcType=BIGINT}
+      AND ts.student_id = #{score.studentId,jdbcType=BIGINT}
     </if>
     <if test="score.termId != null">
       AND tt.term_id = #{score.termId,jdbcType=BIGINT}
     </if>
-    # 默认成绩状态恒等有效，无效成绩不予显示
-    AND ts.status = 1
   </select>
 
 </mapper>

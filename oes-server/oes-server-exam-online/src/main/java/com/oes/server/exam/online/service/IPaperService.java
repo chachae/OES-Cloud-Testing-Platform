@@ -33,10 +33,11 @@ public interface IPaperService extends IService<Paper> {
   IPage<Paper> getImitatePaper(QueryParam param, Paper paper);
 
   /**
-   * 获取某张试卷的信息
+   * 获取某个同学某张试卷的信息
    *
-   * @param paperId 试卷编号
-   * @return {@link List<Map<String,Object>>} 试卷信息集合
+   * @param studentId 学生编号
+   * @param paperId   试卷编号
+   * @return {@link List<Map>} 试卷信息集合
    */
-  List<Map<String, Object>> getByPaperId(Long paperId);
+  List<Map<String, Object>> getByPaperIdAndStudentId(Long studentId, Long paperId);
 }

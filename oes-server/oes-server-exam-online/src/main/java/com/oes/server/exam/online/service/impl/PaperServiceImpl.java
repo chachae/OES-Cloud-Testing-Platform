@@ -44,8 +44,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public List<Map<String, Object>> getByPaperId(Long paperId) {
-    R<Paper> res = remotePaperService.getOne(paperId);
+  public List<Map<String, Object>> getByPaperIdAndStudentId(Long paperId, Long studentId) {
+    R<Paper> res = remotePaperService.getOne(paperId, studentId);
     if (res.getData() == null) {
       throw new ApiException("获取试卷失败");
     }

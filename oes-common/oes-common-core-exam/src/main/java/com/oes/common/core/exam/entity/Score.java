@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 成绩表实体类
@@ -16,6 +17,7 @@ import lombok.Data;
  * @since 2020-06-03 16:43:16
  */
 @Data
+@NoArgsConstructor
 @TableName("t_score")
 public class Score implements Serializable {
 

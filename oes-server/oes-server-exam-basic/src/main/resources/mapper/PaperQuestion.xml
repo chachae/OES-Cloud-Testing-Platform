@@ -35,8 +35,30 @@
     where 1 = 1
   </sql>
 
+  <sql id="baseSql2">
+    select tpq.paper_id,
+           tpq.question_id,
+           tq.question_id,
+           question_name,
+           tq.option_a,
+           tq.option_b,
+           tq.option_c,
+           tq.option_d,
+           tq.option_e,
+           tq.option_f,
+           tq.type_id
+    from t_paper_question tpq
+           left join t_question tq on tpq.question_id = tq.question_id
+    where 1 = 1
+  </sql>
+
   <select id="selectListByPaperId" parameterType="long" resultMap="baseMap">
     <include refid="baseSql"/>
+    and tpq.paper_id = #{paperId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectBaseListByPaperId" parameterType="long" resultMap="baseMap">
+    <include refid="baseSql2"/>
     and tpq.paper_id = #{paperId,jdbcType=BIGINT}
   </select>
 

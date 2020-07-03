@@ -23,10 +23,11 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 通过试卷编号获取试卷信息
    *
-   * @param paperId 试卷编号
+   * @param paperId   试卷编号
+   * @param studentId 用户编号
    * @return {@link Paper} 试卷数据
    */
-  Paper getByPaperId(Long paperId);
+  Paper getPaper(Long paperId, Long studentId);
 
 
   /**

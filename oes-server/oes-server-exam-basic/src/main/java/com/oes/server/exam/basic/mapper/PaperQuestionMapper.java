@@ -19,4 +19,11 @@ public interface PaperQuestionMapper extends BaseMapper<PaperQuestion> {
    */
   List<PaperQuestion> selectListByPaperId(@Param("paperId") Long paperId);
 
+  /**
+   * 通过试卷编号查询试题集合（移除题目分析和正确答案等信息）
+   *
+   * @param paperId 试卷编号
+   * @return {@link List<PaperQuestion>} 试题集合
+   */
+  List<PaperQuestion> selectBaseListByPaperId(@Param("paperId") Long paperId);
 }
