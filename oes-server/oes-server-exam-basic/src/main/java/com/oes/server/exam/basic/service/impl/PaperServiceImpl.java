@@ -85,9 +85,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
     }
 
-    for (PaperQuestion paperQuestion : paper.getPaperQuestionList()) {
-      // 判断 Map 存在元素情况，为空说明没有答题记录直接略过 set 操作
-      if (!answerMap.isEmpty()) {
+    // 判断 Map 存在元素情况，为空说明没有答题记录直接略过 set 操作
+    if (!answerMap.isEmpty()) {
+      for (PaperQuestion paperQuestion : paper.getPaperQuestionList()) {
         Answer answer = answerMap.get(paperQuestion.getQuestionId());
         if (answer != null) {
           paperQuestion.setAnswerId(answer.getAnswerId());

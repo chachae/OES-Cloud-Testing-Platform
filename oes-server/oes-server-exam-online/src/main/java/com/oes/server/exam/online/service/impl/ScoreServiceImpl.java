@@ -39,7 +39,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     }
     Page<Score> page = new Page<>(score.getPageNum(), score.getPageSize());
     // 根据学期降序排序
-    SortUtil.handlePageSort(score, page, "termId", SystemConstant.ORDER_DESC, true);
+    SortUtil.handlePageSort(score, page, "tt.term_id", SystemConstant.ORDER_DESC, false);
     return baseMapper.pageScore(score, page);
   }
 

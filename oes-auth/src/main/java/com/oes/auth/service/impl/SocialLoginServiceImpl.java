@@ -122,7 +122,7 @@ public class SocialLoginServiceImpl implements ISocialLoginService {
     }
     String encryptPassword = passwordEncoder.encode(registerUser.getBindPassword());
     SystemUser systemUser = this.userManager
-        .registUser(registerUser.getBindUsername(), encryptPassword);
+        .registerUser(registerUser.getBindUsername(), encryptPassword);
     this.createConnection(systemUser, authUser);
     return this.getOauth2AccessToken(systemUser);
   }

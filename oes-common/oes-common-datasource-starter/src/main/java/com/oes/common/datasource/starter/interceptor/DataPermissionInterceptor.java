@@ -3,8 +3,8 @@ package com.oes.common.datasource.starter.interceptor;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
+import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.auth.CurrentUser;
-import com.oes.common.core.entity.system.SystemUser;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.datasource.starter.announcation.DataPermission;
 import java.io.StringReader;
@@ -86,7 +86,8 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
       }
 
       List<String> curRoles = StrUtil.split(user.getRoleId(), StrUtil.C_COMMA);
-      if (!dataPermission.filterAdmin() && curRoles.contains(SystemUser.ADMIN_ROLE_ID)) {
+      if (!dataPermission.filterAdmin() && curRoles
+          .contains(String.valueOf(SystemConstant.SYS_ADMIN_ROLE_ID))) {
         return originSql;
       }
 

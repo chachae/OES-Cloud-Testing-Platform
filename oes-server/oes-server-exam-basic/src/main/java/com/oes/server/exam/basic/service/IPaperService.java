@@ -21,7 +21,7 @@ public interface IPaperService extends IService<Paper> {
   IPage<Paper> pagePaper(QueryPaperDto paper);
 
   /**
-   * 通过试卷编号获取试卷信息
+   * 通过试卷编号和学生编号获取试卷信息
    *
    * @param paperId   试卷编号
    * @param studentId 用户编号

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 个人成绩查询
+ *
  * @author chachae
  * @version v1.0
  * @date 2020/6/24 17:49

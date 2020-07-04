@@ -23,7 +23,6 @@ public interface SystemConstant {
    */
   String OAUTH2_TOKEN_TYPE = "bearer";
 
-
   /**
    * 验证码 key前缀
    */
@@ -56,9 +55,19 @@ public interface SystemConstant {
   String JAVA_TEMP_DIR = "java.io.tmpdir";
 
   /**
+   * 系统管理员角色ID
+   */
+  Long SYS_ADMIN_ROLE_ID = 1L;
+
+  /**
+   * 学院管理员角色ID
+   */
+  Long COLLEGE_ADMIN_ROLE_ID = 2L;
+
+  /**
    * 注册用户角色ID
    */
-  Long REGISTER_ROLE_ID = 2L;
+  Long REGISTER_ROLE_ID = 3L;
 
   String LOCALHOST = "localhost";
 
