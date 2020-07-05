@@ -44,6 +44,19 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  public List<Answer> getWarnAnswer(Long studentId, Long paperId) {
+    if (studentId == null) {
+      studentId = SecurityUtil.getCurrentUser().getUserId();
+    }
+    LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
+    wrapper
+        .eq(Answer::getStudentId, studentId)
+        .eq(Answer::getPaperId, paperId)
+        .eq(Answer::getWarn, Answer.IS_WARN);
+    return baseMapper.selectList(wrapper);
+  }
+
+  @Override
   @Transactional(rollbackFor = Exception.class)
   public Long updateAnswer(Answer answer) {
     // 处理多选题

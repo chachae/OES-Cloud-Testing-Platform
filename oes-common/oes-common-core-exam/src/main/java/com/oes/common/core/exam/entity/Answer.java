@@ -24,6 +24,10 @@ public class Answer implements Serializable {
 
   public static final Integer STATUS_NOT_CORRECT = 0;
 
+  public static final Integer IS_RIGHT = 1;
+
+  public static final Integer IS_WARN = 0;
+
   /**
    * 学生答题主键（id）
    */
@@ -61,6 +65,11 @@ public class Answer implements Serializable {
    * 答案状态（1：批改，0：未批改）
    */
   private Integer status;
+
+  /**
+   * 是否正确（1：回答正确，0：回答错误）
+   */
+  private Integer warn;
   /**
    * 试卷名称
    */

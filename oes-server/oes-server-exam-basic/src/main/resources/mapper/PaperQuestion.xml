@@ -8,12 +8,8 @@
     <result column="question_id" property="questionId"/>
     <result column="question_name" property="questionName"/>
     <result column="type_id" property="typeId"/>
-    <result column="option_a" property="optionA"/>
-    <result column="option_b" property="optionB"/>
-    <result column="option_c" property="optionC"/>
-    <result column="option_d" property="optionD"/>
-    <result column="option_e" property="optionE"/>
-    <result column="option_f" property="optionF"/>
+    <result column="options" property="optionList" jdbcType="VARCHAR" javaType="arraylist"
+      typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
   </resultMap>
 
   <sql id="baseSql">
@@ -21,12 +17,7 @@
            tpq.question_id,
            tq.question_id,
            question_name,
-           tq.option_a,
-           tq.option_b,
-           tq.option_c,
-           tq.option_d,
-           tq.option_e,
-           tq.option_f,
+           tq.options,
            tq.type_id,
            tq.analysis,
            tq.right_key
@@ -39,13 +30,8 @@
     select tpq.paper_id,
            tpq.question_id,
            tq.question_id,
-           question_name,
-           tq.option_a,
-           tq.option_b,
-           tq.option_c,
-           tq.option_d,
-           tq.option_e,
-           tq.option_f,
+           tq.question_name,
+           tq.options,
            tq.type_id
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id

@@ -69,11 +69,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Override
   public Paper getPaper(Long paperId, Long studentId) {
     // 从缓存中取出试卷
-    boolean hasCache = true;
     Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
     if (paper == null) {
-      hasCache = false;
       paper = baseMapper.selectByPaperId(paperId);
+      // 缓存试卷
+      paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
     }
     // 题目顺序随机
     Collections.shuffle(paper.getPaperQuestionList());
@@ -98,11 +98,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     // 试卷题型分类
     PaperUtil.groupQuestions(paper);
-    if (!hasCache) {
-      // 缓存试卷
-      paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
-    }
-    paper.setPaperQuestionList(null);
     return paper;
   }
 

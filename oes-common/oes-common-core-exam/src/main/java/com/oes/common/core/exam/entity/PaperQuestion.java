@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -49,36 +51,11 @@ public class PaperQuestion implements Serializable {
    */
   @TableField(exist = false)
   private Long typeId;
-  /**
-   * 选项A
-   */
+
+  @JsonProperty("options")
   @TableField(exist = false)
-  private String optionA;
-  /**
-   * 选项B
-   */
-  @TableField(exist = false)
-  private String optionB;
-  /**
-   * 选项C
-   */
-  @TableField(exist = false)
-  private String optionC;
-  /**
-   * 选项D
-   */
-  @TableField(exist = false)
-  private String optionD;
-  /**
-   * 选项E
-   */
-  @TableField(exist = false)
-  private String optionE;
-  /**
-   * 选项F
-   */
-  @TableField(exist = false)
-  private String optionF;
+  private List<String> optionList;
+
   /**
    * 正确答案
    */

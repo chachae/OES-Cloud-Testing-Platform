@@ -41,6 +41,7 @@ public class PaperUtil {
       questionMap.put(Paper.QUESTION_KEY, objs);
       result.add(questionMap);
     }
+    paper.setPaperQuestionList(null);
     paper.setPaperQuestions(result);
   }
 

@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -35,6 +37,34 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
   private final IQuestionService questionService;
+
+  @PostMapping("make")
+  @ResponseStatus(HttpStatus.BAD_GATEWAY)
+  public void make(Question question) {
+//
+//    List<Question> list = questionService.getList(new Question());
+//    for (Question question : list) {
+//
+//      List<String> options = new ArrayList<>();
+//
+//      if (question.getTypeId() == 1 || question.getTypeId() == 2) {
+//        options.add(question.getOptionA());
+//        options.add(question.getOptionB());
+//        options.add(question.getOptionC());
+//        options.add(question.getOptionD());
+//        if (question.getTypeId() == 2) {
+//          if (StrUtil.isNotBlank(question.getOptionE())) {
+//            options.add(question.getOptionE());
+//          }
+//          if (StrUtil.isNotBlank(question.getOptionF())) {
+//            options.add(question.getOptionF());
+//          }
+//        }
+//        question.setOptions(JSON.toJSONString(options));
+//        this.questionService.updateQuestion(question);
+//      }
+//    }
+  }
 
   @GetMapping
   @PreAuthorize("hasAuthority('question:view')")

@@ -1,6 +1,7 @@
 package com.oes.common.core.exam.entity.query;
 
 import com.oes.common.core.entity.QueryParam;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -8,6 +9,7 @@ import lombok.EqualsAndHashCode;
  * @version v1.0
  * @date 2020/6/26 17:53
  */
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class QueryQuestionDto extends QueryParam {
 
@@ -24,7 +26,7 @@ public class QueryQuestionDto extends QueryParam {
   private Long courseId;
 
   /**
-   * 学期
+   * 类型
    */
   private Long typeId;
 }

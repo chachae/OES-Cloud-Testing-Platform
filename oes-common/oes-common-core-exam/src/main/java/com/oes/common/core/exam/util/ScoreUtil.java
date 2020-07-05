@@ -34,6 +34,8 @@ public class ScoreUtil {
    * @param paperQuestion 当前题目的答案信息
    */
   public static void mark(Answer answer, PaperQuestion paperQuestion) {
+    // 默认全部错误，具体的评分方法再进行"是否为错题"设置
+    answer.setWarn(Answer.IS_WARN);
     if (Type.DEFAULT_TYPE_ID_ARRAY[0].equals(String.valueOf(answer.getTypeId()))) {
       // 单项选择题
       markChoice(answer, paperQuestion);
@@ -76,6 +78,7 @@ public class ScoreUtil {
     }
     for (String rk : paperQuestion.getRightKey().split(StrUtil.COMMA)) {
       if (rk.equals(answer.getAnswerContent())) {
+        answer.setWarn(Answer.IS_RIGHT);
         answer.setScore(paperQuestion.getScore());
         return;
       }
@@ -98,6 +101,7 @@ public class ScoreUtil {
     }
 
     if (answer.getAnswerContent().equals(paperQuestion.getRightKey())) {
+      answer.setWarn(Answer.IS_RIGHT);
       answer.setScore(paperQuestion.getScore());
       return;
     }
@@ -130,6 +134,7 @@ public class ScoreUtil {
     if (!rightKeys.contains(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
     } else {
+      answer.setWarn(Answer.IS_RIGHT);
       answer.setScore(paperQuestion.getScore());
     }
   }
@@ -155,7 +160,11 @@ public class ScoreUtil {
     if (answer.getAnswerContent().length() < paperQuestion.getRightKey().length() / 1.1) {
       calScore = calScore >= 2.50d ? calScore * 0.70 : calScore * 0.75;
     }
-    answer.setScore((int) calScore);
+    int endScore = (int) calScore;
+    answer.setScore(endScore);
+    if (endScore == paperQuestion.getScore()) {
+      answer.setWarn(Answer.IS_RIGHT);
+    }
   }
 
   /**

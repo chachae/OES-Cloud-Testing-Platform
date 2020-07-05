@@ -20,6 +20,15 @@ public interface IAnswerService extends IService<Answer> {
   List<Answer> getAnswer(Long studentId, Long paperId);
 
   /**
+   * 获取学生错题集
+   *
+   * @param studentId 学生编号
+   * @param paperId   试卷编号
+   * @return {@link List<Answer>} 错题信息
+   */
+  List<Answer> getWarnAnswer(Long studentId, Long paperId);
+
+  /**
    * 更新答案
    *
    * @param answer 答案

@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -46,34 +49,23 @@ public class Question implements Serializable {
    * 题目图片
    */
   private String questionImage;
+
   /**
-   * 选项A
+   * 选项
    */
-  private String optionA;
-  /**
-   * 选项B
-   */
-  private String optionB;
-  /**
-   * 选项C
-   */
-  private String optionC;
-  /**
-   * 选项D
-   */
-  private String optionD;
-  /**
-   * 选项E
-   */
-  private String optionE;
-  /**
-   * 选项F
-   */
-  private String optionF;
+  @JsonProperty("options")
+  @TableField("options")
+  private List<String> optionList;
+
+  @JsonIgnore
+  @TableField(exist = false)
+  private String options;
+
   /**
    * 正确答案
    */
   private String rightKey;
+
   /**
    * 试题解析
    */
