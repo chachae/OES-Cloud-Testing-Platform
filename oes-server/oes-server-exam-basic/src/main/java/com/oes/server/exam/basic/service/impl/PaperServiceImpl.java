@@ -15,7 +15,7 @@ import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
-import com.oes.common.core.exam.util.PaperUtil;
+import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exception.ApiException;
 import com.oes.server.exam.basic.cache.PaperCacheService;
 import com.oes.server.exam.basic.mapper.PaperMapper;
@@ -61,7 +61,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     IPage<Paper> result = baseMapper.pagePaper(page, paper);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
-      result.getRecords().forEach(PaperUtil::groupQuestions);
+      result.getRecords().forEach(GroupUtil::groupQuestions);
     }
     return result;
   }
@@ -97,7 +97,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     // 试卷题型分类
-    PaperUtil.groupQuestions(paper);
+    GroupUtil.groupQuestions(paper);
     return paper;
   }
 

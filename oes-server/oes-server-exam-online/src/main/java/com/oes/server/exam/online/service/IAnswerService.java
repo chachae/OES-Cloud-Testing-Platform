@@ -2,7 +2,9 @@ package com.oes.server.exam.online.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chachae
@@ -22,11 +24,10 @@ public interface IAnswerService extends IService<Answer> {
   /**
    * 获取学生错题集
    *
-   * @param studentId 学生编号
-   * @param paperId   试卷编号
+   * @param answer 查询条件
    * @return {@link List<Answer>} 错题信息
    */
-  List<Answer> getWarnAnswer(Long studentId, Long paperId);
+  List<Map<String, Object>> getWarnAnswer(QueryAnswerDto answer);
 
   /**
    * 更新答案

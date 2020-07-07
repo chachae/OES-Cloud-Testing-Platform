@@ -2,10 +2,11 @@ package com.oes.server.exam.online.controller;
 
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.server.exam.online.service.IAnswerService;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -35,9 +36,10 @@ public class AnswerController {
    * @return {@link R<List>} 错题集
    */
   @GetMapping("warn/{paperId}")
-  public R<List<Answer>> getWarningAnswer(@PathVariable Long paperId,
-      @NotNull(message = "{required}") Long studentId) {
-    return R.ok(answerService.getWarnAnswer(paperId, studentId));
+  public R<List<Map<String, Object>>> getWarningAnswer(@PathVariable Long paperId,
+      QueryAnswerDto answer) {
+    answer.setPaperId(paperId);
+    return R.ok(answerService.getWarnAnswer(answer));
   }
 
   @PutMapping

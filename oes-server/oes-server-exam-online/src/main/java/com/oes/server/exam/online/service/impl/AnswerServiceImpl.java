@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.query.QueryAnswerDto;
+import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.AnswerMapper;
@@ -44,16 +46,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
-  public List<Answer> getWarnAnswer(Long studentId, Long paperId) {
-    if (studentId == null) {
-      studentId = SecurityUtil.getCurrentUser().getUserId();
+  public List<Map<String, Object>> getWarnAnswer(QueryAnswerDto answer) {
+    if (answer.getStudentId() == null) {
+      answer.setStudentId(SecurityUtil.getCurrentUser().getUserId());
     }
-    LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-    wrapper
-        .eq(Answer::getStudentId, studentId)
-        .eq(Answer::getPaperId, paperId)
-        .eq(Answer::getWarn, Answer.IS_WARN);
-    return baseMapper.selectList(wrapper);
+    answer.setWarn(Answer.IS_WARN);
+    List<Answer> answers = baseMapper.getWarnAnswer(answer);
+    return !answers.isEmpty() ? GroupUtil.groupQuestion(answers) : null;
   }
 
   @Override

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -86,10 +87,20 @@ public class Answer implements Serializable {
   @TableField(exist = false)
   private Integer typeId;
   /**
+   * 选项
+   */
+  @TableField(exist = false)
+  private List<String> options;
+  /**
    * 正确答案
    */
   @TableField(exist = false)
   private String rightKey;
+  /**
+   * 解析
+   */
+  @TableField(exist = false)
+  private String analysis;
   /**
    * 学生姓名
    */
