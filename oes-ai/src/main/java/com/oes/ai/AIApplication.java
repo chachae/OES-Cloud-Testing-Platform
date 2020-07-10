@@ -1,6 +1,7 @@
 package com.oes.ai;
 
 import com.oes.common.security.starter.annotation.EnableOesCloudResourceServer;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableOesCloudResourceServer
+@MapperScan("com.oes.ai.mapper")
 public class AIApplication {
 
   public static void main(String[] args) {

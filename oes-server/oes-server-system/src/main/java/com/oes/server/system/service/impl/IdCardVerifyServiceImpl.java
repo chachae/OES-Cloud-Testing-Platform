@@ -57,6 +57,8 @@ public class IdCardVerifyServiceImpl extends
     }
     idCardVerify.setUserId(curUser.getUserId());
     idCardVerify.setCreateTime(new Date());
+    // 去除 base64 图片头信息
+    idCardVerify.setPhoto(idCardVerify.getPhoto().substring(22));
     baseMapper.insert(idCardVerify);
   }
 
