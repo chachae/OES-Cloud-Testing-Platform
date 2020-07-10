@@ -7,6 +7,7 @@ import com.oes.oss.qiniu.entity.QiNiuConfig;
 import com.oes.oss.qiniu.entity.QiNiuContent;
 import com.oes.oss.qiniu.entity.query.QiNiuQueryDto;
 import java.util.List;
+import java.util.Map;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -98,4 +99,17 @@ public interface IQiNiuContentService extends IService<QiNiuContent> {
    * @param config 配置
    */
   void deleteAll(String[] ids, QiNiuConfig config);
+
+  /**
+   * 统计排名前10的文件类型及数量
+   *
+   * <pre>
+   *   返回的集合内 Map 中的数据解释
+   *   value：当前类型的文件总数
+   *   name：当前文件的类型
+   * </pre>
+   *
+   * @return {@link List <Map>} 查询数据题
+   */
+  List<Map<String, Object>> getTopTenFileTypeData();
 }

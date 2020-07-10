@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -23,5 +25,24 @@ public interface QuestionMapper extends BaseMapper<Question> {
    * @return 分页结果集
    */
   IPage<Question> pageQuestion(Page<Question> page, @Param("question") QueryQuestionDto question);
+
+  /**
+   * 统计各科目题量排名前10的题目情况
+   * <pre>
+   *   返回的集合内 Map 中的数据解释
+   *   value：当前科目题目的总数
+   *   name：当前课程名称
+   * </pre>
+   *
+   * @return {@link List<Map>} 查询数据题
+   */
+  List<Map<String, Object>> selectTopTenQuestionData();
+
+  /**
+   * 统计各型题目的题目数量分布情况
+   *
+   * @return {@link List<Map>} 分布数据
+   */
+  List<Map<String, Object>> countDistributeGroupByType();
 
 }

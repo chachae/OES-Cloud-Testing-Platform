@@ -102,6 +102,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
+  public List<Map<String, Object>> getTopTenPaperData() {
+    return baseMapper.selectTopTenPaper();
+  }
+
+  @Override
   @Transactional(rollbackFor = Exception.class)
   public void updatePaper(Paper paper) {
     paper.setUpdateTime(new Date());

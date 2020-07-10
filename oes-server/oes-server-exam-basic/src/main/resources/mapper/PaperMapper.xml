@@ -127,4 +127,14 @@
     AND tp.paper_id = #{paperId,jdbcType=BIGINT}
   </select>
 
+  <select id="selectTopTenPaper" resultType="map">
+    select count(*)       value,
+           tc.course_name name
+    from t_paper tp
+           left join t_course tc on (tp.course_id = tc.course_id)
+    group by tp.course_id
+    order by tp.course_id
+    limit 0, 10
+  </select>
+
 </mapper>

@@ -7,6 +7,7 @@ import com.oes.oss.qiniu.entity.QiNiuContent;
 import com.oes.oss.qiniu.entity.query.QiNiuQueryDto;
 import com.oes.oss.qiniu.service.IQiNiuConfigService;
 import com.oes.oss.qiniu.service.IQiNiuContentService;
+import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +69,10 @@ public class QiNiuContentController {
   public void delete(@PathVariable @NotBlank(message = "{required}") String ids) {
     String[] idArray = ids.split(StrUtil.COMMA);
     qiNiuContentService.delete(idArray, qiNiuConfigService.getConfig());
+  }
+
+  @GetMapping("top10")
+  public R<List<Map<String, Object>>> countTopTenTypeFiles() {
+    return R.ok(qiNiuContentService.getTopTenFileTypeData());
   }
 }

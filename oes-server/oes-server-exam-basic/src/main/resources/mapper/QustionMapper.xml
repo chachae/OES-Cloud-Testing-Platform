@@ -64,4 +64,23 @@
     </if>
   </select>
 
+  <select id="selectTopTenQuestionData" resultType="map">
+    select count(*)       value,
+           tc.course_name name
+    from t_question tq
+           left join t_course tc on (tq.course_id = tc.course_id)
+    group by tq.course_id
+    order by value desc
+    limit 0, 10
+  </select>
+
+  <select id="countDistributeGroupByType" resultType="map">
+    select count(*)     value,
+           tt.type_name name
+    from t_question tq
+           left join t_type tt on (tq.type_id = tt.type_id)
+    group by tq.type_id
+    order by tq.type_id
+  </select>
+
 </mapper>

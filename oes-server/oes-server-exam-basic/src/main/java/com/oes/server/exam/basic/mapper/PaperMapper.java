@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.datasource.starter.announcation.DataPermission;
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -32,5 +34,17 @@ public interface PaperMapper extends BaseMapper<Paper> {
    * @return {@link Paper} 试卷数据
    */
   Paper selectByPaperId(@Param("paperId") Long paperId);
+
+  /**
+   * 统计各科目试卷量前十
+   * <pre>
+   *   返回的集合内 Map 中的数据解释
+   *   value：当前试卷量
+   *   name：当前课程名称
+   * </pre>
+   *
+   * @return {@link List<Map>} 查询数据题
+   */
+  List<Map<String, Object>> selectTopTenPaper();
 
 }

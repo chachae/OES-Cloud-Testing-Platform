@@ -22,4 +22,9 @@ public class AnnounceQueryDto extends QueryParam {
    */
   private String creatorName;
 
+  /**
+   * 公告状态
+   */
+  private Integer status;
+
 }

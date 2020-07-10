@@ -26,6 +26,7 @@ import com.qiniu.util.Auth;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -201,11 +202,17 @@ public class QiNiuContentServiceImpl extends
     BucketManager bucketManager = new BucketManager(auth, cfg);
     for (QiNiuContent content : contents) {
       try {
-        bucketManager.delete(content.getBucket(), content.getName() + "." + content.getSuffix());
+        bucketManager
+            .delete(content.getBucket(), content.getName() + StrUtil.DOT + content.getSuffix());
       } catch (QiniuException e) {
         log.error("QiNiuException", e);
         throw new ApiException("七牛云对象存储服务异常");
       }
     }
+  }
+
+  @Override
+  public List<Map<String, Object>> getTopTenFileTypeData() {
+    return baseMapper.listCountTopTenFileTypeData();
   }
 }

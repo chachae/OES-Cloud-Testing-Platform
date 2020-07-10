@@ -18,6 +18,7 @@ import com.oes.server.exam.basic.service.IQuestionService;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -83,6 +84,16 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     sortMulChoiceRightKey(question);
     question.setUpdateTime(new Date());
     baseMapper.updateById(question);
+  }
+
+  @Override
+  public List<Map<String, Object>> getTopTenQuestionData() {
+    return baseMapper.selectTopTenQuestionData();
+  }
+
+  @Override
+  public List<Map<String, Object>> getTypeCountDistribute() {
+    return baseMapper.countDistributeGroupByType();
   }
 
   private void sortMulChoiceRightKey(Question question) {

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author chachae
@@ -29,6 +31,18 @@ public interface IPaperService extends IService<Paper> {
    */
   Paper getPaper(Long paperId, Long studentId);
 
+  /**
+   * 统计各科目题量排名前10的题目情况
+   *
+   * <pre>
+   *   返回的集合内 Map 中的数据解释
+   *   value：当前科目题目的总数
+   *   name：当前课程名称
+   * </pre>
+   *
+   * @return {@link List <Map>} 查询数据题
+   */
+  List<Map<String, Object>> getTopTenPaperData();
 
   /**
    * 更新试卷信息

@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.system.Announce;
 import com.oes.common.core.entity.system.query.AnnounceQueryDto;
+import com.oes.common.core.util.SortUtil;
 import com.oes.server.system.mapper.AnnounceContentMapper;
 import com.oes.server.system.mapper.AnnounceMapper;
 import com.oes.server.system.service.IAnnounceService;
@@ -34,22 +36,16 @@ public class AnnounceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> i
 
   @Override
   public IPage<Announce> pageAnnounce(AnnounceQueryDto announce) {
-    LambdaQueryWrapper<Announce> wrapper = new LambdaQueryWrapper<>();
-    if (StrUtil.isNotBlank(announce.getKey())) {
-      wrapper.like(Announce::getTitle, announce.getKey());
-    }
-    if (StrUtil.isNotBlank(announce.getCreatorName())) {
-      wrapper.like(Announce::getCreatorName, announce.getCreatorName());
-    }
-    return baseMapper
-        .selectPage(new Page<>(announce.getPageNum(), announce.getPageSize()), wrapper);
+    Page<Announce> page = new Page<>(announce.getPageNum(), announce.getPageSize());
+    // 根据时间降序排序
+    SortUtil.handlePageSort(announce, page, "create_time", SystemConstant.ORDER_DESC, false);
+    return baseMapper.selectPage(page, wrapperFilter(new LambdaQueryWrapper<>(), announce));
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void addAnnounce(Announce announce) {
     announce.setCreateTime(new Date());
-    announce.setStatus(Announce.STATUS_ACTIVE);
     baseMapper.insert(announce);
   }
 
@@ -67,5 +63,19 @@ public class AnnounceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> i
     List<Long> contentIds = Lists.transform(announces, Announce::getContentId);
     baseMapper.deleteBatchIds(announceIds);
     announceContentMapper.deleteBatchIds(contentIds);
+  }
+
+  private LambdaQueryWrapper<Announce> wrapperFilter(LambdaQueryWrapper<Announce> wrapper,
+      AnnounceQueryDto announce) {
+    if (announce.getStatus() != null) {
+      wrapper.eq(Announce::getStatus, announce.getStatus());
+    }
+    if (StrUtil.isNotBlank(announce.getKey())) {
+      wrapper.like(Announce::getTitle, announce.getKey());
+    }
+    if (StrUtil.isNotBlank(announce.getCreatorName())) {
+      wrapper.like(Announce::getCreatorName, announce.getCreatorName());
+    }
+    return wrapper;
   }
 }
