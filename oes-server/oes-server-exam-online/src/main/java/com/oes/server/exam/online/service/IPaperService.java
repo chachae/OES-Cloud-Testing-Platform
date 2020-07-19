@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exam.entity.Paper;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author chachae
@@ -37,7 +35,7 @@ public interface IPaperService extends IService<Paper> {
    *
    * @param studentId 学生编号
    * @param paperId   试卷编号
-   * @return {@link List<Map>} 试卷信息集合
+   * @return {@link Paper} 试卷信息集合
    */
-  List<Map<String, Object>> getByPaperIdAndStudentId(Long studentId, Long paperId);
+  Paper getByPaperIdAndStudentId(Long studentId, Long paperId);
 }

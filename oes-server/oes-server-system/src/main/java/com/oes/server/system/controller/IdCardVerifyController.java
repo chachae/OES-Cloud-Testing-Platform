@@ -28,7 +28,7 @@ public class IdCardVerifyController {
 
   private final IIdCardVerifyService iIdCardVerifyService;
 
-  @GetMapping("my")
+  @GetMapping("me")
   public R<IdCardVerify> getMyIdCardVerifyInfo() {
     return R.ok(iIdCardVerifyService.getByUserId(null));
   }
@@ -38,8 +38,13 @@ public class IdCardVerifyController {
     iIdCardVerifyService.createIdCardVerify(idCardVerify);
   }
 
-  @PostMapping("check")
+  @GetMapping("check")
+  public boolean checkVerifyInfo() {
+    return iIdCardVerifyService.getByUserId(null) != null;
+  }
+
+  @PostMapping("auth")
   public boolean checkVerifyInfo(@Valid IdCardVerify idCardVerify) {
-    return iIdCardVerifyService.check(idCardVerify.getName(), idCardVerify.getNum());
+    return iIdCardVerifyService.auth(idCardVerify.getName(), idCardVerify.getNum());
   }
 }

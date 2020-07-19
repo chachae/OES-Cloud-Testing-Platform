@@ -1,5 +1,6 @@
 package com.oes.server.system.service.impl;
 
+import cn.hutool.http.HtmlUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.entity.system.AnnounceContent;
@@ -23,13 +24,18 @@ public class AnnounceContentServiceImpl extends
 
   @Override
   public AnnounceContent getAnnounceContent(Long contentId) {
-    return baseMapper.selectOne(
+    AnnounceContent content = baseMapper.selectOne(
         new LambdaQueryWrapper<AnnounceContent>().eq(AnnounceContent::getContentId, contentId));
+    // 解析 Html 转义内容
+    content.setHtmlContent(HtmlUtil.unescape(content.getHtmlContent()));
+    return content;
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public AnnounceContent addAnnounceContent(AnnounceContent announceContent) {
+    // Html 转义
+    announceContent.setHtmlContent(HtmlUtil.escape(announceContent.getHtmlContent()));
     baseMapper.insert(announceContent);
     return announceContent;
   }
@@ -37,6 +43,8 @@ public class AnnounceContentServiceImpl extends
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateAnnounceContent(AnnounceContent announceContent) {
+    // Html 转义
+    announceContent.setHtmlContent(HtmlUtil.escape(announceContent.getHtmlContent()));
     baseMapper.updateById(announceContent);
   }
 }

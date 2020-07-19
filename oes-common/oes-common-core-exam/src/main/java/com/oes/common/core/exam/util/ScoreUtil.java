@@ -174,34 +174,7 @@ public class ScoreUtil {
    * @return 成绩
    */
   public static String calTimes(Date creteTime) {
-    return calTimes(creteTime, new Date());
-  }
-
-  /**
-   * 计算耗时
-   *
-   * @param startTime 开始时间
-   * @param endTime   结束时间
-   * @return 时间（%s天%s小时%s分%s秒）
-   */
-  public static String calTimes(Date startTime, Date endTime) {
-    long btw = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
-    int msc = (int) btw;
-    int day = msc / 1000 / 60 / 60 / 24;
-    int hr = msc / 1000 / 60 / 60 % 24;
-    int min = msc / 1000 / 60 % 60;
-    int sec = msc / 1000 % 60;
-    if (day != 0) {
-      return String.format("%s天%s小时%s分%s秒", day, hr, min, sec);
-    } else if (hr != 0) {
-      return String.format("%s小时%s分%s秒", hr, min, sec);
-    } else if (min != 0) {
-      return String.format("%s分%s秒", min, sec);
-    } else if (sec != 0) {
-      return String.format("%s秒", sec);
-    } else {
-      return String.format("%s秒", 0);
-    }
+    return DateUtil.calTimes(creteTime, new Date());
   }
 
   /**

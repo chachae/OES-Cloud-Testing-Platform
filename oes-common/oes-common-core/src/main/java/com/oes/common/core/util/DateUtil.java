@@ -64,6 +64,16 @@ public class DateUtil {
   }
 
   /**
+   * 格式化时间，格式为 yyyy-MM-dd HH:mm:ss
+   *
+   * @param date Date
+   * @return 格式化后的字符串
+   */
+  public static synchronized String formatDate(Date date) {
+    return getDateFormat(date, FULL_TIME_SPLIT_PATTERN);
+  }
+
+  /**
    * 根据传入的格式，格式化时间
    *
    * @param date   Date
@@ -142,5 +152,32 @@ public class DateUtil {
   public static boolean between(LocalTime from, LocalTime to) {
     LocalTime now = LocalTime.now();
     return now.isAfter(from) && now.isBefore(to);
+  }
+
+  /**
+   * 计算耗时
+   *
+   * @param startTime 开始时间
+   * @param endTime   结束时间
+   * @return 时间（%s天%s小时%s分%s秒）
+   */
+  public static String calTimes(Date startTime, Date endTime) {
+    long btw = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
+    int msc = (int) btw;
+    int day = msc / 1000 / 60 / 60 / 24;
+    int hr = msc / 1000 / 60 / 60 % 24;
+    int min = msc / 1000 / 60 % 60;
+    int sec = msc / 1000 % 60;
+    if (day != 0) {
+      return String.format("%s天%s小时%s分%s秒", day, hr, min, sec);
+    } else if (hr != 0) {
+      return String.format("%s小时%s分%s秒", hr, min, sec);
+    } else if (min != 0) {
+      return String.format("%s分%s秒", min, sec);
+    } else if (sec != 0) {
+      return String.format("%s秒", sec);
+    } else {
+      return String.format("%s秒", 0);
+    }
   }
 }

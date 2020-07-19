@@ -7,7 +7,6 @@ import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.online.service.IPaperService;
 import com.oes.server.exam.online.service.IScoreService;
-import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ public class ExamController {
    * </pre>
    */
   @GetMapping("{paperId}")
-  public R<List<Map<String, Object>>> getExam(@PathVariable Long paperId,
+  public R<Paper> getExam(@PathVariable Long paperId,
       @NotNull(message = "{required}") Long studentId) {
     Score res = scoreService.getScore(studentId, paperId);
     if (res == null) {

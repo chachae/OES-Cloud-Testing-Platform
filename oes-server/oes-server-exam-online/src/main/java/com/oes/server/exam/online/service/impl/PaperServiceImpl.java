@@ -11,8 +11,6 @@ import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.mapper.PaperMapper;
 import com.oes.server.exam.online.remote.IRemotePaperService;
 import com.oes.server.exam.online.service.IPaperService;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,13 +42,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public List<Map<String, Object>> getByPaperIdAndStudentId(Long paperId, Long studentId) {
+  public Paper getByPaperIdAndStudentId(Long paperId, Long studentId) {
     R<Paper> res = remotePaperService.getOne(paperId, studentId);
     if (res.getData() == null) {
       throw new ApiException("获取试卷失败");
     }
-    Paper paper = res.getData();
-    return paper.getPaperQuestions();
+    return res.getData();
   }
 
   private IPage<Paper> filterPaper(QueryParam param, Paper paper) {

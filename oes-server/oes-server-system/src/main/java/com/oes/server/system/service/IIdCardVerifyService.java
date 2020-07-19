@@ -33,5 +33,5 @@ public interface IIdCardVerifyService extends IService<IdCardVerify> {
    * @param idCardNum 身份证号
    * @return {@link Boolean} true / false
    */
-  Boolean check(String fullName, String idCardNum);
+  Boolean auth(String fullName, String idCardNum);
 }

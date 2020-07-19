@@ -63,7 +63,7 @@ public class IdCardVerifyServiceImpl extends
   }
 
   @Override
-  public Boolean check(String fullName, String idCardNum) {
+  public Boolean auth(String fullName, String idCardNum) {
     return baseMapper.selectCount(new LambdaQueryWrapper<IdCardVerify>()
         .eq(IdCardVerify::getUserId, SecurityUtil.getCurrentUser().getUserId())
         .eq(IdCardVerify::getNum, idCardNum)
