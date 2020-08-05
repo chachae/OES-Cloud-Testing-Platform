@@ -23,13 +23,21 @@ public interface IExamViolateLogService extends IService<ExamViolateLog> {
   IPage<ExamViolateLog> pageExamViolateLog(QueryExamViolateLogDto entity);
 
   /**
-   * 获取某场考试的违规记录数
+   * 查询某场考试的所有违规记录
    *
    * @param paperId 试卷编号
-   * @param userId  用户编号
+   * @return 违规记录集合
+   */
+  List<ExamViolateLog> selectByPaperId(Long paperId);
+
+  /**
+   * 获取某场考试的违规记录数
+   *
+   * @param paperId  试卷编号
+   * @param username 用户名
    * @return 违规记录数量
    */
-  Integer getViolateCount(Long paperId, Long userId);
+  Integer getViolateCount(Long paperId, String username);
 
   /**
    * 创建考试违规行为日志

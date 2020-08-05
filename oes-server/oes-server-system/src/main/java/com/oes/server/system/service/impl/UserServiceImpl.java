@@ -102,11 +102,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Transactional(rollbackFor = Exception.class)
   public void updateUser(SystemUser user) {
     // 更新用户
-    user
-        .setPassword(null)
-        .setUsername(null)
-        .setCreateTime(null)
-        .setUpdateTime(new Date());
+    user.setPassword(null);
+    user.setUsername(null);
+    user.setCreateTime(null);
+    user.setUpdateTime(new Date());
     updateById(user);
     // 维护用户角色信息
     String[] userIds = {String.valueOf(user.getUserId())};
@@ -131,7 +130,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateProfile(SystemUser user) {
-    user.setPassword(null).setUsername(null).setStatus(null);
+    user.setPassword(null);
+    user.setUsername(null);
+    user.setStatus(null);
     if (hasCurrentUser(new String[]{String.valueOf(user.getUserId())})) {
       updateById(user);
     } else {
@@ -142,7 +143,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateAvatar(String avatar) {
-    SystemUser user = new SystemUser().setAvatar(avatar);
+    SystemUser user = new SystemUser();
+    user.setAvatar(avatar);
     String curUsername = SecurityUtil.getCurrentUsername();
     this.baseMapper.update(user,
         new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));
@@ -151,7 +153,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updatePassword(String password) {
-    SystemUser user = new SystemUser().setPassword(passwordEncoder.encode(password));
+    SystemUser user = new SystemUser();
+    user.setPassword(passwordEncoder.encode(password));
     String curUsername = SecurityUtil.getCurrentUsername();
     baseMapper.update(user,
         new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));

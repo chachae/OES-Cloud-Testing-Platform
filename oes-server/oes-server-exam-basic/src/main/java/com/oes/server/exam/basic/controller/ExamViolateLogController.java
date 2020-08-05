@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,21 +32,27 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("exam/violate/log")
+@RequestMapping("exam/violatelog")
 public class ExamViolateLogController {
 
   private final IExamViolateLogService examViolateLogService;
 
   @GetMapping
+  @PreAuthorize("hasAuthority('violatelog:view')")
   public R<Map<String, Object>> paperExamViolateLog(QueryExamViolateLogDto query) {
     return R.ok(PageUtil.toPage(examViolateLogService.pageExamViolateLog(query)));
   }
 
+  @GetMapping("list")
+  public R<List<ExamViolateLog>> listExamViolateLog(@NotNull(message = "{required}") Long paperId) {
+    return R.ok(examViolateLogService.selectByPaperId(paperId));
+  }
+
   @GetMapping("count")
-  public Integer getViolateCount(
+  public Integer getViolateLogCount(
       @NotBlank(message = "{required}") Long paperId) {
     return examViolateLogService
-        .getViolateCount(paperId, SecurityUtil.getCurrentUser().getUserId());
+        .getViolateCount(paperId, SecurityUtil.getCurrentUsername());
   }
 
   /**
@@ -56,11 +64,12 @@ public class ExamViolateLogController {
    * @return {@link Boolean} true / false
    */
   @GetMapping("check")
-  public boolean checkHasViolateLog(
+  public boolean checkMaxViolateLog(
       @NotBlank(message = "{required}") Long paperId) {
-    // 在成绩无效（未提交前 / 人为修改成绩状态）时，单场考试违规记录超过（包含） 3 条无法进入考试
-    return examViolateLogService.getViolateCount(paperId, SecurityUtil.getCurrentUser().getUserId())
-        >= ExamBasicConstant.MAX_VIOLATE_COUNT;
+    // 在成绩无效（未提交前 / 人为修改成绩状态）时，单场考试违规记录超过阈值无法进入考试
+    return
+        examViolateLogService.getViolateCount(paperId, SecurityUtil.getCurrentUsername())
+            >= ExamBasicConstant.MAX_VIOLATE_COUNT;
   }
 
   @PostMapping
@@ -69,6 +78,7 @@ public class ExamViolateLogController {
   }
 
   @DeleteMapping("{violateIds}")
+  @PreAuthorize("hasAuthority('violatelog:delete')")
   public void createViolateLog(@NotBlank(message = "{required}") @PathVariable String violateIds) {
     List<String> ids = StrUtil.split(violateIds, StrUtil.C_COMMA);
     examViolateLogService.deleteExamViolateLog(ids);

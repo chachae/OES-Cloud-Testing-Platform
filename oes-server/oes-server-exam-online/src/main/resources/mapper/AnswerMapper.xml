@@ -6,13 +6,11 @@
   <resultMap id="baseMapper" type="com.oes.common.core.exam.entity.Answer">
     <result column="answer_id" property="answerId"/>
     <result column="answer_content" property="answerContent"/>
-    <result column="student_id" property="studentId"/>
     <result column="paper_id" property="paperId"/>
     <result column="question_id" property="questionId"/>
     <result column="score" property="score"/>
     <result column="status" property="status"/>
     <result column="warn" property="warn"/>
-    <result column="paper_name" property="paperName"/>
     <result column="question_name" property="questionName"/>
     <result column="options" property="options" jdbcType="VARCHAR" javaType="arraylist"
       typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
@@ -24,20 +22,18 @@
   <sql id="baseSql">
     select ta.answer_id,
            ta.answer_content,
-           ta.student_id,
            ta.paper_id,
            ta.question_id,
+           ta.username,
            ta.score,
            ta.status,
            ta.warn,
-           tp.paper_name,
            tq.question_name,
            tq.options,
            tq.type_id,
            tq.right_key,
            tq.analysis
     from t_answer ta
-           left join t_paper tp on ta.paper_id = tp.paper_id
            left join t_question tq on ta.question_id = tq.question_id
     where 1 = 1
   </sql>
@@ -45,15 +41,11 @@
   <select id="getWarnAnswer" parameterType="com.oes.common.core.exam.entity.query.QueryAnswerDto"
     resultMap="baseMapper">
     <include refid="baseSql"/>
-    and tp.paper_id = #{answer.paperId,jdbcType=BIGINT}
-    and ta.student_id = #{answer.studentId,jdbcType=BIGINT}
-    <if test="answer.warn != null">
-      and ta.warn = #{answer.warn,jdbcType=INTEGER}
-    </if>
-    <if test="answer.termId != null">
-      and tp.term_id = #{answer.termId,jdbcType=BIGINT}
-    </if>
-    group by ta.answer_id, ta.answer_content, ta.student_id, ta.paper_id, ta.question_id, ta.score,
-    ta.status, ta.warn, tp.paper_name, tq.question_name, tq.options, tq.type_id, tq.right_key
+    and ta.paper_id = #{answer.paperId,jdbcType=BIGINT}
+    and ta.username = #{answer.username,jdbcType=VARCHAR}
+    <!-- 错题 wran：0 -->
+    and ta.warn = 0
+    group by ta.answer_id, ta.answer_content, ta.paper_id, ta.question_id, ta.score,
+    ta.status, ta.warn, tq.question_name, tq.options, tq.type_id, tq.right_key
   </select>
 </mapper>

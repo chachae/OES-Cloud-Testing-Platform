@@ -3,10 +3,11 @@ package com.oes.server.exam.online.controller;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
+import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.PageUtil;
-import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -37,10 +38,14 @@ public class ScoreController {
     return status != null && status == 0;
   }
 
+  @GetMapping("statistic")
+  public R<StatisticScoreVo> statisticScore(@NotNull(message = "{required}") Long paperId) {
+    return R.ok(this.scoreService.statisticScore(paperId));
+  }
+
   @GetMapping
   public R<Map<String, Object>> pageScore(QueryScoreDto score) {
-    score.setStudentId(SecurityUtil.getCurrentUser().getUserId());
-    return R.ok(PageUtil.toPage(scoreService.getScore(score)));
+    return R.ok(PageUtil.toPage(scoreService.pageScore(score)));
   }
 
   @PostMapping

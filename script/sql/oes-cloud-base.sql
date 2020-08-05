@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 26/06/2020 16:16:19
+ Date: 05/08/2020 22:40:07
 */
 
 SET NAMES utf8mb4;
@@ -49,45 +49,29 @@ CREATE TABLE `oauth_code` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Table structure for t_answer
+-- Table structure for t_announce
 -- ----------------------------
-DROP TABLE IF EXISTS `t_answer`;
-CREATE TABLE `t_answer` (
-  `answer_id` bigint NOT NULL AUTO_INCREMENT COMMENT '学生答题主键（id）',
-  `answer_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '学生答题JSON数据',
-  `student_id` bigint NOT NULL COMMENT '学生编号（id）',
-  `paper_id` bigint NOT NULL COMMENT '试卷编号（id）',
-  `question_id` bigint NOT NULL COMMENT '题目编号（id）',
-  `score` int DEFAULT NULL COMMENT '题目的分',
+DROP TABLE IF EXISTS `t_announce`;
+CREATE TABLE `t_announce` (
+  `announce_id` bigint NOT NULL AUTO_INCREMENT COMMENT '公告主键',
+  `title` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '公告标题',
+  `content_id` bigint DEFAULT NULL COMMENT '内容编号',
+  `creator_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建人',
+  `status` tinyint DEFAULT NULL COMMENT '公告状态（1：激活，0：禁用）',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint DEFAULT NULL COMMENT '答案状态（1：批改，0：未批改）',
-  PRIMARY KEY (`answer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=349 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`announce_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='系统公告表';
 
 -- ----------------------------
--- Table structure for t_course
+-- Table structure for t_announce_content
 -- ----------------------------
-DROP TABLE IF EXISTS `t_course`;
-CREATE TABLE `t_course` (
-  `course_id` bigint NOT NULL AUTO_INCREMENT COMMENT '课程主键（id）',
-  `course_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程名称',
-  `dept_id` bigint NOT NULL COMMENT '开课学院（部门）',
-  `creator_id` bigint DEFAULT NULL COMMENT '创建人编号',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_course_teacher
--- ----------------------------
-DROP TABLE IF EXISTS `t_course_teacher`;
-CREATE TABLE `t_course_teacher` (
-  `course_id` bigint NOT NULL COMMENT '课程编号（id）',
-  `teacher_id` bigint NOT NULL COMMENT '教师编号（id）',
-  PRIMARY KEY (`course_id`,`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `t_announce_content`;
+CREATE TABLE `t_announce_content` (
+  `content_id` bigint NOT NULL AUTO_INCREMENT,
+  `html_content` blob COMMENT '公告内容',
+  PRIMARY KEY (`content_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='系统公告内容表';
 
 -- ----------------------------
 -- Table structure for t_dept
@@ -101,7 +85,30 @@ CREATE TABLE `t_dept` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`dept_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='部门表';
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='部门表';
+
+-- ----------------------------
+-- Table structure for t_idcard_verify
+-- ----------------------------
+DROP TABLE IF EXISTS `t_idcard_verify`;
+CREATE TABLE `t_idcard_verify` (
+  `verify_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int DEFAULT NULL COMMENT '用户编号',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证姓名',
+  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证地址',
+  `num` varchar(25) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证号',
+  `sex` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证性别',
+  `birth` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证生日',
+  `photo` blob COMMENT '身份证头像base64编码',
+  `start_date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证签发日期',
+  `end_date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证过期时间',
+  `issue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '身份证签发机关',
+  `success` tinyint DEFAULT NULL COMMENT '身份核验状态（1：通过，0：失败）',
+  `fake` tinyint DEFAULT NULL COMMENT '是否为复印件等',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`verify_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Table structure for t_job
@@ -154,7 +161,7 @@ CREATE TABLE `t_log` (
   `location` varchar(50) DEFAULT NULL COMMENT '操作地点',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `t_log_create_time` (`create_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=146 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户操作日志表';
+) ENGINE=MyISAM AUTO_INCREMENT=241 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户操作日志表';
 
 -- ----------------------------
 -- Table structure for t_logger
@@ -181,11 +188,11 @@ CREATE TABLE `t_login_log` (
   `login_time` datetime NOT NULL COMMENT '登录时间',
   `location` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '登录地点',
   `ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'IP地址',
-  `system` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '操作系统',
-  `browser` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '浏览器',
+  `system` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '操作系统',
+  `browser` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '浏览器',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `t_login_log_login_time` (`login_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=88 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='登录日志表';
+) ENGINE=MyISAM AUTO_INCREMENT=128 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='登录日志表';
 
 -- ----------------------------
 -- Table structure for t_menu
@@ -206,87 +213,7 @@ CREATE TABLE `t_menu` (
   PRIMARY KEY (`menu_id`) USING BTREE,
   KEY `t_menu_parent_id` (`parent_id`),
   KEY `t_menu_menu_id` (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=228 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单表';
-
--- ----------------------------
--- Table structure for t_paper
--- ----------------------------
-DROP TABLE IF EXISTS `t_paper`;
-CREATE TABLE `t_paper` (
-  `paper_id` bigint NOT NULL AUTO_INCREMENT COMMENT '试卷主键（id）',
-  `paper_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '试卷名称',
-  `paper_score` int DEFAULT NULL COMMENT '试卷分数',
-  `start_time` datetime DEFAULT NULL COMMENT '开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT '结束时间',
-  `minute` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '考试时长',
-  `creator_id` bigint DEFAULT NULL COMMENT '创建人编号（id）',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint DEFAULT NULL COMMENT '试卷状态（1：启用，0：禁用）',
-  `course_id` bigint DEFAULT NULL COMMENT '课程编号（id）',
-  `type` tinyint DEFAULT NULL COMMENT '试卷类型（1：正式考试，0：模拟考试）',
-  `is_random` tinyint DEFAULT NULL COMMENT '是否为随机生成的试卷（1：是，0：否）',
-  `term_id` bigint DEFAULT NULL COMMENT '学期',
-  PRIMARY KEY (`paper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_paper_dept
--- ----------------------------
-DROP TABLE IF EXISTS `t_paper_dept`;
-CREATE TABLE `t_paper_dept` (
-  `paper_id` bigint NOT NULL COMMENT '试卷编号（id）',
-  `dept_id` bigint NOT NULL COMMENT '部门编号（id）',
-  PRIMARY KEY (`paper_id`,`dept_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_paper_question
--- ----------------------------
-DROP TABLE IF EXISTS `t_paper_question`;
-CREATE TABLE `t_paper_question` (
-  `paper_id` bigint NOT NULL COMMENT '试卷编号（id）',
-  `question_id` bigint NOT NULL COMMENT '试题编号（id)',
-  PRIMARY KEY (`paper_id`,`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_paper_type
--- ----------------------------
-DROP TABLE IF EXISTS `t_paper_type`;
-CREATE TABLE `t_paper_type` (
-  `paper_id` bigint NOT NULL COMMENT '模板主键',
-  `type_id` bigint NOT NULL COMMENT '试题类型编号（id）',
-  `score` tinyint NOT NULL COMMENT '题目分值',
-  `num` int DEFAULT NULL COMMENT '题目数量',
-  PRIMARY KEY (`paper_id`,`type_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_question
--- ----------------------------
-DROP TABLE IF EXISTS `t_question`;
-CREATE TABLE `t_question` (
-  `question_id` bigint NOT NULL AUTO_INCREMENT COMMENT '题目主键（id）',
-  `question_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '题干',
-  `question_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '题目图片',
-  `option_a` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项A',
-  `option_b` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项B',
-  `option_c` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项C',
-  `option_d` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项D',
-  `option_e` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项E',
-  `option_f` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '选项F',
-  `right_key` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '正确答案（选择题录入答案内容）',
-  `analysis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '试题解析',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `creator_id` bigint NOT NULL COMMENT '创建人用户编号',
-  `type_id` bigint NOT NULL COMMENT '题目类型',
-  `course_id` bigint NOT NULL COMMENT '所属课程',
-  `difficult` enum('1','2','3') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '试题难度',
-  `consumption` int DEFAULT '0' COMMENT '使用量',
-  PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单表';
 
 -- ----------------------------
 -- Table structure for t_role
@@ -299,7 +226,7 @@ CREATE TABLE `t_role` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='角色表';
 
 -- ----------------------------
 -- Table structure for t_role_menu
@@ -310,34 +237,6 @@ CREATE TABLE `t_role_menu` (
   `menu_id` bigint NOT NULL,
   PRIMARY KEY (`role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='角色菜单关联表';
-
--- ----------------------------
--- Table structure for t_score
--- ----------------------------
-DROP TABLE IF EXISTS `t_score`;
-CREATE TABLE `t_score` (
-  `score_id` bigint NOT NULL AUTO_INCREMENT COMMENT '成绩编号（id）',
-  `score` tinyint NOT NULL COMMENT '成绩',
-  `paper_id` bigint NOT NULL COMMENT '试卷编号（id）',
-  `student_id` bigint NOT NULL COMMENT '学生编号（id）',
-  `times` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '考试用时',
-  `create_time` datetime DEFAULT NULL COMMENT '操作时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint DEFAULT NULL COMMENT '提交状态（1：已提交，0：未提交）',
-  PRIMARY KEY (`score_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ----------------------------
--- Table structure for t_term
--- ----------------------------
-DROP TABLE IF EXISTS `t_term`;
-CREATE TABLE `t_term` (
-  `term_id` bigint NOT NULL AUTO_INCREMENT COMMENT '学期主键',
-  `term_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '学期名称',
-  `create_time` datetime DEFAULT NULL COMMENT '创建日期',
-  `update_time` datetime DEFAULT NULL COMMENT '更新日期',
-  PRIMARY KEY (`term_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Table structure for t_tx_exception
@@ -355,19 +254,6 @@ CREATE TABLE `t_tx_exception` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
-
--- ----------------------------
--- Table structure for t_type
--- ----------------------------
-DROP TABLE IF EXISTS `t_type`;
-CREATE TABLE `t_type` (
-  `type_id` bigint NOT NULL AUTO_INCREMENT COMMENT '题目类型主键',
-  `type_name` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型名称',
-  `score` int DEFAULT NULL COMMENT '题目参考分值',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Table structure for t_user
@@ -393,7 +279,7 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`user_id`) USING BTREE,
   KEY `t_user_username` (`username`),
   KEY `t_user_mobile` (`mobile`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=2140 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户表';
 
 -- ----------------------------
 -- Table structure for t_user_connection

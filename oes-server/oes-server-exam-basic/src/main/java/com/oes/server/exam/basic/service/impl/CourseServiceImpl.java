@@ -10,6 +10,7 @@ import com.oes.common.core.exam.entity.CourseTeacher;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.core.exception.ApiException;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.mapper.CourseMapper;
 import com.oes.server.exam.basic.service.ICourseService;
 import com.oes.server.exam.basic.service.ICourseTeacherService;
@@ -77,6 +78,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createCourse(Course course) {
+    course.setCreatorId(SecurityUtil.getCurrentUserId());
     course.setCreateTime(new Date());
     baseMapper.insert(course);
     // 维护课程-教师数据

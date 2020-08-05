@@ -162,12 +162,11 @@ public class DateUtil {
    * @return 时间（%s天%s小时%s分%s秒）
    */
   public static String calTimes(Date startTime, Date endTime) {
-    long btw = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
-    int msc = (int) btw;
-    int day = msc / 1000 / 60 / 60 / 24;
-    int hr = msc / 1000 / 60 / 60 % 24;
-    int min = msc / 1000 / 60 % 60;
-    int sec = msc / 1000 % 60;
+    long cutMilli = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
+    long day = cutMilli / 1000 / 60 / 60 / 24;
+    long hr = cutMilli / 1000 / 60 / 60 % 24;
+    long min = cutMilli / 1000 / 60 % 60;
+    long sec = cutMilli / 1000 % 60;
     if (day != 0) {
       return String.format("%s天%s小时%s分%s秒", day, hr, min, sec);
     } else if (hr != 0) {

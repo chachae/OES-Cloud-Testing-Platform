@@ -2,6 +2,7 @@ package com.oes.common.core.entity.system.query;
 
 import com.oes.common.core.entity.QueryParam;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author chachae
@@ -10,7 +11,10 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AnnounceQueryDto extends QueryParam {
+
+  private static final long serialVersionUID = 830930215315431455L;
 
   /**
    * 查询关键字

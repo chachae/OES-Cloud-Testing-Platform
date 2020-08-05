@@ -18,7 +18,7 @@
     <result column="course_id" property="courseId"/>
     <result column="difficult" property="difficult"/>
     <result column="consumption" property="consumption"/>
-    <result column="full_name" property="fullName"/>
+    <result column="creator_name" property="creatorName"/>
     <result column="type_name" property="typeName"/>
     <result column="course_name" property="courseName"/>
   </resultMap>
@@ -34,14 +34,13 @@
            tq.update_time,
            tq.creator_id,
            tq.consumption,
-           tu.full_name,
+           tq.creator_name,
            tq.type_id,
            tt.type_name,
            tq.course_id,
            tc.course_name,
            tq.difficult
     from t_question tq
-           left join t_user tu on tq.creator_id = tu.user_id
            left join t_type tt on tq.type_id = tt.type_id
            left join t_course tc on tq.course_id = tc.course_id
     where 1 = 1
@@ -53,6 +52,9 @@
     resultMap="baseMap"
   >
     <include refid="baseSql"/>
+    <if test="question.creatorName != null and question.creatorName != ''">
+      and tq.creator_name like concat('%',#{question.creatorName,jdbcType=VARCHAR},'%')
+    </if>
     <if test="question.questionName != null and question.questionName != ''">
       and tq.question_name like concat('%',#{question.questionName,jdbcType=VARCHAR},'%')
     </if>

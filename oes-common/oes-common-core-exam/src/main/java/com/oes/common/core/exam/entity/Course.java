@@ -46,12 +46,6 @@ public class Course implements Serializable {
    */
   private Date updateTime;
 
-  /**
-   * 开课单位名称
-   */
-  @TableField(exist = false)
-  private String deptName;
-
   @TableField(exist = false)
   private String teacherIds;
 

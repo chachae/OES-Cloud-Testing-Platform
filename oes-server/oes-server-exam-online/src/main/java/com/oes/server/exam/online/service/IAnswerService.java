@@ -15,11 +15,19 @@ public interface IAnswerService extends IService<Answer> {
   /**
    * 获取学生答题集合
    *
-   * @param studentId 学生编号
-   * @param paperId   试卷编号
+   * @param username 用户名
+   * @param paperId  试卷编号
    * @return {@link List<Answer>} 分页结果集
    */
-  List<Answer> getAnswer(Long studentId, Long paperId);
+  List<Answer> getAnswer(String username, Long paperId);
+
+  /**
+   * 获取某张试卷的全部答题信息
+   *
+   * @param paperId 试卷编号
+   * @return 题目信息
+   */
+  List<Answer> getAnswer(Long paperId);
 
   /**
    * 获取学生错题集
@@ -36,4 +44,10 @@ public interface IAnswerService extends IService<Answer> {
    */
   Long updateAnswer(Answer answer);
 
+  /**
+   * 统计考试答题情况信息（只统计：单/多项选择题、填空题、判断题）
+   *
+   * @param paperId 试卷编号
+   */
+  List<Map<String, Object>> statisticAnswers(Long paperId);
 }

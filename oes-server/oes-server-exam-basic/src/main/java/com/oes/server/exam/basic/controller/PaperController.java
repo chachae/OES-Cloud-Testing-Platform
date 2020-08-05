@@ -7,11 +7,11 @@ import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.PageUtil;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.service.IPaperService;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,9 +46,9 @@ public class PaperController {
   }
 
   @GetMapping("{paperId}")
-  public R<Paper> getOne(@PathVariable("paperId") Long paperId,
-      @NotNull(message = "{required}") Long studentId) {
-    Paper result = paperService.getPaper(paperId, studentId);
+  public R<Paper> getOne(@PathVariable("paperId") Long paperId, String username) {
+    username = username == null ? SecurityUtil.getCurrentUsername() : username;
+    Paper result = paperService.getPaper(paperId, username);
     return R.ok(result);
   }
 

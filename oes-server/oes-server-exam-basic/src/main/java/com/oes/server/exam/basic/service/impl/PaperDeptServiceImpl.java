@@ -6,7 +6,6 @@ import com.oes.common.core.exam.entity.PaperDept;
 import com.oes.server.exam.basic.mapper.PaperDeptMapper;
 import com.oes.server.exam.basic.service.IPaperDeptService;
 import java.util.Arrays;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept> implements
     IPaperDeptService {
-
-  @Override
-  public List<PaperDept> getByPaperId(String[] paperIds) {
-    return baseMapper
-        .selectList(
-            new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
-  }
 
   @Override
   public void deleteBatchByPaperIds(String[] paperIds) {

@@ -84,7 +84,7 @@ public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
    * @return {@link String} 图片 Base64 信息
    */
   private String getCurUserPhoto() {
-    Long userId = SecurityUtil.getCurrentUser().getUserId();
+    Long userId = SecurityUtil.getCurrentUserId();
     IdCardVerify info = idCardVerifyMapper
         .selectOne(new LambdaQueryWrapper<IdCardVerify>().eq(IdCardVerify::getUserId, userId));
 

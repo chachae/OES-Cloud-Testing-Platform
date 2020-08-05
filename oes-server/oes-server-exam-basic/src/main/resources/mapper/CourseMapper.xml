@@ -10,7 +10,6 @@
     <result column="creator_id" property="creatorId"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
-    <result column="dept_name" property="deptName"/>
     <result column="teacher_ids" property="teacherIds"/>
   </resultMap>
 
@@ -21,10 +20,8 @@
            tc.creator_id,
            tc.create_time,
            tc.update_time,
-           td.dept_name,
            GROUP_CONCAT(tct.teacher_id ORDER BY tct.course_id) AS teacher_ids
     FROM t_course tc
-           LEFT JOIN t_dept td ON tc.dept_id = td.dept_id
            LEFT JOIN t_course_teacher tct ON tc.course_id = tct.course_id
     WHERE 1 = 1
   </sql>

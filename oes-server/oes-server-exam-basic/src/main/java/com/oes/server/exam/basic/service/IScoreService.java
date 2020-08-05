@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
+import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
+import java.util.List;
 
 /**
  * @author chachae
@@ -22,19 +24,18 @@ public interface IScoreService extends IService<Score> {
   /**
    * 通过分数信息查询分数
    *
-   * @param paperId 试卷编号
-   * @param userId  用户编号
+   * @param score 模糊条件
    * @return 分数列表
    */
-  Score getScore(Long userId, Long paperId);
+  List<Score> getScore(QueryScoreDto score);
 
   /**
    * 删除学期数据
    *
-   * @param paperId 试卷编号
-   * @param userId  考生编号
+   * @param username 用户名
+   * @param paperId  试卷编号
    */
-  void deleteScore(Long userId, Long paperId);
+  void deleteScore(String username, Long paperId);
 
   /**
    * 更新学期数据
@@ -49,4 +50,12 @@ public interface IScoreService extends IService<Score> {
    * @param score 分数信息
    */
   void createScore(Score score);
+
+
+  /**
+   * 分数情况统计
+   *
+   * @param paperId 试卷编号
+   */
+  StatisticScoreVo statisticScore(Long paperId);
 }

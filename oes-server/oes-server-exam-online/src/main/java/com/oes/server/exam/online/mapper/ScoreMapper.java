@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -21,4 +22,12 @@ public interface ScoreMapper extends BaseMapper<Score> {
    * @return 分页结果集
    */
   IPage<Score> pageScore(@Param("score") QueryScoreDto score, Page<Score> page);
+
+  /**
+   * 查询考试分数
+   *
+   * @param score 模糊搜索条件
+   * @return 分页结果集
+   */
+  List<Score> getScore(@Param("score") QueryScoreDto score);
 }

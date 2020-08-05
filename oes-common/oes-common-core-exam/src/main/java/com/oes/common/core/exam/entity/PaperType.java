@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -34,13 +33,10 @@ public class PaperType implements Serializable {
    * 模板主键
    */
   @TableId(type = IdType.INPUT)
-  @NotNull(message = "{required}")
   private Long paperId;
   /**
    * 试题类型编号（id）
    */
-  @TableId(type = IdType.INPUT)
-  @NotNull(message = "{required}")
   private Long typeId;
   /**
    * 题目分值

@@ -10,7 +10,6 @@
     <result column="start_time" property="startTime"/>
     <result column="end_time" property="endTime"/>
     <result column="minute" property="minute"/>
-    <result column="creator_id" property="courseId"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
     <result column="status" property="status"/>
@@ -29,7 +28,6 @@
            tp.start_time,
            tp.end_time,
            tp.minute,
-           tp.creator_id,
            tp.create_time,
            tp.update_time,
            tp.status,
@@ -48,8 +46,12 @@
 
   <select id="pagePaper" parameterType="com.oes.common.core.exam.entity.Paper" resultMap="baseMap">
     <include refid="baseSql"/>
-    AND tpd.dept_id in (#{paper.deptIds,jdbcType=VARCHAR})
-    AND tp.type = #{paper.type,jdbcType=INTEGER}
+    <if test="paper.deptIds != null and paper.deptIds != ''">
+      AND tpd.dept_id in (#{paper.deptIds,jdbcType=VARCHAR})
+    </if>
+    <if test="paper.type != null">
+      AND tp.type = #{paper.type,jdbcType=INTEGER}
+    </if>
     AND tp.status = #{paper.status,jdbcType=INTEGER}
     AND (tp.end_time &gt;= now())
     group by tp.paper_id

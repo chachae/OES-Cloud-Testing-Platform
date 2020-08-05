@@ -23,11 +23,9 @@ public class QueryAnswerDto extends QueryParam {
 
   private Long termId;
 
-  private Long studentId;
-
   private Integer status;
 
-  private String studentName;
+  private String username;
 
   private Integer warn;
 

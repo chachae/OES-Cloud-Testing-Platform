@@ -33,6 +33,9 @@
     <if test="user.username != null and user.username != ''">
       AND u.username like CONCAT('%',#{user.username},'%')
     </if>
+    <if test="user.fullName != null and user.fullName != ''">
+      AND u.full_name like CONCAT('%',#{user.fullName},'%')
+    </if>
     <if test="user.deptName != null and user.deptName != ''">
       AND d.dept_name like CONCAT('%',#{user.deptName,jdbcType=VARCHAR},'%')
     </if>

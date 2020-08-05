@@ -31,10 +31,16 @@ public class ExamViolateLog implements Serializable {
    */
   @TableId(type = IdType.AUTO)
   private Long violateId;
+
   /**
-   * 学生编号
+   * 学号（用户名）
    */
-  private Long studentId;
+  private String username;
+
+  /**
+   * 真实姓名
+   */
+  private String fullName;
   /**
    * 试卷编号
    */
@@ -81,16 +87,4 @@ public class ExamViolateLog implements Serializable {
 
   @TableField(exist = false)
   private String paperName;
-
-  @TableField(exist = false)
-  private String username;
-
-  @TableField(exist = false)
-  private String fullName;
-
-  @TableField(exist = false)
-  private String courseName;
-
-  @TableField(exist = false)
-  private String courseId;
 }

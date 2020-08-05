@@ -39,9 +39,9 @@ public class Answer implements Serializable {
    */
   private String answerContent;
   /**
-   * 学生编号（id）
+   * 用户名
    */
-  private Long studentId;
+  private String username;
   /**
    * 试卷编号（id）
    */
@@ -101,11 +101,6 @@ public class Answer implements Serializable {
    */
   @TableField(exist = false)
   private String analysis;
-  /**
-   * 学生姓名
-   */
-  @TableField(exist = false)
-  private String studentName;
   /**
    * 学期名称
    */

@@ -41,11 +41,16 @@ public class ExamViolateLogServiceImpl extends
   }
 
   @Override
-  public Integer getViolateCount(Long paperId, Long userId) {
+  public List<ExamViolateLog> selectByPaperId(Long paperId) {
+    return baseMapper.selectByPaperId(paperId);
+  }
+
+  @Override
+  public Integer getViolateCount(Long paperId, String username) {
     return baseMapper
         .selectCount(new LambdaQueryWrapper<ExamViolateLog>()
             .eq(ExamViolateLog::getPaperId, paperId)
-            .eq(ExamViolateLog::getStudentId, userId));
+            .eq(ExamViolateLog::getUsername, username));
   }
 
   @Override
@@ -72,7 +77,9 @@ public class ExamViolateLogServiceImpl extends
         curUser.getFullName(), DateUtil.formatDate(examViolateLog.getViolateTime()), violateMsg,
         stayTime);
 
-    examViolateLog.setStudentId(curUser.getUserId())
+    examViolateLog
+        .setUsername(curUser.getUsername())
+        .setFullName(curUser.getFullName())
         .setBehaviour(violateMsg)
         .setSystem(agentInfo.getSystem())
         .setBrowser(agentInfo.getBrowser())

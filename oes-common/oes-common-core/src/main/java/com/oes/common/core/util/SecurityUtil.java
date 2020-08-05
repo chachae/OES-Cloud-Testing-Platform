@@ -1,8 +1,8 @@
 package com.oes.common.core.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oes.common.core.entity.auth.AuthUser;
 import com.oes.common.core.entity.auth.CurrentUser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,16 @@ public class SecurityUtil {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   /**
+   * 获取用户编号
+   *
+   * @return getCurrentUserId 当前用户编号
+   */
+  public static Long getCurrentUserId() {
+    CurrentUser currentUser = getCurrentUser();
+    return currentUser != null ? currentUser.getUserId() : null;
+  }
+
+  /**
    * 获取在线用户信息
    *
    * @return CurrentUser 当前用户信息
@@ -38,7 +48,7 @@ public class SecurityUtil {
       return MAPPER.readValue(MAPPER.writeValueAsString(principal), CurrentUser.class);
     } catch (Exception e) {
       log.error("获取当前用户信息失败", e);
-      return null;
+      return new CurrentUser();
     }
   }
 

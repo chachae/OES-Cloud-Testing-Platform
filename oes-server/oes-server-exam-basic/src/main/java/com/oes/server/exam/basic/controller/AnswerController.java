@@ -55,7 +55,7 @@ public class AnswerController {
   @DeleteMapping
   @PreAuthorize("hasAuthority('answer:delete')")
   public void deleteByAnswer(Answer answer) {
-    this.answerService.deleteAnswer(answer.getStudentId(), answer.getPaperId());
+    this.answerService.deleteAnswer(answer.getUsername(), answer.getPaperId());
   }
 
 }

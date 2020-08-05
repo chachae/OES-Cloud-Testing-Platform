@@ -24,4 +24,24 @@ public class QueryPaperDto extends QueryParam {
    * 学期
    */
   private String termId;
+
+  /**
+   * 试卷状态
+   */
+  private Integer status;
+
+  /**
+   * 试卷类型
+   */
+  private Integer type;
+
+  /**
+   * 部门编号
+   */
+  private String deptIds;
+
+  /**
+   * 过滤结束试卷（默认关闭）
+   */
+  private boolean filterEnd = false;
 }

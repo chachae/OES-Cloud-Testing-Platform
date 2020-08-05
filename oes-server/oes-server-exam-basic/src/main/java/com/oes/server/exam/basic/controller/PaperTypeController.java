@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("paper/type")
+@RequestMapping("paperType")
 public class PaperTypeController {
 
   private final IPaperTypeService paperTypeService;

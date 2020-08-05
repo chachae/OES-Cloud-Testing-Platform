@@ -1,5 +1,6 @@
 package com.oes.common.core.entity.system;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,10 +11,8 @@ import java.util.Date;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
  * 用户表实体类
@@ -24,8 +23,6 @@ import lombok.experimental.Accessors;
 @Data
 @TableName("t_user")
 @NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
 public class SystemUser implements Serializable {
 
   /**
@@ -69,12 +66,14 @@ public class SystemUser implements Serializable {
   /**
    * 用户名
    */
+  @ExcelProperty(index = 0)
   @Size(min = 4, max = 10, message = "{range}")
   private String username;
 
   /**
    * 真实姓名
    */
+  @ExcelProperty(index = 1)
   private String fullName;
 
   /**
@@ -143,6 +142,7 @@ public class SystemUser implements Serializable {
    * 部门名称
    */
   @TableField(exist = false)
+  @ExcelProperty(index = 2)
   private String deptName;
 
   @TableField(exist = false)

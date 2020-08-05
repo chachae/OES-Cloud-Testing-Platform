@@ -5,7 +5,8 @@
 
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.ExamViolateLog">
     <result column="violate_id" property="violateId"/>
-    <result column="student_id" property="studentId"/>
+    <result column="username" property="username"/>
+    <result column="full_name" property="fullName"/>
     <result column="paper_id" property="paperId"/>
     <result column="behaviour" property="behaviour"/>
     <result column="violate_time" property="violateTime"/>
@@ -15,15 +16,10 @@
     <result column="capture" property="capture"/>
     <result column="description" property="description"/>
     <result column="paper_name" property="paperName"/>
-    <result column="username" property="username"/>
-    <result column="full_name" property="fullName"/>
-    <result column="course_name" property="courseName"/>
-    <result column="course_id" property="courseId"/>
   </resultMap>
 
   <sql id="baseSql">
     select tevl.violate_id,
-           tevl.student_id,
            tevl.paper_id,
            tevl.behaviour,
            tevl.violate_time,
@@ -33,14 +29,10 @@
            tevl.capture,
            tevl.description,
            tp.paper_name,
-           tu.username,
-           tu.full_name,
-           tc.course_id,
-           tc.course_name
+           tevl.username,
+           tevl.full_name
     from t_exam_violate_log tevl
            left join t_paper tp on tevl.paper_id = tp.paper_id
-           left join t_user tu on tevl.student_id = tu.user_id
-           left join t_course tc on tp.course_id = tc.course_id
     where 1 = 1
   </sql>
 
@@ -49,10 +41,10 @@
     resultMap="baseMap">
     <include refid="baseSql"/>
     <if test="violate.username != null and violate.username != ''">
-      and tu.username = #{violate.username,jdbcType=VARCHAR}
+      and tevl.username = #{violate.username,jdbcType=VARCHAR}
     </if>
     <if test="violate.fullName != null and violate.fullName != ''">
-      and tu.full_name like concat('%',#{violate.fullName,jdbcType=VARCHAR},'%')
+      and tevl.full_name like concat('%',#{violate.fullName,jdbcType=VARCHAR},'%')
     </if>
     <if test="violate.paperName != null and violate.paperName != ''">
       and tp.paper_name like concat('%',#{violate.paperName,jdbcType=VARCHAR},'%')
@@ -60,7 +52,15 @@
     <if test="violate.termId != null">
       and tp.term_id = #{violate.termId,jdbcType=BIGINT}
     </if>
-    group by tevl.violate_id, tevl.student_id, tevl.paper_id, tevl.behaviour, tevl.violate_time,
+    group by tevl.violate_id, tevl.full_name, tevl.paper_id, tevl.behaviour, tevl.violate_time,
     tevl.stay_time, tevl.`system`, tevl.description, tevl.capture
+  </select>
+
+  <select id="selectByPaperId" parameterType="long" resultMap="baseMap">
+    <include refid="baseSql"/>
+    and tevl.paper_id = #{paperId,jdbcType=BIGINT}
+    group by tevl.violate_id, tevl.full_name, tevl.paper_id, tevl.behaviour, tevl.violate_time,
+    tevl.stay_time, tevl.`system`
+    order by tevl.violate_id
   </select>
 </mapper>

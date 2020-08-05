@@ -1,10 +1,11 @@
 package com.oes.server.exam.online.controller;
 
-import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.Score;
+import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.PageUtil;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.service.IPaperService;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.Map;
@@ -42,41 +43,37 @@ public class ExamController {
    * </pre>
    */
   @GetMapping("{paperId}")
-  public R<Paper> getExam(@PathVariable Long paperId,
-      @NotNull(message = "{required}") Long studentId) {
-    Score res = scoreService.getScore(studentId, paperId);
+  public R<Paper> getExam(@PathVariable @NotNull(message = "{required}") Long paperId) {
+    String username = SecurityUtil.getCurrentUsername();
+    Score res = scoreService.getScore(username, paperId);
     if (res == null) {
       Score score = new Score();
-      score.setStudentId(studentId);
+      score.setUsername(username);
       score.setPaperId(paperId);
       scoreService.createScore(score);
     }
-    return R.ok(paperService.getByPaperIdAndStudentId(paperId, studentId));
+    return R.ok(paperService.getByPaperIdAndUsername(paperId, username));
   }
 
   /**
    * 获取正式考试信息
    *
-   * @param param 分页信息
-   * @param paper 试卷查询信息
    * @return {@link R<Map>} 返回结果
    */
   @GetMapping("normal")
-  public R<Map<String, Object>> pageNormalPaper(QueryParam param, Paper paper) {
-    Map<String, Object> map = PageUtil.toPage(paperService.getNormalPaper(param, paper));
+  public R<Map<String, Object>> pageNormalPaper(QueryPaperDto entity) {
+    Map<String, Object> map = PageUtil.toPage(paperService.getNormalPaper(entity));
     return R.ok(map);
   }
 
   /**
    * 获取模拟考试信息
    *
-   * @param param 分页信息
-   * @param paper 试卷查询信息
    * @return {@link R<Map>} 返回结果
    */
   @GetMapping("imitate")
-  public R<Map<String, Object>> pageImitatePaper(QueryParam param, Paper paper) {
-    Map<String, Object> map = PageUtil.toPage(paperService.getImitatePaper(param, paper));
+  public R<Map<String, Object>> pageImitatePaper(QueryPaperDto entity) {
+    Map<String, Object> map = PageUtil.toPage(paperService.getImitatePaper(entity));
     return R.ok(map);
   }
 }

@@ -4,16 +4,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
+import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Map;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +39,7 @@ public class ScoreController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('score:view')")
-  public R<Map<String, Object>> pageAnswer(QueryScoreDto score) {
+  public R<Map<String, Object>> pageScore(QueryScoreDto score) {
     IPage<Score> result = scoreService.pageScore(score);
     return R.ok(PageUtil.toPage(result));
   }
@@ -55,8 +58,13 @@ public class ScoreController {
 
   @DeleteMapping
   @PreAuthorize("hasAuthority('score:delete')")
-  public void deleteByAnswer(Score score) {
-    this.scoreService.deleteScore(score.getStudentId(), score.getPaperId());
+  public void deleteByScore(Score score) {
+    this.scoreService.deleteScore(score.getUsername(), score.getPaperId());
   }
 
+  @GetMapping("statistic/{paperId}")
+  public R<StatisticScoreVo> statisticScore(
+      @PathVariable @NotNull(message = "{required}") Long paperId) {
+    return R.ok(this.scoreService.statisticScore(paperId));
+  }
 }

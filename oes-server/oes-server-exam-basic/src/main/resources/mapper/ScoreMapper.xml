@@ -2,12 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.basic.mapper.ScoreMapper">
-
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Score">
     <result column="score_id" property="scoreId"/>
     <result column="score" property="studentScore"/>
     <result column="paper_id" property="paperId"/>
-    <result column="student_id" property="studentId"/>
     <result column="times" property="times"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
@@ -24,34 +22,31 @@
     SELECT ts.score_id,
            ts.score,
            ts.paper_id,
-           ts.student_id,
            ts.times,
            ts.create_time,
            ts.update_time,
            ts.status,
            tp.paper_name,
            tp.paper_score,
-           tu.full_name,
-           tu.username,
+           ts.full_name,
+           ts.username,
            tt.term_name,
            tc.course_name
     FROM t_score ts
            LEFT JOIN t_paper tp ON ts.paper_id = tp.paper_id
-           LEFT JOIN t_user tu ON ts.student_id = tu.user_id
            LEFT JOIN t_term tt ON tp.term_id = tt.term_id
            LEFT JOIN t_course tc on tp.course_id = tc.course_id
     WHERE 1 = 1
   </sql>
 
-  <select
-    id="pageScore"
-    parameterType="com.oes.common.core.exam.entity.query.QueryScoreDto"
-    resultMap="baseMap"
-  >
+  <sql id="filterSql">
     <include refid="baseSql"/>
+    <if test="score.paperId != null">
+      AND tp.paper_id = #{score.paperId,jdbcType=BIGINT}
+    </if>
     <if test="score.key != null and score.key != ''">
-      AND (tu.username LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')
-      OR (tu.full_name LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')))
+      AND (ts.username LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')
+      OR (ts.full_name LIKE CONCAT('%',#{score.key,jdbcType=VARCHAR},'%')))
     </if>
     <if test="score.paperName">
       AND (tp.paper_name LIKE CONCAT('%',#{score.paperName},'%'))
@@ -62,10 +57,25 @@
     <if test="score.status != null">
       AND ts.status = #{score.status,jdbcType=INTEGER}
     </if>
-    <if test="score.deptName != null and score.deptName != ''">
-      AND tu.dept_id in (SELECT t_dept.dept_id FROM t_dept WHERE t_dept.dept_name LIKE
-      CONCAT('%',#{score.deptName,jdbcType=VARCHAR},'%'))
-    </if>
+    <!--    <if test="score.deptName != null and score.deptName != ''">-->
+    <!--      AND tu.dept_id in (SELECT t_dept.dept_id FROM t_dept WHERE t_dept.dept_name LIKE-->
+    <!--      CONCAT('%',#{score.deptName,jdbcType=VARCHAR},'%'))-->
+    <!--    </if>-->
+  </sql>
+
+  <select
+    id="pageScore"
+    parameterType="com.oes.common.core.exam.entity.query.QueryScoreDto"
+    resultMap="baseMap"
+  >
+    <include refid="filterSql"/>
   </select>
 
+  <select
+    id="getScore"
+    parameterType="com.oes.common.core.exam.entity.query.QueryScoreDto"
+    resultMap="baseMap"
+  >
+    <include refid="filterSql"/>
+  </select>
 </mapper>

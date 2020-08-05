@@ -28,31 +28,31 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
-  public Answer getAnswer(Long studentId, Long paperId, Long questionId) {
+  public Answer getAnswer(String username, Long paperId, Long questionId) {
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper
-        .eq(Answer::getStudentId, studentId)
+        .eq(Answer::getUsername, username)
         .eq(Answer::getPaperId, paperId)
         .eq(Answer::getQuestionId, questionId);
     return baseMapper.selectOne(wrapper);
   }
 
   @Override
-  public List<Answer> getAnswer(Long studentId, Long paperId) {
+  public List<Answer> getAnswer(String username, Long paperId) {
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper
-        .eq(Answer::getStudentId, studentId)
+        .eq(Answer::getUsername, username)
         .eq(Answer::getPaperId, paperId);
     return baseMapper.selectList(wrapper);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void deleteAnswer(Long userId, Long paperId) {
-    if (userId != null || paperId != null) {
+  public void deleteAnswer(String username, Long paperId) {
+    if (username != null || paperId != null) {
       LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-      if (userId != null) {
-        wrapper.eq(Answer::getStudentId, userId);
+      if (username != null) {
+        wrapper.eq(Answer::getUsername, username);
       }
       if (paperId != null) {
         wrapper.eq(Answer::getPaperId, paperId);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,14 +48,8 @@ public class CourseController {
     return R.ok(PageUtil.toPage(result));
   }
 
-  /**
-   * check course name s it repeated.
-   *
-   * @param courseName course name
-   * @return {@link Boolean}
-   */
-  @GetMapping("check/{courseName}")
-  public Boolean pageCourse(@PathVariable String courseName) {
+  @GetMapping("check")
+  public Boolean pageCourse(@NotNull(message = "{required}") String courseName) {
     Course course = courseService
         .getOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseName, courseName));
     return course == null;

@@ -29,4 +29,9 @@ public class QueryQuestionDto extends QueryParam {
    * 类型
    */
   private Long typeId;
+
+  /**
+   * 出题人
+   */
+  private String creatorName;
 }

@@ -42,7 +42,6 @@ public class UserConnectionServiceImpl extends
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createUserConnection(UserConnection userConnection) {
-    System.out.println("ins：" + userConnection);
     this.baseMapper.insert(userConnection);
   }
 

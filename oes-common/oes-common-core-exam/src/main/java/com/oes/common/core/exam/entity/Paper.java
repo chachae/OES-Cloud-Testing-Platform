@@ -85,9 +85,9 @@ public class Paper implements Serializable {
   private Integer minute;
 
   /**
-   * 创建人编号（id）
+   * 创建人姓名
    */
-  private Long creatorId;
+  private String creatorName;
 
   /**
    * 创建时间
@@ -136,28 +136,10 @@ public class Paper implements Serializable {
   private String courseName;
 
   /**
-   * 课程班所属学院
-   */
-  @TableField(exist = false)
-  private String deptName;
-
-  /**
    * 考试班级集合
    */
   @TableField(exist = false)
   private String deptIds;
-
-  /**
-   * 考试班级名称集合
-   */
-  @TableField(exist = false)
-  private String deptNames;
-
-  /**
-   * 出卷人姓名
-   */
-  @TableField(exist = false)
-  private String creatorName;
 
   /**
    * 试卷题目信息（返回给前端）

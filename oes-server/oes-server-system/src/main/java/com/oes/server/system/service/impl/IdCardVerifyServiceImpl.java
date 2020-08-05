@@ -32,7 +32,7 @@ public class IdCardVerifyServiceImpl extends
   @Override
   public IdCardVerify getByUserId(Long userId) {
     if (userId == null) {
-      userId = SecurityUtil.getCurrentUser().getUserId();
+      userId = SecurityUtil.getCurrentUserId();
     }
 
     IdCardVerify verifyInfo = baseMapper

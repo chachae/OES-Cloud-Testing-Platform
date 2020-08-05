@@ -83,6 +83,10 @@ public class Question implements Serializable {
    */
   private Long creatorId;
   /**
+   * 出题人姓名
+   */
+  private String creatorName;
+  /**
    * 题目类型
    */
   private Long typeId;
@@ -98,12 +102,6 @@ public class Question implements Serializable {
    * 使用量
    */
   private Integer consumption;
-
-  /**
-   * 出题人姓名
-   */
-  @TableField(exist = false)
-  private String fullName;
 
   /**
    * 题目类型名称

@@ -43,10 +43,6 @@ public class Score implements Serializable {
    */
   private Long paperId;
   /**
-   * 学生编号（id）
-   */
-  private Long studentId;
-  /**
    * 考试用时
    */
   private String times;
@@ -80,13 +76,11 @@ public class Score implements Serializable {
   /**
    * 学生姓名
    */
-  @TableField(exist = false)
   private String fullName;
 
   /**
    * 用户名（学号）
    */
-  @TableField(exist = false)
   private String username;
 
   /**

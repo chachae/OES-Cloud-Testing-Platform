@@ -67,7 +67,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public Paper getPaper(Long paperId, Long studentId) {
+  public Paper getPaper(Long paperId, String username) {
     // 从缓存中取出试卷
     Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
     if (paper == null) {
@@ -79,7 +79,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     Collections.shuffle(paper.getPaperQuestionList());
 
     // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力
-    List<Answer> answers = answerService.getAnswer(studentId, paperId);
+    List<Answer> answers = answerService.getAnswer(username, paperId);
     Map<Long, Answer> answerMap = new HashMap<>(answers.size());
     if (CollUtil.isNotEmpty(answers)) {
       answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
@@ -134,6 +134,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   public void randomCreatePaper(Paper paper, PaperType paperType) {
     paper.setCreateTime(new Date());
     paper.setIsRandom(Paper.IS_RANDOM);
+    paper.setStatus(Paper.STATUS_CLOSE);
     baseMapper.insert(paper);
     Long paperId = paper.getPaperId();
 

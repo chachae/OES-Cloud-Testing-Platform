@@ -10,7 +10,6 @@
     <result column="start_time" property="startTime"/>
     <result column="end_time" property="endTime"/>
     <result column="minute" property="minute"/>
-    <result column="creator_id" property="creatorId"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
     <result column="status" property="status"/>
@@ -18,9 +17,7 @@
     <result column="is_random" property="isRandom"/>
     <result column="type" property="type"/>
     <result column="course_name" property="courseName"/>
-    <result column="dept_name" property="deptName"/>
     <result column="dept_ids" property="deptIds"/>
-    <result column="dept_names" property="deptNames"/>
     <result column="creator_name" property="creatorName"/>
     <result column="term_id" property="termId"/>
     <result column="term_name" property="termName"/>
@@ -39,7 +36,7 @@
     <result column="start_time" property="startTime"/>
     <result column="end_time" property="endTime"/>
     <result column="minute" property="minute"/>
-    <result column="creator_id" property="creatorId"/>
+    <result column="creator_name" property="courseName"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
     <result column="status" property="status"/>
@@ -63,7 +60,7 @@
            tp.start_time,
            tp.end_time,
            tp.minute,
-           tp.creator_id,
+           tp.creator_name,
            tp.create_time,
            tp.update_time,
            tp.status,
@@ -73,14 +70,7 @@
            tp.is_random,
            tp.term_id,
            tt.term_name,
-           (select dept_name from t_dept where t_dept.dept_id = tc.dept_id) as dept_name,
-           (select full_name
-            from t_user
-            where t_user.user_id = tp.creator_id)                              creator_name,
-           group_concat(tpd.dept_id)                                        as dept_ids,
-           group_concat((select dept_name
-                         from t_dept
-                         where t_dept.dept_id in (tpd.dept_id)))            as dept_names
+           group_concat(tpd.dept_id) as dept_ids
     from t_paper tp
            left join t_course tc on (tp.course_id = tc.course_id)
            left join t_paper_dept tpd on (tp.paper_id = tpd.paper_id)
@@ -95,7 +85,7 @@
            tp.start_time,
            tp.end_time,
            tp.minute,
-           tp.creator_id,
+           tp.creator_name,
            tp.create_time,
            tp.update_time,
            tp.status,
@@ -118,6 +108,12 @@
     </if>
     <if test="paper.termId != null">
       and tt.term_id = #{paper.termId,jdbcType=BIGINT}
+    </if>
+    <if test="paper.status != null">
+      and tp.status = #{paper.status,jdbcType=INTEGER}
+    </if>
+    <if test="paper.filterEnd == true ">
+      and (tp.end_time &gt;= now())
     </if>
     GROUP BY tp.paper_id
   </select>

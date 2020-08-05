@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
-import javax.validation.constraints.NotNull;
+import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
+import java.util.List;
 import org.springframework.scheduling.annotation.Async;
 
 /**
@@ -23,16 +24,24 @@ public interface IScoreService extends IService<Score> {
    * @param score 查询数据
    * @return 分数集合
    */
-  IPage<Score> getScore(QueryScoreDto score);
+  IPage<Score> pageScore(QueryScoreDto score);
 
   /**
    * 通过分数信息查询分数
    *
-   * @param paperId 试卷编号
-   * @param userId  用户编号
+   * @param score 查询数据
    * @return 分数
    */
-  Score getScore(Long userId, @NotNull Long paperId);
+  List<Score> getScore(QueryScoreDto score);
+
+  /**
+   * 通过分数信息查询分数
+   *
+   * @param paperId  试卷编号
+   * @param username 用户名
+   * @return 分数
+   */
+  Score getScore(String username, Long paperId);
 
   /**
    * 增加分数数据
@@ -48,4 +57,12 @@ public interface IScoreService extends IService<Score> {
    */
   @Async(SystemConstant.ASYNC_POOL)
   void updateScore(Score score);
+
+
+  /**
+   * 分数情况统计
+   *
+   * @param paperId 试卷编号
+   */
+  StatisticScoreVo statisticScore(Long paperId);
 }

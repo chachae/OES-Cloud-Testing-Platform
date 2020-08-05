@@ -1,13 +1,21 @@
 package com.oes.common.core.exam.util;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
+import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.Type;
+import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.DateUtil;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
 import org.apache.commons.text.similarity.JaccardSimilarity;
 
 /**
@@ -187,4 +195,91 @@ public class ScoreUtil {
     return answers.stream().map(Answer::getScore).mapToInt(s -> s).sum();
   }
 
+  /**
+   * 成绩统计
+   *
+   * @param scores scores
+   * @return 平均分
+   */
+  public static StatisticScoreVo statisticScore(List<Score> scores) {
+    return statisticScoreInts(Lists.transform(scores, Score::getStudentScore));
+  }
+
+  /**
+   * 成绩统计（包含个人成绩排名）
+   *
+   * @param scores scores
+   * @return 平均分
+   */
+  public static StatisticScoreVo statisticScore(List<Score> scores, Score score,
+      Integer userCount) {
+    // 获取基本信息
+    List<Integer> res = scores.stream().map(Score::getStudentScore).collect(Collectors.toList());
+    Collections.reverse(res);
+    StatisticScoreVo baseInfo = statisticScoreInts(res);
+
+    baseInfo.setFullCount(userCount);
+    baseInfo.setScoreCount(res.size());
+    baseInfo.setRank(res.indexOf(score.getStudentScore()) + 1);
+    return baseInfo;
+  }
+
+  private static StatisticScoreVo statisticScoreInts(List<Integer> res) {
+    return new StatisticScoreVo(calMax(res), calMin(res), calAverage(res), calFraction(res));
+  }
+
+  /**
+   * 最高分
+   *
+   * @param scores 分数集合
+   * @return 最高分
+   */
+  private static Integer calMax(List<Integer> scores) {
+    OptionalInt optionMax = scores.stream().mapToInt(s -> s).max();
+    return optionMax.isPresent() ? optionMax.getAsInt() : 0;
+  }
+
+  /**
+   * 最低分
+   *
+   * @param scores 分数集合
+   * @return 最低分
+   */
+  private static Integer calMin(List<Integer> scores) {
+    OptionalInt optionMin = scores.stream().mapToInt(s -> s).min();
+    return optionMin.isPresent() ? optionMin.getAsInt() : 0;
+  }
+
+  /**
+   * 平均分
+   *
+   * @param scores 分数集合
+   * @return 平均分
+   */
+  private static Double calAverage(List<Integer> scores) {
+    OptionalDouble optionAvg = scores.stream().mapToInt(s -> s).average();
+    return optionAvg.isPresent() ? optionAvg.getAsDouble() : 0;
+  }
+
+  /**
+   * 分数段统计
+   *
+   * @param scores 分数集合
+   */
+  private static List<EchartMap> calFraction(List<Integer> scores) {
+    List<EchartMap> result = new ArrayList<>(5);
+
+    long lt60 = scores.stream().filter(s -> s < 60).count();
+    long bt60To70 = scores.stream().filter(s -> s < 70 && s >= 60).count();
+    long bt70To80 = scores.stream().filter(s -> s < 80 && s >= 70).count();
+    long bt80To90 = scores.stream().filter(s -> s < 90 && s >= 80).count();
+    long mt90 = scores.stream().filter(s -> s >= 90).count();
+
+    result.add(new EchartMap().pubData("低于60分", lt60));
+    result.add(new EchartMap().pubData("60分-70分", bt60To70));
+    result.add(new EchartMap().pubData("70分-80分", bt70To80));
+    result.add(new EchartMap().pubData("80分-90分", bt80To90));
+    result.add(new EchartMap().pubData("90分以上", mt90));
+    return result;
+  }
 }

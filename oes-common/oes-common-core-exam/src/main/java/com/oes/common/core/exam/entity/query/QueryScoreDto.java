@@ -33,9 +33,9 @@ public class QueryScoreDto extends QueryParam {
   private Long paperId;
 
   /**
-   * 学生编号
+   * 用户名
    */
-  private Long studentId;
+  private String username;
 
   /**
    * 部门名称

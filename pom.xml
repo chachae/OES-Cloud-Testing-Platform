@@ -54,6 +54,7 @@
     <apache-common-text.version>1.8</apache-common-text.version>
     <codingapi.txlcn.version>5.0.2.RELEASE</codingapi.txlcn.version>
     <dynamic-datasource.version>2.5.7</dynamic-datasource.version>
+    <easyexcel.version>2.2.6</easyexcel.version>
   </properties>
 
   <dependencyManagement>
