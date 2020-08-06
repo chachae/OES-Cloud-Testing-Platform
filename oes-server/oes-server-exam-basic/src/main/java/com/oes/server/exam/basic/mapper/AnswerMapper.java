@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
-import com.oes.common.datasource.starter.announcation.DataPermission;
+import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chachae
  * @since 2020-06-03 16:43:13
  */
-@DataPermission(methods = {"pageAnswer"}, field = "paper_id")
+@ExamInfoScope(methods = {"pageAnswer"}, field = "paper_id")
 public interface AnswerMapper extends BaseMapper<Answer> {
 
   /**

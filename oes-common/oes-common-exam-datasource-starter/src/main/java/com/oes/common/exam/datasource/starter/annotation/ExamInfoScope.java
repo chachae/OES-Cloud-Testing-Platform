@@ -1,4 +1,4 @@
-package com.oes.common.datasource.starter.announcation;
+package com.oes.common.exam.datasource.starter.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DataPermission {
+public @interface ExamInfoScope {
 
   /**
    * mapper层需要数据权限过滤的方法名集合

@@ -5,8 +5,8 @@ import com.oes.ai.entity.ocr.IdCardInfo;
 import com.oes.ai.entity.ocr.QueryOcrEntity;
 import com.oes.ai.function.ocr.baidu.IdCardNumTypeEnum;
 import com.oes.ai.function.ocr.baidu.IdCardStatusEnum;
+import com.oes.ai.function.ocr.baidu.client.BaiduOcrClient;
 import com.oes.ai.function.ocr.baidu.constant.BaiduOcrConstant;
-import com.oes.ai.function.ocr.baidu.remote.IRemoteBaiduOcrService;
 import com.oes.ai.function.ocr.baidu.service.IBaiduOcrIdCardService;
 import com.oes.ai.function.ocr.baidu.util.BaiduIdCardResultUtil;
 import com.oes.ai.function.supplier.baidu.service.IAccessTokenService;
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 public class BaiduOcrIdCardServiceImpl implements IBaiduOcrIdCardService {
 
   private final IAccessTokenService accessTokenService;
-  private final IRemoteBaiduOcrService remoteBaiduOcrService;
+  private final BaiduOcrClient remoteBaiduOcrService;
 
   public IdCardInfo ocrIdCard(QueryOcrEntity entity) {
     // 获取接口资源访问权限 AccessToken

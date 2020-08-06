@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryQuestionDto;
-import com.oes.common.datasource.starter.announcation.DataPermission;
+import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-@DataPermission(methods = {"pageQuestion"}, field = "course_id")
+@ExamInfoScope(methods = {"pageQuestion"}, field = "course_id")
 public interface QuestionMapper extends BaseMapper<Question> {
 
   /**

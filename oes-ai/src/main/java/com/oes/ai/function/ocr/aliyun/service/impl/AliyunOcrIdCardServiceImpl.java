@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.oes.ai.entity.ocr.IdCardInfo;
 import com.oes.ai.entity.ocr.QueryOcrEntity;
+import com.oes.ai.function.ocr.aliyun.client.AliyunOcrClient;
 import com.oes.ai.function.ocr.aliyun.constant.AliyunOcrConstant;
-import com.oes.ai.function.ocr.aliyun.remote.IRemoteAliyunOcrService;
 import com.oes.ai.function.ocr.aliyun.service.IAliyunOcrIdCardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AliyunOcrIdCardServiceImpl implements IAliyunOcrIdCardService {
 
-  private final IRemoteAliyunOcrService remoteAliyunOcrService;
+  private final AliyunOcrClient remoteAliyunOcrService;
 
   @Override
   public IdCardInfo ocrIdCard(QueryOcrEntity aliyunOcr) {

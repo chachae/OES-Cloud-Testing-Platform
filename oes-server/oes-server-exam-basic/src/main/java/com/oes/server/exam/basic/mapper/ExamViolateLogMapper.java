@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.ExamViolateLog;
 import com.oes.common.core.exam.entity.query.QueryExamViolateLogDto;
-import com.oes.common.datasource.starter.announcation.DataPermission;
+import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-07-15 20:18:29
  */
-@DataPermission(methods = {"pageExamViolateLog"}, field = "paper_id")
+@ExamInfoScope(methods = {"pageExamViolateLog"}, field = "paper_id")
 public interface ExamViolateLogMapper extends BaseMapper<ExamViolateLog> {
 
   /**

@@ -1,4 +1,4 @@
-package com.oes.common.datasource.starter.interceptor;
+package com.oes.common.exam.datasource.starter.common;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.auth.CurrentUser;
 import com.oes.common.core.util.SecurityUtil;
-import com.oes.common.datasource.starter.announcation.DataPermission;
+import com.oes.common.exam.datasource.starter.annotation.DataPermission;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.util.List;
@@ -100,19 +100,8 @@ public class DataPermissionInterceptor extends AbstractSqlParserHandler implemen
           fromItem.getAlias() == null ? fromItem.getName() : fromItem.getAlias().getName();
 
       // 默认使用用户数据权限进行
-      String dataPermissionSql;
-      if (dataPermission.field().equals("dept_id")) {
-        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getDeptIds());
-      } else if (dataPermission.field().equals("course_id")) {
-        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getCourseIds());
-      } else if (dataPermission.field().equals("paper_id")) {
-        dataPermissionSql = formatSql(selectTableName, dataPermission.field(), user.getPaperIds());
-      } else if (dataPermission.field().equals("creator_id")) {
-        dataPermissionSql = formatSql(selectTableName, dataPermission.field(),
-            String.valueOf(user.getUserId()));
-      } else {
-        dataPermissionSql = originSql;
-      }
+      String dataPermissionSql = formatSql(selectTableName, dataPermission.field(),
+          user.getDeptIds());
 
       if (plainSelect.getWhere() == null) {
         plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(dataPermissionSql));

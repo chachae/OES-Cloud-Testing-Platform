@@ -1,6 +1,6 @@
-package com.oes.ai.function.ocr.aliyun.remote.fallback;
+package com.oes.ai.function.ocr.aliyun.client.fallback;
 
-import com.oes.ai.function.ocr.aliyun.remote.IRemoteAliyunOcrService;
+import com.oes.ai.function.ocr.aliyun.client.AliyunOcrClient;
 import com.oes.common.core.annotation.Fallback;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Fallback
-public class RemoteAliyunOcrServiceFallback implements FallbackFactory<IRemoteAliyunOcrService> {
+public class RemoteAliyunOcrServiceFallback implements FallbackFactory<AliyunOcrClient> {
 
   @Override
-  public IRemoteAliyunOcrService create(Throwable throwable) {
+  public AliyunOcrClient create(Throwable throwable) {
     return obj -> {
       if (throwable.getMessage().startsWith("[463 463] during [POST]")) {
         log.error("输入图像不是对应服务的图像，请上传正确的身份证图片");

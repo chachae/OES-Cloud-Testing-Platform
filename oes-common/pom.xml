@@ -20,6 +20,7 @@
   <modules>
     <module>oes-common-core</module>
     <module>oes-common-datasource-starter</module>
+    <module>oes-common-exam-datasource-starter</module>
     <module>oes-common-redis-starter</module>
     <module>oes-common-security-starter</module>
     <module>oes-common-core-exam</module>

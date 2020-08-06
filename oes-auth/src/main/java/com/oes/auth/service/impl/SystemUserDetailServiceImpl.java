@@ -58,13 +58,6 @@ public class SystemUserDetailServiceImpl extends ServiceImpl<UserMapper, SystemU
             true, true, true, authorities);
         // 拷贝认证用户属性
         BeanUtils.copyProperties(systemUser, authUser);
-
-        // 课程信息
-        String userCourseDetail = userManager.findUserCourse(authUser.getUserId());
-        // 试卷信息
-        String paperDetail = userManager.finaPaper(authUser.getUserId());
-        authUser.setCourseIds(userCourseDetail);
-        authUser.setPaperIds(paperDetail);
         return authUser;
       } else {
         return new AuthUser(systemUser.getUsername(), systemUser.getPassword(), false);

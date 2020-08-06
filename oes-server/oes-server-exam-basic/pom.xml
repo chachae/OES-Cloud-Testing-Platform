@@ -21,7 +21,7 @@
     </dependency>
     <dependency>
       <groupId>com.oes</groupId>
-      <artifactId>oes-common-datasource-starter</artifactId>
+      <artifactId>oes-common-exam-datasource-starter</artifactId>
       <version>${oes.version}</version>
     </dependency>
     <dependency>

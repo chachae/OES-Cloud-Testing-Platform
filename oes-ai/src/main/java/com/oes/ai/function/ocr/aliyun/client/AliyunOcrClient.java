@@ -1,7 +1,7 @@
-package com.oes.ai.function.ocr.aliyun.remote;
+package com.oes.ai.function.ocr.aliyun.client;
 
+import com.oes.ai.function.ocr.aliyun.client.fallback.RemoteAliyunOcrServiceFallback;
 import com.oes.ai.function.ocr.aliyun.config.AliyunOcrTokenConfig;
-import com.oes.ai.function.ocr.aliyun.remote.fallback.RemoteAliyunOcrServiceFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @date 2020/6/29 11:39
  */
 @FeignClient(name = "AliyunIDCardOCR", url = "${oes.ai.aliyun.url}", configuration = AliyunOcrTokenConfig.class, fallbackFactory = RemoteAliyunOcrServiceFallback.class)
-public interface IRemoteAliyunOcrService {
+public interface AliyunOcrClient {
 
   @PostMapping
   String idCardOcr(String obj);

@@ -1,8 +1,8 @@
-package com.oes.ai.function.ocr.baidu.remote;
+package com.oes.ai.function.ocr.baidu.client;
 
+import com.oes.ai.function.ocr.baidu.client.fallback.RemoteBaiduOcrServiceFallback;
 import com.oes.ai.function.ocr.baidu.config.BaiduOcrInterceptorConfig;
 import com.oes.ai.function.ocr.baidu.entity.AccessTokenInfo;
-import com.oes.ai.function.ocr.baidu.remote.fallback.RemoteBaiduOcrServiceFallback;
 import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
     configuration = BaiduOcrInterceptorConfig.class,
     fallbackFactory = RemoteBaiduOcrServiceFallback.class
 )
-public interface IRemoteBaiduOcrService {
+public interface BaiduOcrClient {
 
   /**
    * 卡证识别

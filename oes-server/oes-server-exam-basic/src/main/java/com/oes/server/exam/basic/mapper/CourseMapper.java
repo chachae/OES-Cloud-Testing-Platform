@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.query.QueryCourseDto;
-import com.oes.common.datasource.starter.announcation.DataPermission;
+import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-@DataPermission(methods = {"pageCourse"}, field = "course_id")
+@ExamInfoScope(methods = {"pageCourse"}, field = "course_id")
 public interface CourseMapper extends BaseMapper<Course> {
 
   /**

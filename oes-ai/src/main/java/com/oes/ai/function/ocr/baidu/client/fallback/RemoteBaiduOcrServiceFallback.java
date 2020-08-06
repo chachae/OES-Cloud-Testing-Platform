@@ -1,6 +1,6 @@
-package com.oes.ai.function.ocr.baidu.remote.fallback;
+package com.oes.ai.function.ocr.baidu.client.fallback;
 
-import com.oes.ai.function.ocr.baidu.remote.IRemoteBaiduOcrService;
+import com.oes.ai.function.ocr.baidu.client.BaiduOcrClient;
 import com.oes.common.core.annotation.Fallback;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Fallback
-public class RemoteBaiduOcrServiceFallback implements FallbackFactory<IRemoteBaiduOcrService> {
+public class RemoteBaiduOcrServiceFallback implements FallbackFactory<BaiduOcrClient> {
 
   @Override
-  public IRemoteBaiduOcrService create(Throwable throwable) {
+  public BaiduOcrClient create(Throwable throwable) {
     return (accessToken, res) -> {
       log.error("Baidu OCR 光学识别接口远端调用异常回滚:", throwable);
       return null;
