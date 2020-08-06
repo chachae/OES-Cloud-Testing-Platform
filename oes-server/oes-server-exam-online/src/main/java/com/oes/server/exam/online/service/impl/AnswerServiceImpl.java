@@ -1,8 +1,10 @@
 package com.oes.server.exam.online.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
@@ -50,6 +52,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Answer> getAnswer(String username, Long paperId) {
     if (username == null) {
       username = SecurityUtil.getCurrentUsername();
@@ -60,11 +63,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Answer> getAnswer(Long paperId) {
     return baseMapper.selectList(new LambdaQueryWrapper<Answer>().eq(Answer::getPaperId, paperId));
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getWarnAnswer(QueryAnswerDto answer) {
     answer.setWarn(Answer.IS_WARN);
     List<Answer> answers = baseMapper.getWarnAnswer(answer);
@@ -107,6 +112,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> statisticAnswers(Long paperId) {
     // 预先准备一个返回体
     List<Map<String, Object>> result = new ArrayList<>();

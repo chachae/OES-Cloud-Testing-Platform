@@ -1,6 +1,8 @@
 package com.oes.server.exam.online.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.online.cache.PaperQuestionCacheService;
@@ -28,6 +30,7 @@ public class PaperQuestionServiceImpl extends
   private final PaperQuestionCacheService paperQuestionCacheService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Map<String, PaperQuestion> getMapByPaperId(Long paperId) {
     Map<String, PaperQuestion> res = paperQuestionCacheService
         .get(SystemConstant.PAPER_QUESTION_PREFIX + paperId);

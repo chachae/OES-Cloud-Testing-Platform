@@ -1,6 +1,8 @@
 package com.oes.server.exam.basic.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.basic.mapper.PaperQuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
@@ -20,6 +22,7 @@ public class PaperQuestionServiceImpl extends
     IPaperQuestionService {
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<PaperQuestion> selectList(Long paperId) {
     return baseMapper.selectListByPaperId(paperId);
   }

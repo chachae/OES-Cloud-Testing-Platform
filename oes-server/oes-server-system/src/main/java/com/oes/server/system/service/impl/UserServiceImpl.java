@@ -1,10 +1,12 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.OptionTree;
 import com.oes.common.core.entity.QueryParam;
@@ -47,6 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   private final IUserDataPermissionService userDataPermissionService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public SystemUser getSystemUser(String username) {
     LambdaQueryWrapper<SystemUser> qw = new LambdaQueryWrapper<>();
     qw.eq(SystemUser::getUsername, username);
@@ -54,6 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<SystemUser> pageSystemUser(QueryParam param, SystemUser user) {
     Page<SystemUser> page = new Page<>(param.getPageNum(), param.getPageSize());
     SortUtil.handlePageSort(param, page, "userId", SystemConstant.ORDER_ASC, true);
@@ -119,6 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<String> getUserIdByDeptIds(String[] deptIds) {
     return baseMapper.selectList(
         new LambdaQueryWrapper<SystemUser>()
@@ -173,6 +178,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<OptionTree<SystemUser>> getSystemUserTree(SystemUser user) {
     List<SystemUser> users = baseMapper.selectSystemUserDetail(user);
     Collection<List<SystemUser>> values = users.stream()

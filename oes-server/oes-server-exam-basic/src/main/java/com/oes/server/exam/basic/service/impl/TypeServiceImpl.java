@@ -1,10 +1,12 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Type;
@@ -34,6 +36,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   private final IQuestionService questionService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<Type> pageType(QueryTypeDto type) {
     Page<Type> page = new Page<>(type.getPageNum(), type.getPageSize());
     LambdaQueryWrapper<Type> wrapper = new LambdaQueryWrapper<>();
@@ -72,6 +75,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Type getByTypeName(String typeName) {
     return baseMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getTypeName, typeName));
   }

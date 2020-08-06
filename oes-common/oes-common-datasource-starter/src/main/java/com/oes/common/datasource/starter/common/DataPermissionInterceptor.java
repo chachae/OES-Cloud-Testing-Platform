@@ -1,4 +1,4 @@
-package com.oes.common.exam.datasource.starter.common;
+package com.oes.common.datasource.starter.common;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.auth.CurrentUser;
 import com.oes.common.core.util.SecurityUtil;
-import com.oes.common.exam.datasource.starter.annotation.DataPermission;
+import com.oes.common.datasource.starter.annotation.DataPermission;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.util.List;

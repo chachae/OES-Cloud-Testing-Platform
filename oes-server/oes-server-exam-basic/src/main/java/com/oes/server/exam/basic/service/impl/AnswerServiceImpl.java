@@ -1,9 +1,11 @@
 package com.oes.server.exam.basic.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.server.exam.basic.mapper.AnswerMapper;
@@ -23,11 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements IAnswerService {
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<Answer> pageAnswer(QueryAnswerDto answer) {
     return baseMapper.pageAnswer(answer, new Page<>(answer.getPageNum(), answer.getPageSize()));
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Answer getAnswer(String username, Long paperId, Long questionId) {
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper
@@ -38,6 +42,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Answer> getAnswer(String username, Long paperId) {
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper

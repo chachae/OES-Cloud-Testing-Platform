@@ -1,8 +1,10 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.auth.CurrentUser;
 import com.oes.common.core.entity.system.IdCardVerify;
 import com.oes.common.core.exception.ApiException;
@@ -30,6 +32,7 @@ public class IdCardVerifyServiceImpl extends
     IIdCardVerifyService {
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IdCardVerify getByUserId(Long userId) {
     if (userId == null) {
       userId = SecurityUtil.getCurrentUserId();
@@ -63,9 +66,10 @@ public class IdCardVerifyServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Boolean auth(String fullName, String idCardNum) {
     return baseMapper.selectCount(new LambdaQueryWrapper<IdCardVerify>()
-        .eq(IdCardVerify::getUserId, SecurityUtil.getCurrentUser().getUserId())
+        .eq(IdCardVerify::getUserId, SecurityUtil.getCurrentUserId())
         .eq(IdCardVerify::getNum, idCardNum)
         .eq(IdCardVerify::getName, fullName)) > 0;
   }

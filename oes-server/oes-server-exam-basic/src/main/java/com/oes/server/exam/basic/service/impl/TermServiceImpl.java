@@ -1,10 +1,12 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.Term;
 import com.oes.common.core.exam.entity.query.QueryTermDto;
@@ -33,6 +35,7 @@ public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements
   private final IPaperService paperService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<Term> pageTerm(QueryTermDto term) {
     LambdaQueryWrapper<Term> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(term.getTermName())) {
@@ -42,6 +45,7 @@ public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Term getByTermName(String termName) {
     return baseMapper.selectOne(new LambdaQueryWrapper<Term>().eq(Term::getTermName, termName));
   }

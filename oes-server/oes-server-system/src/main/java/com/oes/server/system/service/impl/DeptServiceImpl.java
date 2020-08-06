@@ -2,9 +2,11 @@ package com.oes.server.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.PageResultConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.DeptTree;
@@ -46,6 +48,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
   private final IUserDataPermissionService userDataPermissionService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Map<String, Object> getDepts(QueryParam param, Dept dept) {
     Map<String, Object> result = new HashMap<>(2);
     try {
@@ -65,6 +68,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Dept> getDepts(Dept dept, QueryParam param) {
     QueryWrapper<Dept> qw = new QueryWrapper<>();
 

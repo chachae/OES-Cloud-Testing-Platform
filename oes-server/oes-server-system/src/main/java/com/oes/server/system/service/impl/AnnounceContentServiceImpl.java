@@ -1,8 +1,10 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.http.HtmlUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.system.AnnounceContent;
 import com.oes.server.system.mapper.AnnounceContentMapper;
 import com.oes.server.system.service.IAnnounceContentService;
@@ -23,6 +25,7 @@ public class AnnounceContentServiceImpl extends
     IAnnounceContentService {
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public AnnounceContent getAnnounceContent(Long contentId) {
     AnnounceContent content = baseMapper.selectOne(
         new LambdaQueryWrapper<AnnounceContent>().eq(AnnounceContent::getContentId, contentId));

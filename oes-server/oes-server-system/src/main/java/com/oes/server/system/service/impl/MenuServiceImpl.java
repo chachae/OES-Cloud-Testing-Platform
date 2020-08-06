@@ -2,8 +2,10 @@ package com.oes.server.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.PageResultConstant;
 import com.oes.common.core.entity.MenuTree;
 import com.oes.common.core.entity.Tree;
@@ -42,17 +44,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
   private final IRoleMenuService roleMenuService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public String getUserPermissions(String username) {
     List<Menu> menus = baseMapper.selectUserPermissions(username);
     return menus.stream().map(Menu::getPerms).collect(Collectors.joining(","));
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Menu> getUserMenus(String username) {
     return this.baseMapper.selectListByUsername(username);
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Map<String, Object> findMenus(Menu menu) {
     Map<String, Object> result = new HashMap<>(2);
     try {
@@ -79,6 +84,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<VueRouter<Menu>> getUserRouters(String username) {
     List<VueRouter<Menu>> routes = new ArrayList<>();
     List<Menu> menus = this.getUserMenus(username);
@@ -97,6 +103,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Menu> findMenuList(Menu menu) {
     LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(menu.getMenuName())) {

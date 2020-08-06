@@ -1,6 +1,8 @@
 package com.oes.server.exam.online.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.server.exam.online.client.SystemUserClient;
@@ -27,6 +29,7 @@ public class ExamMonitorServiceImpl implements IExamMonitorService {
   private final SystemUserClient systemUserClient;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Map<String, Object> statisticExamRatio(String deptIds, Long paperId) {
     // 考生总数
     R<Integer> res = systemUserClient.countByDeptIds(deptIds);

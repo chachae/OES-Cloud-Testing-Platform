@@ -1,4 +1,4 @@
-package com.oes.common.exam.datasource.starter.annotation;
+package com.oes.common.datasource.starter.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

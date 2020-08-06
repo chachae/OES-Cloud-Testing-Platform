@@ -2,10 +2,12 @@ package com.oes.oss.qiniu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.FileUtil;
 import com.oes.oss.qiniu.entity.QiNiuConfig;
@@ -65,6 +67,7 @@ public class QiNiuContentServiceImpl extends
   private Long expire;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<QiNiuContent> pageQiNiuContent(QiNiuQueryDto query) {
     LambdaQueryWrapper<QiNiuContent> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotEmpty(query.getKey())) {
@@ -74,6 +77,7 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<QiNiuContent> getByIds(String[] ids) {
     return baseMapper.selectBatchIds(Arrays.asList(ids));
   }
@@ -119,6 +123,7 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public QiNiuContent getByName(String key) {
     LambdaQueryWrapper<QiNiuContent> qw = new LambdaQueryWrapper<>();
     qw.eq(QiNiuContent::getName, key);
@@ -126,11 +131,13 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public QiNiuContent getById(Long id) {
     return baseMapper.selectById(id);
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public String download(QiNiuContent content, QiNiuConfig config) {
     String finalUrl;
     if (QiNiuConfig.OPEN_ZONE.equals(content.getType())) {
@@ -152,6 +159,7 @@ public class QiNiuContentServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   @Transactional(rollbackFor = Exception.class)
   public void synchronize(QiNiuConfig config) {
     if (config.getConfigId() == null) {

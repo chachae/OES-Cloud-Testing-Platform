@@ -1,6 +1,7 @@
 package com.oes.auth.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.auth.entity.OauthClientDetails;
 import com.oes.auth.mapper.OauthClientDetailsMapper;
 import com.oes.auth.service.IOauthClientDetailsService;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.exception.ApiException;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class OauthClientDetailsServiceImpl extends
   private final RedisClientDetailsService redisClientDetailsService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<OauthClientDetails> findOauthClientDetails(QueryParam param,
       OauthClientDetails oauthClientDetails) {
     LambdaQueryWrapper<OauthClientDetails> wrapper = new LambdaQueryWrapper<>();
@@ -45,7 +48,7 @@ public class OauthClientDetailsServiceImpl extends
       wrapper.like(OauthClientDetails::getClientId, oauthClientDetails.getClientId());
     }
     Page<OauthClientDetails> page = new Page<>(param.getPageNum(), param.getPageSize());
-    IPage<OauthClientDetails> result = page(page, wrapper);
+    IPage<OauthClientDetails> result = baseMapper.selectPage(page, wrapper);
 
     List<OauthClientDetails> records = new ArrayList<>(result.getRecords().size());
     for (OauthClientDetails ocd : result.getRecords()) {

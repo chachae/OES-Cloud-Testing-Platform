@@ -1,9 +1,11 @@
 package com.oes.auth.manager;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.oes.auth.mapper.MenuMapper;
 import com.oes.auth.mapper.UserMapper;
 import com.oes.auth.mapper.UserRoleMapper;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.system.Menu;
 import com.oes.common.core.entity.system.SystemUser;
@@ -37,14 +39,14 @@ public class UserManager {
    * @param username 用户名
    * @return 用户
    */
+  @DS(DataSourceConstant.SLAVE)
   public SystemUser findByName(String username) {
     SystemUser user = userMapper.selectByName(username);
     if (user != null) {
       // 权限数据
       List<UserDataPermission> permissions = userMapper.selectUserDataPermissions(user.getUserId());
       String deptIds = permissions.stream().map(p -> String.valueOf(p.getDeptId()))
-          .collect(Collectors.joining(
-              StrUtil.COMMA));
+          .collect(Collectors.joining(StrUtil.COMMA));
       user.setDeptIds(deptIds);
     }
     return user;
@@ -56,6 +58,7 @@ public class UserManager {
    * @param username 用户名
    * @return 权限
    */
+  @DS(DataSourceConstant.SLAVE)
   public String findUserPermissions(String username) {
     List<Menu> userPermissions = menuMapper.selectUserPermissions(username);
     return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));

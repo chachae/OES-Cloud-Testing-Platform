@@ -1,8 +1,10 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.system.UserDataPermission;
 import com.oes.server.system.mapper.UserDataPermissionMapper;
 import com.oes.server.system.service.IUserDataPermissionService;
@@ -33,6 +35,7 @@ public class UserDataPermissionImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public String getByUserId(Long userId) {
     LambdaQueryWrapper<UserDataPermission> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(UserDataPermission::getUserId, userId);

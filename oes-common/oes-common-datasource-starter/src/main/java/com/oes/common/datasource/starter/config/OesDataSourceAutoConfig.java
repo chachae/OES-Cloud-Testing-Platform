@@ -1,9 +1,9 @@
-package com.oes.common.exam.datasource.starter.config;
+package com.oes.common.datasource.starter.config;
 
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.parsers.BlockAttackSqlParser;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.oes.common.exam.datasource.starter.common.DataPermissionInterceptor;
+import com.oes.common.datasource.starter.common.DataPermissionInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.annotation.Bean;

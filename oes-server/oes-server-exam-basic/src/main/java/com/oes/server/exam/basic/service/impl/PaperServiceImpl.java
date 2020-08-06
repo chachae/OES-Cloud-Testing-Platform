@@ -2,10 +2,12 @@ package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Paper;
@@ -56,6 +58,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   private final IPaperQuestionService paperQuestionService;
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public IPage<Paper> pagePaper(QueryPaperDto paper) {
     Page<Paper> page = new Page<>(paper.getPageNum(), paper.getPageSize());
     IPage<Paper> result = baseMapper.pagePaper(page, paper);
@@ -67,6 +70,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public Paper getPaper(Long paperId, String username) {
     // 从缓存中取出试卷
     Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
@@ -102,6 +106,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getTopTenPaperData() {
     return baseMapper.selectTopTenPaper();
   }

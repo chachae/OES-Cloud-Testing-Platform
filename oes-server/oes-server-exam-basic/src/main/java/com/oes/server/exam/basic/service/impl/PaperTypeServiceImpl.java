@@ -1,7 +1,9 @@
 package com.oes.server.exam.basic.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.server.exam.basic.mapper.PaperTypeMapper;
 import com.oes.server.exam.basic.service.IPaperTypeService;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2020-06-03 16:43:16
  */
 @Service
+@DS(DataSourceConstant.SLAVE)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType> implements
     IPaperTypeService {

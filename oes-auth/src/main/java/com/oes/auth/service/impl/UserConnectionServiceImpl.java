@@ -1,10 +1,12 @@
 package com.oes.auth.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.auth.entity.UserConnection;
 import com.oes.auth.mapper.UserConnectionMapper;
 import com.oes.auth.service.IUserConnectionService;
+import com.oes.common.core.constant.DataSourceConstant;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +26,7 @@ public class UserConnectionServiceImpl extends
     IUserConnectionService {
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public UserConnection selectByCondition(String providerName, String providerUserId) {
     LambdaQueryWrapper<UserConnection> wrapper = new LambdaQueryWrapper<>();
     wrapper
@@ -33,6 +36,7 @@ public class UserConnectionServiceImpl extends
   }
 
   @Override
+  @DS(DataSourceConstant.SLAVE)
   public List<UserConnection> selectByCondition(String username) {
     LambdaQueryWrapper<UserConnection> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(UserConnection::getUserName, username);
