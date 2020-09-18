@@ -26,6 +26,11 @@
     </dependency>
     <dependency>
       <groupId>com.oes</groupId>
+      <artifactId>oes-common-netty-websocket-starter</artifactId>
+      <version>${oes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oes</groupId>
       <artifactId>oes-common-security-starter</artifactId>
       <version>${oes.version}</version>
     </dependency>
@@ -37,14 +42,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.codingapi.txlcn</groupId>
-      <artifactId>txlcn-tc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.codingapi.txlcn</groupId>
-      <artifactId>txlcn-txmsg-netty</artifactId>
     </dependency>
   </dependencies>
 

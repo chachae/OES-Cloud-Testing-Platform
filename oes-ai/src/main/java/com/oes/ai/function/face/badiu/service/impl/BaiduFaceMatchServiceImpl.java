@@ -1,19 +1,18 @@
 package com.oes.ai.function.face.badiu.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.oes.ai.client.IdCardVerifyClient;
 import com.oes.ai.entity.face.FaceMatchInfo;
 import com.oes.ai.entity.face.QueryFaceMatch;
+import com.oes.ai.function.face.badiu.client.IRemoteBaiduFaceMatchService;
 import com.oes.ai.function.face.badiu.constant.BaiduFaceMatchConstant;
-import com.oes.ai.function.face.badiu.remote.IRemoteBaiduFaceMatchService;
 import com.oes.ai.function.face.badiu.service.IBaiduFaceMatchService;
 import com.oes.ai.function.face.badiu.util.FaceMatchResultUtil;
 import com.oes.ai.function.supplier.baidu.CommonErrorEnum;
 import com.oes.ai.function.supplier.baidu.service.IAccessTokenService;
-import com.oes.ai.mapper.IdCardVerifyMapper;
+import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.IdCardVerify;
 import com.oes.common.core.exception.ApiException;
-import com.oes.common.core.util.SecurityUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
 
-  private final IdCardVerifyMapper idCardVerifyMapper;
+  private final IdCardVerifyClient idCardVerifyClient;
   private final IAccessTokenService accessTokenService;
   private final IRemoteBaiduFaceMatchService remoteBaiduFaceMatchService;
 
@@ -84,14 +83,12 @@ public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
    * @return {@link String} 图片 Base64 信息
    */
   private String getCurUserPhoto() {
-    Long userId = SecurityUtil.getCurrentUserId();
-    IdCardVerify info = idCardVerifyMapper
-        .selectOne(new LambdaQueryWrapper<IdCardVerify>().eq(IdCardVerify::getUserId, userId));
-
-    if (info == null) {
+    R<IdCardVerify> info = idCardVerifyClient.getMyIdCardVerifyInfo();
+    if (info.getData() == null) {
       throw new ApiException("当前用户身份信息未核验");
     }
-    return info.getPhoto();
+    System.out.println(info.getData().getPhoto());
+    return info.getData().getPhoto();
   }
 
   /**

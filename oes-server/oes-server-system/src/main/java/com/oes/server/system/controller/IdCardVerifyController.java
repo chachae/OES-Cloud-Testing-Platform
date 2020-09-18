@@ -2,6 +2,7 @@ package com.oes.server.system.controller;
 
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.IdCardVerify;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.system.service.IIdCardVerifyService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class IdCardVerifyController {
 
   @GetMapping("me")
   public R<IdCardVerify> getMyIdCardVerifyInfo() {
-    return R.ok(iIdCardVerifyService.getByUserId(null));
+    return R.ok(iIdCardVerifyService.getByUserId(SecurityUtil.getCurrentUserId()));
   }
 
   @PostMapping
@@ -40,7 +41,7 @@ public class IdCardVerifyController {
 
   @GetMapping("check")
   public boolean checkVerifyInfo() {
-    return iIdCardVerifyService.getByUserId(null) != null;
+    return iIdCardVerifyService.getByUserId(SecurityUtil.getCurrentUserId()) != null;
   }
 
   @PostMapping("auth")

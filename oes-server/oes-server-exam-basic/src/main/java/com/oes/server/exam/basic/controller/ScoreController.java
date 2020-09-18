@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,9 +61,8 @@ public class ScoreController {
     this.scoreService.deleteScore(score.getUsername(), score.getPaperId());
   }
 
-  @GetMapping("statistic/{paperId}")
-  public R<StatisticScoreVo> statisticScore(
-      @PathVariable @NotNull(message = "{required}") Long paperId) {
+  @GetMapping("statistic")
+  public R<StatisticScoreVo> statisticScore(@NotNull(message = "{required}") Long paperId) {
     return R.ok(this.scoreService.statisticScore(paperId));
   }
 }

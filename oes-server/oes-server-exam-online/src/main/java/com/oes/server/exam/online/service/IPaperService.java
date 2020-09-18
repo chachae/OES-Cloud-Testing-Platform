@@ -31,9 +31,8 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 获取某个同学某张试卷的信息
    *
-   * @param username 用户名
-   * @param paperId  试卷编号
+   * @param paperId 试卷编号
    * @return {@link Paper} 试卷信息集合
    */
-  Paper getByPaperIdAndUsername(Long paperId, String username);
+  Paper getOnePaper(Long paperId);
 }

@@ -23,6 +23,7 @@
     <module>oes-common-exam-datasource-starter</module>
     <module>oes-common-redis-starter</module>
     <module>oes-common-security-starter</module>
+    <module>oes-common-netty-websocket-starter</module>
     <module>oes-common-core-exam</module>
   </modules>
 

@@ -5,6 +5,7 @@ import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.PageUtil;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -34,8 +35,8 @@ public class ScoreController {
 
   @GetMapping("check")
   public Boolean checkScore(Score score) {
-    Integer status = scoreService.getScore(null, score.getPaperId()).getStatus();
-    return status != null && status == 0;
+    score = scoreService.getScore(SecurityUtil.getCurrentUsername(), score.getPaperId());
+    return score != null && score.getStatus() != null && score.getStatus() == 0;
   }
 
   @GetMapping("statistic")
@@ -50,6 +51,7 @@ public class ScoreController {
 
   @PostMapping
   public void add(Score score) {
+    score.setUsername(SecurityUtil.getCurrentUsername());
     scoreService.updateScore(score);
   }
 

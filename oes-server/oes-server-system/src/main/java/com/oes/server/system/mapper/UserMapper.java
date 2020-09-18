@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020/4/30 19:56
  */
-@DataPermission(methods = {"pageSystemUserDetail", "selectSystemUserDetail"})
+@DataPermission(methods = {"pageSystemUserDetail"})
 public interface UserMapper extends BaseMapper<SystemUser> {
 
 

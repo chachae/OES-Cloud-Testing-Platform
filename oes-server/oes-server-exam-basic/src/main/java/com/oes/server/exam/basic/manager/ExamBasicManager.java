@@ -55,7 +55,7 @@ public class ExamBasicManager {
    * @param userId 用户编号
    * @return 试卷编号数据
    */
-  public String finaPaper(Long userId) {
+  public String findPaper(Long userId) {
     List<String> courseIds = getCourseIds(userId);
     if (CollUtil.isNotEmpty(courseIds)) {
       List<Paper> papers = paperMapper

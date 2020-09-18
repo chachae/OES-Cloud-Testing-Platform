@@ -1,6 +1,6 @@
-package com.oes.ai.function.face.badiu.remote.fallback;
+package com.oes.ai.function.face.badiu.client.fallback;
 
-import com.oes.ai.function.face.badiu.remote.IRemoteBaiduFaceMatchService;
+import com.oes.ai.function.face.badiu.client.IRemoteBaiduFaceMatchService;
 import com.oes.common.core.annotation.Fallback;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;

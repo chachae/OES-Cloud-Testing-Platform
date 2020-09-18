@@ -45,7 +45,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public Paper getByPaperIdAndUsername(Long paperId, String username) {
+  public Paper getOnePaper(Long paperId) {
     R<Paper> res = remotePaperService.getOne(paperId);
     if (res.getData() == null) {
       throw new ApiException("获取试卷失败");

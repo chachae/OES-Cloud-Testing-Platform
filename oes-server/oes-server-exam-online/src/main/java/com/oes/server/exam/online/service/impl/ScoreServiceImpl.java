@@ -62,13 +62,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   @Override
   @DS(DataSourceConstant.SLAVE)
   public Score getScore(String username, Long paperId) {
-    if (username == null) {
-      username = SecurityUtil.getCurrentUsername();
-    }
     LambdaQueryWrapper<Score> wrapper = new LambdaQueryWrapper<>();
-    wrapper
-        .eq(Score::getUsername, username)
-        .eq(Score::getPaperId, paperId);
+    wrapper.eq(Score::getUsername, username).eq(Score::getPaperId, paperId);
     return baseMapper.selectOne(wrapper);
   }
 
@@ -93,10 +88,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     List<Answer> answers = answerService.getAnswer(score.getUsername(), score.getPaperId());
     score.setStudentScore(ScoreUtil.calScore(answers));
     score.setStatus(Score.STATUS_HAS_SUBMIT);
-    baseMapper
-        .update(score, new LambdaQueryWrapper<Score>()
-            .eq(Score::getUsername, score.getUsername())
-            .eq(Score::getPaperId, score.getPaperId()));
+    baseMapper.update(score, new LambdaQueryWrapper<Score>()
+        .eq(Score::getUsername, score.getUsername())
+        .eq(Score::getPaperId, score.getPaperId()));
   }
 
   @Override

@@ -61,6 +61,8 @@ public class ExamViolateLogServiceImpl extends
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void saveExamViolateLog(ExamViolateLog examViolateLog) {
+    examViolateLog.setUsername(SecurityUtil.getCurrentUsername());
+    examViolateLog.setFullName(SecurityUtil.getCurrentUser().getFullName());
     setExamViolateLogInfo(examViolateLog);
     baseMapper.insert(examViolateLog);
   }
@@ -79,16 +81,14 @@ public class ExamViolateLogServiceImpl extends
     String violateMsg = ExamViolateBehaviourEnum.getMsg(examViolateLog.getCode());
     // 格式化描述信息
     final String desc = String.format("%s：%s于%s时%s，违规停留时间共计%s。", curUser.getDeptName(),
-        curUser.getFullName(), DateUtil.formatDate(examViolateLog.getViolateTime()), violateMsg,
-        stayTime);
+        curUser.getFullName(), DateUtil.formatDate(examViolateLog.getViolateTime()), violateMsg, stayTime);
 
-    examViolateLog
-        .setUsername(curUser.getUsername())
-        .setFullName(curUser.getFullName())
-        .setBehaviour(violateMsg)
-        .setSystem(agentInfo.getSystem())
-        .setBrowser(agentInfo.getBrowser())
-        .setDescription(desc)
-        .setStayTime(stayTime);
+    examViolateLog.setUsername(curUser.getUsername());
+    examViolateLog.setFullName(curUser.getFullName());
+    examViolateLog.setBehaviour(violateMsg);
+    examViolateLog.setSystem(agentInfo.getSystem());
+    examViolateLog.setBrowser(agentInfo.getBrowser());
+    examViolateLog.setDescription(desc);
+    examViolateLog.setStayTime(stayTime);
   }
 }

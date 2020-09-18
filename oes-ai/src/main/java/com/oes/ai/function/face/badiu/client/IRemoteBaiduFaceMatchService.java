@@ -1,6 +1,6 @@
-package com.oes.ai.function.face.badiu.remote;
+package com.oes.ai.function.face.badiu.client;
 
-import com.oes.ai.function.face.badiu.remote.fallback.RemoteBaiduFaceMatchServiceFallback;
+import com.oes.ai.function.face.badiu.client.fallback.RemoteBaiduFaceMatchServiceFallback;
 import com.oes.ai.function.ocr.baidu.entity.AccessTokenInfo;
 import com.oes.common.core.constant.SystemConstant;
 import java.util.Map;

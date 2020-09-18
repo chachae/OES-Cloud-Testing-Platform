@@ -21,9 +21,7 @@ public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept
 
   @Override
   public void deleteBatchByPaperIds(String[] paperIds) {
-    baseMapper
-        .delete(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds
-        )));
+    baseMapper.delete(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
   }
 
   @Override

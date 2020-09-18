@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -151,8 +152,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
     SystemUser user = new SystemUser();
     user.setAvatar(avatar);
     String curUsername = SecurityUtil.getCurrentUsername();
-    this.baseMapper.update(user,
-        new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));
+    this.baseMapper.update(user, new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));
   }
 
   @Override
@@ -161,8 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
     SystemUser user = new SystemUser();
     user.setPassword(passwordEncoder.encode(password));
     String curUsername = SecurityUtil.getCurrentUsername();
-    baseMapper.update(user,
-        new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));
+    baseMapper.update(user, new LambdaQueryWrapper<SystemUser>().eq(SystemUser::getUsername, curUsername));
   }
 
   @Override
@@ -172,8 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
     params.setPassword(passwordEncoder.encode(SystemUser.DEFAULT_PASSWORD));
 
     List<String> list = Arrays.asList(usernames);
-    baseMapper
-        .update(params, new LambdaQueryWrapper<SystemUser>().in(SystemUser::getUsername, list));
+    baseMapper.update(params, new LambdaQueryWrapper<SystemUser>().in(SystemUser::getUsername, list));
 
   }
 
@@ -184,9 +182,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
     Collection<List<SystemUser>> values = users.stream()
         .collect(Collectors.groupingBy(SystemUser::getDeptId)).values();
 
-    List<OptionTree<SystemUser>> result = new ArrayList<>();
+    List<OptionTree<SystemUser>> result = new LinkedList<>();
     for (List<SystemUser> list : values) {
-      List<OptionTree<SystemUser>> children = new ArrayList<>();
+      List<OptionTree<SystemUser>> children = new LinkedList<>();
       list.forEach(cur -> children.add(new OptionTree<>(cur.getUserId(), cur.getFullName())));
       result.add(new OptionTree<>(list.get(0).getDeptId(), list.get(0).getDeptName(), children));
     }

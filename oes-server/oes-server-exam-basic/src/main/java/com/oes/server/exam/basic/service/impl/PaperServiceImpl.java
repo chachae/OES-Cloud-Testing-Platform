@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.DataSourceConstant;
-import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperDept;
@@ -19,7 +18,7 @@ import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exception.ApiException;
-import com.oes.server.exam.basic.cache.PaperCacheService;
+import com.oes.server.exam.basic.config.SnowflakeConfig;
 import com.oes.server.exam.basic.mapper.PaperMapper;
 import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
@@ -51,10 +50,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   private final ScoreMapper scoreMapper;
   private final IAnswerService answerService;
+  private final SnowflakeConfig snowflakeConfig;
   private final IQuestionService questionService;
   private final IPaperTypeService paperTypeService;
   private final IPaperDeptService paperDeptService;
-  private final PaperCacheService paperCacheService;
   private final IPaperQuestionService paperQuestionService;
 
   @Override
@@ -73,15 +72,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @DS(DataSourceConstant.SLAVE)
   public Paper getPaper(Long paperId, String username) {
     // 从缓存中取出试卷
-    Paper paper = paperCacheService.get(SystemConstant.PAPER_PREFIX + paperId);
-    if (paper == null) {
-      paper = baseMapper.selectByPaperId(paperId);
-      // 缓存试卷
-      paperCacheService.save(SystemConstant.PAPER_PREFIX + paperId, paper);
-    }
+    Paper paper = baseMapper.selectByPaperId(paperId);
     // 题目顺序随机
     Collections.shuffle(paper.getPaperQuestionList());
-
     // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力
     List<Answer> answers = answerService.getAnswer(username, paperId);
     Map<Long, Answer> answerMap = new HashMap<>(answers.size());
@@ -137,6 +130,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void randomCreatePaper(Paper paper, PaperType paperType) {
+    // 采用雪花算法
+    paper.setPaperId(snowflakeConfig.getId());
     paper.setCreateTime(new Date());
     paper.setIsRandom(Paper.IS_RANDOM);
     paper.setStatus(Paper.STATUS_CLOSE);
@@ -182,9 +177,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       String[] numArray) {
     List<PaperType> objects = new ArrayList<>(typeIdArray.length);
     for (int i = 0; i < typeIdArray.length; i++) {
-      objects.add(
-          new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]),
-              Integer.parseInt(numArray[i])));
+      objects.add(new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]), Integer.parseInt(numArray[i])));
     }
     this.paperTypeService.saveBatch(objects);
   }

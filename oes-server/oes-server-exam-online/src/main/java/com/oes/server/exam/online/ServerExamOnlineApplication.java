@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableFeignClients
 @SpringBootApplication
 @EnableTransactionManagement
-// @EnableDistributedTransaction
 @EnableOesCloudResourceServer
 @MapperScan("com.oes.server.exam.online.mapper")
 public class ServerExamOnlineApplication {

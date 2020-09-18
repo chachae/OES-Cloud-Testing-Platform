@@ -2,7 +2,6 @@ package com.oes.common.core.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.constant.PageResultConstant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +40,19 @@ public class PageUtil {
   /**
    * List<T> 分页
    */
-  public static <T> List<T> toPage(int page, int size, List<T> list) {
-    int start = (page - 1) * size;
-    int end = start + size;
-    if (start > list.size()) {
-      return new ArrayList<>(0);
-    } else if (end >= list.size()) {
-      return list.subList(start, list.size());
+  public static <T> Map<String, Object> toPage(int page, int size, List<T> list) {
+    if (list.isEmpty()) {
+      return toPage(null, 0);
     } else {
-      return list.subList(start, end);
+      int start = (page - 1) * size;
+      int end = start + size;
+      if (start > list.size()) {
+        return toPage(null, 0);
+      } else if (end >= list.size()) {
+        return toPage(list.subList(start, list.size()), list.size());
+      } else {
+        return toPage(list.subList(start, end), list.size());
+      }
     }
   }
 }

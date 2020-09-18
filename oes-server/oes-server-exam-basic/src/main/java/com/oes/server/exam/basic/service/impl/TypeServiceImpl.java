@@ -18,7 +18,6 @@ import com.oes.server.exam.basic.service.IQuestionService;
 import com.oes.server.exam.basic.service.ITypeService;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -81,9 +80,8 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   }
 
   private boolean hasDefaultType(String[] typeIds) {
-    List<String> defaults = Arrays.asList(Type.DEFAULT_TYPE_ID_ARRAY);
     for (String typeId : typeIds) {
-      if (defaults.contains(typeId)) {
+      if (Integer.parseInt(typeId) <= 5) {
         return true;
       }
     }

@@ -54,9 +54,6 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   @Override
   @DS(DataSourceConstant.SLAVE)
   public List<Answer> getAnswer(String username, Long paperId) {
-    if (username == null) {
-      username = SecurityUtil.getCurrentUsername();
-    }
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId);
     return baseMapper.selectList(wrapper);

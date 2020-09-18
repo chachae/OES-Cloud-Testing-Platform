@@ -47,6 +47,7 @@ public class AnswerController {
 
   @PutMapping
   public R<Long> updateAnswer(@Valid Answer answer) {
+    answer.setUsername(SecurityUtil.getCurrentUsername());
     return R.ok(answerService.updateAnswer(answer));
   }
 

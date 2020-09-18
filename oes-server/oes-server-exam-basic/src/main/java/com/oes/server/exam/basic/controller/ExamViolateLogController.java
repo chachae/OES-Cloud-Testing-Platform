@@ -44,15 +44,14 @@ public class ExamViolateLogController {
   }
 
   @GetMapping("list")
+  @PreAuthorize("hasAuthority('violatelog:view')")
   public R<List<ExamViolateLog>> listExamViolateLog(@NotNull(message = "{required}") Long paperId) {
     return R.ok(examViolateLogService.selectByPaperId(paperId));
   }
 
   @GetMapping("count")
-  public Integer getViolateLogCount(
-      @NotBlank(message = "{required}") Long paperId) {
-    return examViolateLogService
-        .getViolateCount(paperId, SecurityUtil.getCurrentUsername());
+  public Integer getViolateLogCount(@NotBlank(message = "{required}") Long paperId) {
+    return examViolateLogService.getViolateCount(paperId, SecurityUtil.getCurrentUsername());
   }
 
   /**
@@ -64,12 +63,10 @@ public class ExamViolateLogController {
    * @return {@link Boolean} true / false
    */
   @GetMapping("check")
-  public boolean checkMaxViolateLog(
-      @NotBlank(message = "{required}") Long paperId) {
+  public boolean checkMaxViolateLog(@NotBlank(message = "{required}") Long paperId) {
     // 在成绩无效（未提交前 / 人为修改成绩状态）时，单场考试违规记录超过阈值无法进入考试
-    return
-        examViolateLogService.getViolateCount(paperId, SecurityUtil.getCurrentUsername())
-            >= ExamBasicConstant.MAX_VIOLATE_COUNT;
+    return examViolateLogService.getViolateCount(paperId, SecurityUtil.getCurrentUsername())
+        >= ExamBasicConstant.MAX_VIOLATE_COUNT;
   }
 
   @PostMapping

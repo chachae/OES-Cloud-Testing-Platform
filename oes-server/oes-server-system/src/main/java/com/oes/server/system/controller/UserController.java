@@ -109,9 +109,7 @@ public class UserController {
 
   @GetMapping("count")
   public R<Integer> getDeptCount(@NotBlank(message = "{required}") String deptIds) {
-    Integer count = userService
-        .count(new LambdaQueryWrapper<SystemUser>()
-            .in(SystemUser::getDeptId, StrUtil.split(deptIds, ',')));
+    Integer count = userService.count(new LambdaQueryWrapper<SystemUser>().in(SystemUser::getDeptId, StrUtil.split(deptIds, ',')));
     return R.ok(count);
   }
 

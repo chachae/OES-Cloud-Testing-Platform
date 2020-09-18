@@ -34,10 +34,6 @@ public class IdCardVerifyServiceImpl extends
   @Override
   @DS(DataSourceConstant.SLAVE)
   public IdCardVerify getByUserId(Long userId) {
-    if (userId == null) {
-      userId = SecurityUtil.getCurrentUserId();
-    }
-
     IdCardVerify verifyInfo = baseMapper
         .selectOne(new LambdaQueryWrapper<IdCardVerify>().eq(IdCardVerify::getUserId, userId));
 

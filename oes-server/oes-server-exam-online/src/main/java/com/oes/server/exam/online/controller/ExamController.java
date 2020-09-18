@@ -36,11 +36,7 @@ public class ExamController {
   private final IScoreService scoreService;
 
   /**
-   * 获取当前考试的信息试卷信息
-   * <pre>
-   *   How to curl cur api
-   *   for example:exam/11?studentId=1
-   * </pre>
+   * 获取当前考试的试卷信息
    */
   @GetMapping("{paperId}")
   public R<Paper> getExam(@PathVariable @NotNull(message = "{required}") Long paperId) {
@@ -52,7 +48,7 @@ public class ExamController {
       score.setPaperId(paperId);
       scoreService.createScore(score);
     }
-    return R.ok(paperService.getByPaperIdAndUsername(paperId, username));
+    return R.ok(paperService.getOnePaper(paperId));
   }
 
   /**

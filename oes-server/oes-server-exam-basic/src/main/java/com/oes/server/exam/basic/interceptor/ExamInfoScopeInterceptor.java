@@ -68,7 +68,7 @@ public class ExamInfoScopeInterceptor extends AbstractExamInfoScopeHandler {
             break;
           case ScopeFieldConstant.PAPER_ID:
             dataPermissionSql = formatSql(selectTableName, examInfoScope.field(),
-                managerBean.finaPaper(SecurityUtil.getCurrentUserId()));
+                managerBean.findPaper(SecurityUtil.getCurrentUserId()));
             break;
           case ScopeFieldConstant.CREATOR_ID:
             dataPermissionSql = formatSql(selectTableName, examInfoScope.field(),

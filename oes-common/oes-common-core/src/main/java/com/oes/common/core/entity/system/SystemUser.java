@@ -67,7 +67,7 @@ public class SystemUser implements Serializable {
    * 用户名
    */
   @ExcelProperty(index = 0)
-  @Size(min = 4, max = 10, message = "{range}")
+  @Size(min = 4, max = 15, message = "{range}")
   private String username;
 
   /**

@@ -56,7 +56,7 @@ public class Paper implements Serializable {
   /**
    * 试卷主键（id）
    */
-  @TableId(type = IdType.AUTO)
+  @TableId(type = IdType.INPUT)
   private Long paperId;
 
   /**
@@ -150,6 +150,7 @@ public class Paper implements Serializable {
   /**
    * 试卷题目信息（SQL 查询映射时使用）
    */
+  @JsonIgnore
   @TableField(exist = false)
   private List<PaperQuestion> paperQuestionList;
 
