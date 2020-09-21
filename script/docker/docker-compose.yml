@@ -1,0 +1,113 @@
+version: '3'
+
+services:
+  oes-gateway:
+    image: oes-gateway:latest
+    container_name: oes-gateway
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--mysql.url=host.docker.internal"
+      - "--redis.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+      - "--oes.gateway=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 8301:8301
+    restart: on-failure
+
+  oes-admin:
+    image: oes-admin:latest
+    container_name: oes-admin
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 8400:8400
+    restart: on-failure
+
+  oes-auth:
+    image: oes-auth:latest
+    container_name: oes-auth
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--redis.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 9200:9200
+    restart: on-failure
+
+  oes-ai:
+    image: oes-ai:latest
+    container_name: oes-ai
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--redis.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+      - "--oes.gateway=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 9700:9700
+    restart: on-failure
+
+  oes-oss-qiniu:
+    image: oes-oss-qiniu:latest
+    container_name: oes-oss-qiniu
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--mysql.url=host.docker.internal"
+      - "--redis.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+      - "--oes.gateway=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 9505:9505
+    restart: on-failure
+
+  oes-server-system:
+    image: oes-server-system:latest
+    container_name: oes-server-system
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--mysql.url=host.docker.internal"
+      - "--redis.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+      - "--oes.gateway=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 9500:9500
+    restart: on-failure
+
+  oes-server-job:
+    image: oes-server-job:latest
+    container_name: oes-server-job
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--nacos.url=host.docker.internal"
+      - "--mysql.url=host.docker.internal"
+      - "--oes.admin=host.docker.internal"
+      - "--oes.gateway=host.docker.internal"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 8204:8204
+    restart: on-failure
