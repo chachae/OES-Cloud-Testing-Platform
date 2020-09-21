@@ -7,11 +7,11 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--mysql.url=host.docker.internal"
-      - "--redis.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
-      - "--oes.gateway=host.docker.internal"
+      - "--nacos.url=10.71.29.182"
+      - "--mysql.url=10.71.29.198"
+      - "--redis.url=10.71.29.182"
+      - "--oes-admin=10.71.29.182"
+      - "--mongo.url=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
@@ -37,9 +37,10 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--redis.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
+      - "--mysql.url=10.71.29.198"
+      - "--nacos.url=10.71.29.182"
+      - "--redis.url=10.71.29.182"
+      - "--oes-admin=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
@@ -52,10 +53,10 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--redis.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
-      - "--oes.gateway=host.docker.internal"
+      - "--nacos.url=10.71.29.182"
+      - "--redis.url=10.71.29.182"
+      - "--oes-admin=10.71.29.182"
+      - "--oes-gateway=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
@@ -68,11 +69,11 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--mysql.url=host.docker.internal"
-      - "--redis.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
-      - "--oes.gateway=host.docker.internal"
+      - "--nacos.url=10.71.29.182"
+      - "--mysql.url=10.71.29.198"
+      - "--redis.url=10.71.29.182"
+      - "--oes-admin=10.71.29.182"
+      - "--oes-gateway=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
@@ -85,11 +86,11 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--mysql.url=host.docker.internal"
-      - "--redis.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
-      - "--oes.gateway=host.docker.internal"
+      - "--nacos.url=10.71.29.182"
+      - "--mysql.url=10.71.29.198"
+      - "--redis.url=10.71.29.182"
+      - "--oes-admin=10.71.29.182"
+      - "--oes-gateway=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
@@ -102,10 +103,10 @@ services:
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
-      - "--mysql.url=host.docker.internal"
-      - "--oes.admin=host.docker.internal"
-      - "--oes.gateway=host.docker.internal"
+      - "--nacos.url=10.71.29.182"
+      - "--mysql.url=10.71.29.198"
+      - "--oes-admin=10.71.29.182"
+      - "--oes-gateway=10.71.29.182"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
