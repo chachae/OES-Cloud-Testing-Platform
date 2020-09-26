@@ -1,12 +1,12 @@
 package com.oes.common.core.exam.util;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Score;
-import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.DateUtil;
 import java.util.ArrayList;
@@ -44,17 +44,19 @@ public class ScoreUtil {
   public static void mark(Answer answer, PaperQuestion paperQuestion) {
     // 默认全部错误，具体的评分方法再进行"是否为错题"设置
     answer.setWarn(Answer.IS_WARN);
-    if (Type.DEFAULT_TYPE_ID_ARRAY[0].equals(String.valueOf(answer.getTypeId()))) {
+    if (answer.getTypeId() == 1) {
       // 单项选择题
       markChoice(answer, paperQuestion);
-    } else if (Type.DEFAULT_TYPE_ID_ARRAY[1].equals(String.valueOf(answer.getTypeId()))) {
+    } else if (answer.getTypeId() == 2) {
       // 多项选择题
       markMulChoice(answer, paperQuestion);
-    } else if (Type.DEFAULT_TYPE_ID_ARRAY[2].equals(String.valueOf(answer.getTypeId()))
-        || Type.DEFAULT_TYPE_ID_ARRAY[3].equals(String.valueOf(answer.getTypeId()))) {
-      // 判断题 / 填空题
-      markNormalMark(answer, paperQuestion);
-    } else if (Type.DEFAULT_TYPE_ID_ARRAY[4].equals(String.valueOf(answer.getTypeId()))) {
+    } else if (answer.getTypeId() == 3) {
+      // 判断题
+      markJudge(answer, paperQuestion);
+    } else if (answer.getTypeId() == 4) {
+      // 填空题
+      markFill(answer, paperQuestion);
+    } else if (answer.getTypeId() == 5) {
       // 主观题
       subjectiveMark(answer, paperQuestion);
     }
@@ -82,69 +84,108 @@ public class ScoreUtil {
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
-      return;
+    } else if (answer.getAnswerContent().equals(paperQuestion.getRightKey())) {
+      answer.setWarn(Answer.IS_RIGHT);
+      answer.setScore(paperQuestion.getScore());
+    } else {
+      answer.setScore(Score.DEFAULT_SCORE);
     }
-    for (String rk : paperQuestion.getRightKey().split(StrUtil.COMMA)) {
-      if (rk.equals(answer.getAnswerContent())) {
-        answer.setWarn(Answer.IS_RIGHT);
-        answer.setScore(paperQuestion.getScore());
-        return;
-      }
-    }
-    answer.setScore(Score.DEFAULT_SCORE);
   }
 
   /**
    * 多项选择题计算
    *
-   * @param answer        answer
+   * @param answer answer
    * @param paperQuestion 当前题目的答案信息
    */
   private static void markMulChoice(Answer answer, PaperQuestion paperQuestion) {
     answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
-    if (StrUtil.isBlank(answer.getAnswerContent())) {
+    List<String> contentArray = JSON.parseArray(answer.getAnswerContent(), String.class);
+    if (contentArray.isEmpty()) {
       answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
 
+    // 全对的情况
     if (answer.getAnswerContent().equals(paperQuestion.getRightKey())) {
       answer.setWarn(Answer.IS_RIGHT);
       answer.setScore(paperQuestion.getScore());
       return;
     }
 
-    List<String> rightKeys = StrUtil.split(paperQuestion.getRightKey(), StrUtil.C_COMMA);
-    String[] contentArray = answer.getAnswerContent().split(StrUtil.COMMA);
+    // 没有全对（包含正确答案内部存在的答案直接的0分）
+    List<String> rightKeys = JSON.parseArray(paperQuestion.getRightKey(), String.class);
     for (String content : contentArray) {
       if (!rightKeys.contains(content)) {
         answer.setScore(0);
         return;
       }
     }
+    // 得分一半
     answer.setScore(paperQuestion.getScore() / 2);
   }
 
   /**
-   * 常规题目计算
+   * 判断题
    *
    * @param answer        answer
    * @param paperQuestion 当前题目的答案信息
    */
-  private static void markNormalMark(Answer answer, PaperQuestion paperQuestion) {
+  private static void markJudge(Answer answer, PaperQuestion paperQuestion) {
     answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
     if (StrUtil.isBlank(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
       return;
     }
-    List<String> rightKeys = StrUtil.split(paperQuestion.getRightKey(), StrUtil.C_COMMA);
-    if (!rightKeys.contains(answer.getAnswerContent())) {
+    if (!paperQuestion.getRightKey().equals(answer.getAnswerContent())) {
       answer.setScore(Score.DEFAULT_SCORE);
     } else {
       answer.setWarn(Answer.IS_RIGHT);
       answer.setScore(paperQuestion.getScore());
     }
+  }
+
+  /**
+   * 填空题评分
+   */
+  private static void markFill(Answer answer, PaperQuestion paperQuestion) {
+    answer.setStatus(Answer.STATUS_CORRECT);
+    List<String> answerContents = JSON.parseArray(answer.getAnswerContent(), String.class);
+    List<String> rightKeys = JSON.parseArray(paperQuestion.getRightKey(), String.class);
+    // 填空数量
+    int fillNum = rightKeys.size();
+    // 题目总分
+    int ans = paperQuestion.getScore();
+    // 错题计数器
+    int cnt = 0;
+    for (int i = 0; i < fillNum; ++i) {
+      String answerContent = answerContents.get(i);
+      if (StrUtil.isBlank(answerContent)) {
+        ++cnt;
+      } else {
+        String rightKey = rightKeys.get(i).trim();
+        // 一空多答案
+        if (rightKey.contains("|")) {
+          List<String> rightKeyList = StrUtil.split(rightKey, '|');
+          if (!rightKeyList.contains(answerContent.trim())) {
+            ++cnt;
+          }
+        } else if (!rightKey.equals(answerContent.trim())) {
+          ++cnt;
+        }
+      }
+    }
+    // cnt = 0，全对，cnt = 填空数，全错
+    if (cnt == 0) {
+      answer.setWarn(Answer.IS_RIGHT);
+    } else if (cnt == fillNum) {
+      ans = 0;
+    } else {
+      ans -= paperQuestion.getScore() / fillNum * cnt;
+    }
+    answer.setScore(ans);
   }
 
   /**
@@ -211,8 +252,7 @@ public class ScoreUtil {
    * @param scores scores
    * @return 平均分
    */
-  public static StatisticScoreVo statisticScore(List<Score> scores, Score score,
-      Integer userCount) {
+  public static StatisticScoreVo statisticScore(List<Score> scores, Score score, Integer userCount) {
     // 获取基本信息
     List<Integer> res = scores.stream().map(Score::getStudentScore).collect(Collectors.toList());
     Collections.reverse(res);
