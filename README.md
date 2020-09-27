@@ -1,5 +1,5 @@
 <p align="center" >
-    <img src="./images/oes-cloud-logo-1.png" width="45%"></a>
+    <img src="./images/oes-cloud-logo-2.png" width="45%"></img>
 </p>
 <p align="center">
   <strong>高性能，易拓展，分布式多场景在线考试平台</strong>
