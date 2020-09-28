@@ -37,8 +37,7 @@ public class AnswerController {
    * @return {@link R<List>} 错题集
    */
   @GetMapping("warn")
-  public R<List<Map<String, Object>>> getWarningAnswer(
-      @NotNull(message = "{required}") Long paperId) {
+  public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
     QueryAnswerDto entity = new QueryAnswerDto();
     entity.setPaperId(paperId);
     entity.setUsername(SecurityUtil.getCurrentUsername());
@@ -47,13 +46,11 @@ public class AnswerController {
 
   @PutMapping
   public R<Long> updateAnswer(@Valid Answer answer) {
-    answer.setUsername(SecurityUtil.getCurrentUsername());
     return R.ok(answerService.updateAnswer(answer));
   }
 
   @GetMapping("statistic")
-  public R<List<Map<String, Object>>> answerStatistic(
-      @NotNull(message = "{required}") Long paperId) {
+  public R<List<Map<String, Object>>> answerStatistic(@NotNull(message = "{required}") Long paperId) {
     return R.ok(answerService.statisticAnswers(paperId));
   }
 }

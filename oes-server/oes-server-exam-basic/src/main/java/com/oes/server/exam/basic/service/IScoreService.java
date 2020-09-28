@@ -51,6 +51,13 @@ public interface IScoreService extends IService<Score> {
    */
   void createScore(Score score);
 
+  /**
+   * 通过试卷编号统计成绩数据
+   *
+   * @param paperIds 试卷编号
+   * @return 总数
+   */
+  Integer countByPaperId(String[] paperIds);
 
   /**
    * 分数情况统计

@@ -87,7 +87,7 @@ public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
     if (info.getData() == null) {
       throw new ApiException("当前用户身份信息未核验");
     }
-    System.out.println(info.getData().getPhoto());
+    // System.out.println(info.getData().getPhoto());
     return info.getData().getPhoto();
   }
 

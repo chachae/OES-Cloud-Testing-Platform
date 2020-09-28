@@ -1,6 +1,5 @@
 package com.oes.common.core.exam.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -55,8 +54,9 @@ public class Paper implements Serializable {
 
   /**
    * 试卷主键（id）
+   * 使用默认的 snowflake
    */
-  @TableId(type = IdType.INPUT)
+  @TableId
   private Long paperId;
 
   /**

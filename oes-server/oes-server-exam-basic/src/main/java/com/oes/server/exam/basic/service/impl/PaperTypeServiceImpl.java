@@ -7,6 +7,7 @@ import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.server.exam.basic.mapper.PaperTypeMapper;
 import com.oes.server.exam.basic.service.IPaperTypeService;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,8 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @DS(DataSourceConstant.SLAVE)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType> implements
-    IPaperTypeService {
+public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType> implements IPaperTypeService {
 
   @Override
   public Boolean checkScore(PaperType paperType) {
@@ -46,4 +46,16 @@ public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType
         .eq(PaperType::getPaperId, paperId)
         .eq(PaperType::getTypeId, typeId));
   }
+
+  @Override
+  @DS(DataSourceConstant.MASTER)
+  public void deleteBatchByPaperIds(String[] paperIds) {
+    if (paperIds.length == 1) {
+      baseMapper.deleteById(paperIds[0]);
+    } else {
+      baseMapper.deleteBatchIds(Arrays.asList(paperIds));
+    }
+  }
+
+
 }

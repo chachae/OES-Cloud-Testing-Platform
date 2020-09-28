@@ -133,8 +133,7 @@ public class UserController {
   }
 
   @GetMapping("{userId}")
-  public R<String> findUserDataPermissions(
-      @NotNull(message = "{required}") @PathVariable Long userId) {
+  public R<String> findUserDataPermissions(@NotNull(message = "{required}") @PathVariable Long userId) {
     String dataPermissions = userDeptService.getByUserId(userId);
     return R.ok(dataPermissions);
   }

@@ -47,8 +47,7 @@ public class TokenConfig {
       return new JwtTokenStore(jwtAccessTokenConverter());
     } else {
       RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
-      redisTokenStore.setAuthenticationKeyGenerator(
-          oAuth2Authentication -> IdUtil.fastUUID());
+      redisTokenStore.setAuthenticationKeyGenerator(oAuth2Authentication -> IdUtil.fastUUID());
       return redisTokenStore;
     }
   }

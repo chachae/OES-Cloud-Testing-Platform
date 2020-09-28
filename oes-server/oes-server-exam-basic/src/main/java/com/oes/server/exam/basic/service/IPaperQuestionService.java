@@ -12,4 +12,5 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
 
   List<PaperQuestion> selectList(Long paperId);
 
+  void deleteBatchByPaperIds(String[] paperIds);
 }

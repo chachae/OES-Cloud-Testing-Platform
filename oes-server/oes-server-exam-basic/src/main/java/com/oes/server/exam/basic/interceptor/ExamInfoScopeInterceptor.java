@@ -31,8 +31,7 @@ import org.apache.ibatis.plugin.Signature;
  * @date 2020/5/29 16:39
  */
 @Slf4j
-@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class,
-    Integer.class})})
+@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class ExamInfoScopeInterceptor extends AbstractExamInfoScopeHandler {
 
   public String dataPermissionSql(String originSql, ExamInfoScope examInfoScope) {
@@ -44,8 +43,7 @@ public class ExamInfoScopeInterceptor extends AbstractExamInfoScopeHandler {
       }
 
       List<String> curRoles = StrUtil.split(user.getRoleId(), StrUtil.C_COMMA);
-      if (!examInfoScope.filterAdmin() && curRoles
-          .contains(String.valueOf(SystemConstant.SYS_ADMIN_ROLE_ID))) {
+      if (!examInfoScope.filterAdmin() && curRoles.contains(String.valueOf(SystemConstant.SYS_ADMIN_ROLE_ID))) {
         return originSql;
       }
 

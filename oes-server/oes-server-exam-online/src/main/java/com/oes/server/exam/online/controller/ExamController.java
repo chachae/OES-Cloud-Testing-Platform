@@ -40,15 +40,18 @@ public class ExamController {
    */
   @GetMapping("{paperId}")
   public R<Paper> getExam(@PathVariable @NotNull(message = "{required}") Long paperId) {
-    String username = SecurityUtil.getCurrentUsername();
-    Score res = scoreService.getScore(username, paperId);
-    if (res == null) {
-      Score score = new Score();
-      score.setUsername(username);
-      score.setPaperId(paperId);
-      scoreService.createScore(score);
+    Paper paper = paperService.getOnePaper(paperId);
+    if (paper != null) {
+      String username = SecurityUtil.getCurrentUsername();
+      Score res = scoreService.getScore(username, paperId);
+      if (res == null) {
+        Score score = new Score();
+        score.setUsername(username);
+        score.setPaperId(paperId);
+        scoreService.createScore(score);
+      }
     }
-    return R.ok(paperService.getOnePaper(paperId));
+    return R.ok(paper);
   }
 
   /**

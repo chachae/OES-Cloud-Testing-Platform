@@ -13,6 +13,7 @@ import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IScoreService;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +73,15 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     // 当前用户
     score.setUsername(SecurityUtil.getCurrentUsername());
     baseMapper.insert(score);
+  }
+
+  @Override
+  public Integer countByPaperId(String[] paperIds) {
+    if (paperIds.length == 1) {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Score>().eq(Score::getPaperId, paperIds[0]));
+    } else {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Score>().in(Score::getPaperId, Arrays.asList(paperIds)));
+    }
   }
 
   @Override

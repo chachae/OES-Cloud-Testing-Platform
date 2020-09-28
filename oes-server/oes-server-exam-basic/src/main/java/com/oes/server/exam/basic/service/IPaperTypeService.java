@@ -35,4 +35,10 @@ public interface IPaperTypeService extends IService<PaperType> {
    */
   PaperType getPaperType(Long paperId, Long typeId);
 
+  /**
+   * 通过试卷编号删除试卷试题类型分值数据
+   *
+   * @param paperIds 试卷编号
+   */
+  void deleteBatchByPaperIds(String[] paperIds);
 }

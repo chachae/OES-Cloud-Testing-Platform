@@ -36,7 +36,8 @@ public class ScoreController {
   @GetMapping("check")
   public Boolean checkScore(Score score) {
     score = scoreService.getScore(SecurityUtil.getCurrentUsername(), score.getPaperId());
-    return score != null && score.getStatus() != null && score.getStatus() == 0;
+    // 成绩记录=null，或者状态=0
+    return score == null || (score.getStatus() != null && score.getStatus() == 0);
   }
 
   @GetMapping("statistic")

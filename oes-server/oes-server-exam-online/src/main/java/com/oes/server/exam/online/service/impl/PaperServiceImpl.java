@@ -8,7 +8,6 @@ import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
-import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.client.PaperClient;
 import com.oes.server.exam.online.mapper.PaperMapper;
@@ -47,9 +46,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Override
   public Paper getOnePaper(Long paperId) {
     R<Paper> res = remotePaperService.getOne(paperId);
-    if (res.getData() == null) {
-      throw new ApiException("获取试卷失败");
-    }
     return res.getData();
   }
 

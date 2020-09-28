@@ -30,7 +30,6 @@ public class PaperDept implements Serializable {
   /**
    * 部门编号（id）
    */
-  @TableId(type = IdType.INPUT)
   private Long deptId;
 
 }

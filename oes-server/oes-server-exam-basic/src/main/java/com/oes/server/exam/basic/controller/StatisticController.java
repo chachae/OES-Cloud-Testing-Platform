@@ -51,8 +51,7 @@ public class StatisticController {
     // 答题总数
     result.put("totalAnswer", answerService.count());
 
-    redisService
-        .hmset(ExamBasicConstant.STATISTIC_PREFIX, result, ExamBasicConstant.STATISTIC_EXPIRE);
+    redisService.hmset(ExamBasicConstant.STATISTIC_PREFIX, result, ExamBasicConstant.STATISTIC_EXPIRE);
 
     return R.ok(result);
   }

@@ -32,16 +32,14 @@ public class PaperQuestionServiceImpl extends
   @Override
   @DS(DataSourceConstant.SLAVE)
   public Map<String, PaperQuestion> getMapByPaperId(Long paperId) {
-    Map<String, PaperQuestion> res = paperQuestionCacheService
-        .get(SystemConstant.PAPER_QUESTION_PREFIX + paperId);
+    Map<String, PaperQuestion> res = paperQuestionCacheService.get(SystemConstant.PAPER_QUESTION_PREFIX + paperId);
     if (res != null) {
       return res;
     }
     List<PaperQuestion> paperQuestions = baseMapper.selectByPaperId(paperId);
     Map<String, PaperQuestion> pqMap = new HashMap<>(paperQuestions.size());
     paperQuestions.forEach(pq -> pqMap.put(String.valueOf(pq.getQuestionId()), pq));
-    paperQuestionCacheService
-        .save(SystemConstant.PAPER_QUESTION_PREFIX + paperId, pqMap);
+    paperQuestionCacheService.save(SystemConstant.PAPER_QUESTION_PREFIX + paperId, pqMap);
     return pqMap;
   }
 }

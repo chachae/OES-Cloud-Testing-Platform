@@ -16,15 +16,12 @@ import org.springframework.stereotype.Service;
  * @since 2020-06-03 16:43:16
  */
 @Service
-public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept> implements
-    IPaperDeptService {
+@DS(DataSourceConstant.SLAVE)
+public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept> implements IPaperDeptService {
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public String getDeptIds(Long paperId) {
-    List<PaperDept> paperDepts = baseMapper
-        .selectList(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
-    return paperDepts.stream().map(o -> String.valueOf(o.getDeptId()))
-        .collect(Collectors.joining(","));
+    List<PaperDept> paperDepts = baseMapper.selectList(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
+    return paperDepts.stream().map(o -> String.valueOf(o.getDeptId())).collect(Collectors.joining(","));
   }
 }

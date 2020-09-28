@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +37,6 @@ public class PaperQuestion implements Serializable {
   /**
    * 试题编号（id)
    */
-  @TableId(type = IdType.INPUT)
   private Long questionId;
   /**
    * 试题名称
@@ -52,9 +49,8 @@ public class PaperQuestion implements Serializable {
   @TableField(exist = false)
   private Long typeId;
 
-  @JsonProperty("options")
   @TableField(exist = false)
-  private List<String> optionList;
+  private String options;
 
   /**
    * 正确答案

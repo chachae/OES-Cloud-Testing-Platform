@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.online.mapper.AnswerMapper">
-
   <resultMap id="baseMapper" type="com.oes.common.core.exam.entity.Answer">
     <result column="answer_id" property="answerId"/>
     <result column="answer_content" property="answerContent"/>
@@ -12,8 +11,7 @@
     <result column="status" property="status"/>
     <result column="warn" property="warn"/>
     <result column="question_name" property="questionName"/>
-    <result column="options" property="options" jdbcType="VARCHAR" javaType="arraylist"
-      typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    <result column="options" property="options"/>
     <result column="type_id" property="typeId"/>
     <result column="right_key" property="rightKey"/>
     <result column="analysis" property="analysis"/>

@@ -1,6 +1,5 @@
 package com.oes.server.exam.online.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,7 +7,6 @@ import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
-import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exam.util.ScoreUtil;
@@ -17,7 +15,6 @@ import com.oes.server.exam.online.mapper.AnswerMapper;
 import com.oes.server.exam.online.service.IAnswerService;
 import com.oes.server.exam.online.service.IPaperQuestionService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,35 +73,23 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Long updateAnswer(Answer answer) {
-    // 处理多选题
-    checkAndHandleMulChoice(answer);
     // 评分
     Map<String, PaperQuestion> pqMap = paperQuestionService.getMapByPaperId(answer.getPaperId());
     ScoreUtil.mark(answer, pqMap.get(String.valueOf(answer.getQuestionId())));
+    // 设置参数
+    answer.setUsername(SecurityUtil.getCurrentUsername());
+
     checkSaveOrUpdate(answer);
     return answer.getAnswerId();
   }
 
   private void checkSaveOrUpdate(Answer answer) {
     if (answer.getAnswerId() == null) {
-      answer.setUsername(SecurityUtil.getCurrentUsername());
       answer.setCreateTime(new Date());
       baseMapper.insert(answer);
     } else {
       answer.setUpdateTime(new Date());
       baseMapper.updateById(answer);
-    }
-  }
-
-  /**
-   * 处理多项选择题的答案顺序
-   */
-  private void checkAndHandleMulChoice(Answer answer) {
-    if (String.valueOf(answer.getTypeId()).equals(Type.DEFAULT_TYPE_ID_ARRAY[1])
-        && StrUtil.isNotBlank(answer.getAnswerContent())) {
-      String[] contents = answer.getAnswerContent().split(StrUtil.COMMA);
-      Arrays.sort(contents);
-      answer.setAnswerContent(String.join(StrUtil.COMMA, contents));
     }
   }
 
@@ -117,8 +102,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     Map<String, PaperQuestion> rightKeyMap = paperQuestionService.getMapByPaperId(paperId);
     // 学生答案按照题目编号分组
     List<Answer> paperAnswer = getAnswer(paperId);
-    Collection<List<Answer>> answersCollection = paperAnswer.stream()
-        .collect(Collectors.groupingBy(Answer::getQuestionId)).values();
+    Collection<List<Answer>> answersCollection = paperAnswer.stream().collect(Collectors.groupingBy(Answer::getQuestionId)).values();
 
     // 处理分组后的答案集合
     for (List<Answer> answers : answersCollection) {
@@ -127,8 +111,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
       // 只处理单选、多选、判断
       if (STATISTIC_TYPE.contains(paperQuestion.getTypeId())) {
         // 学生答案按照回答或选项分组
-        Map<String, Long> collect = answers.stream()
-            .collect(Collectors.groupingBy(Answer::getAnswerContent, Collectors.counting()));
+        Map<String, Long> collect = answers.stream().collect(Collectors.groupingBy(Answer::getAnswerContent, Collectors.counting()));
         // 用于存储答题情况分布数据的集合
         List<Map<String, Object>> distribute = new ArrayList<>(collect.size());
         // 统计准确率

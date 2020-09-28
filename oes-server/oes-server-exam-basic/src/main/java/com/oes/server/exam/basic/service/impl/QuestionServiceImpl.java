@@ -10,9 +10,9 @@ import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Question;
-import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.core.exception.ApiException;
+import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.core.util.SortUtil;
 import com.oes.server.exam.basic.mapper.QuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
@@ -33,8 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements
-    IQuestionService {
+public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements IQuestionService {
 
   private final IPaperQuestionService paperQuestionService;
 
@@ -68,7 +67,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createQuestion(Question question) {
-    sortMulChoiceRightKey(question);
+    question.setCreatorId(SecurityUtil.getCurrentUserId());
+    question.setCreatorName(SecurityUtil.getCurrentUser().getFullName());
+    question.setConsumption(0);
     question.setCreateTime(new Date());
     baseMapper.insert(question);
   }
@@ -85,7 +86,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateQuestion(Question question) {
-    sortMulChoiceRightKey(question);
     question.setUpdateTime(new Date());
     baseMapper.updateById(question);
   }
@@ -100,14 +100,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getTypeCountDistribute() {
     return baseMapper.countDistributeGroupByType();
-  }
-
-  private void sortMulChoiceRightKey(Question question) {
-    if (String.valueOf(question.getTypeId()).equals(Type.DEFAULT_TYPE_ID_ARRAY[1])) {
-      String[] rightKeyArray = question.getRightKey().split(StrUtil.COMMA);
-      Arrays.sort(rightKeyArray);
-      question.setRightKey(String.join(StrUtil.COMMA, rightKeyArray));
-    }
   }
 
   private boolean hasQuestion(String[] questionIds) {
