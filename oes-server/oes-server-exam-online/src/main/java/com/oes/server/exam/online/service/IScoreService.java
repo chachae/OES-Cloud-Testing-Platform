@@ -2,12 +2,10 @@ package com.oes.server.exam.online.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import java.util.List;
-import org.springframework.scheduling.annotation.Async;
 
 /**
  * @author chachae
@@ -55,9 +53,7 @@ public interface IScoreService extends IService<Score> {
    *
    * @param score 分数信息
    */
-  @Async(SystemConstant.ASYNC_POOL)
   void updateScore(Score score);
-
 
   /**
    * 分数情况统计

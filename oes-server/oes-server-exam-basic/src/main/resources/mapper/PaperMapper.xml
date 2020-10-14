@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.basic.mapper.PaperMapper">
-
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Paper">
     <result column="paper_id" property="paperId"/>
     <result column="paper_name" property="paperName"/>
@@ -132,5 +131,4 @@
     order by tp.course_id
     limit 0, 10
   </select>
-
 </mapper>

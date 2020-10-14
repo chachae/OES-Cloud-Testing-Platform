@@ -1,28 +1,19 @@
 package com.oes.server.exam.online.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.EchartMap;
+import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
-import com.oes.common.core.exam.entity.query.QueryAnswerDto;
-import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exam.util.ScoreUtil;
-import com.oes.common.core.util.SecurityUtil;
-import com.oes.server.exam.online.mapper.AnswerMapper;
+import com.oes.server.exam.online.client.AnswerClient;
 import com.oes.server.exam.online.service.IAnswerService;
 import com.oes.server.exam.online.service.IPaperQuestionService;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,70 +27,54 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements IAnswerService {
+public class AnswerServiceImpl implements IAnswerService {
 
+  private final AnswerClient answerClient;
   private final IPaperQuestionService paperQuestionService;
 
-  private static final Set<Long> STATISTIC_TYPE = new HashSet<>(3);
-
-  static {
-    STATISTIC_TYPE.add(1L);
-    STATISTIC_TYPE.add(2L);
-    STATISTIC_TYPE.add(3L);
+  @Override
+  public List<Answer> getAnswerList(String username, Long paperId) {
+    R<List<Answer>> ans = answerClient.getAnswerList(username, paperId);
+    return ans.getData();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
-  public List<Answer> getAnswer(String username, Long paperId) {
-    LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId);
-    return baseMapper.selectList(wrapper);
-  }
-
-  @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Answer> getAnswer(Long paperId) {
-    return baseMapper.selectList(new LambdaQueryWrapper<Answer>().eq(Answer::getPaperId, paperId));
+    R<List<Answer>> ans = answerClient.getAnswerList(null, paperId);
+    return ans.getData();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
-  public List<Map<String, Object>> getWarnAnswer(QueryAnswerDto answer) {
-    answer.setWarn(Answer.IS_WARN);
-    List<Answer> answers = baseMapper.getWarnAnswer(answer);
-    return !answers.isEmpty() ? GroupUtil.groupQuestion(answers) : null;
+  public List<Map<String, Object>> getWarnAnswerByPaperId(Long paperId) {
+    R<List<Map<String, Object>>> ans = answerClient.getWarningAnswer(paperId);
+    return ans.getData();
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
   public Long updateAnswer(Answer answer) {
-    // 评分
-    Map<String, PaperQuestion> pqMap = paperQuestionService.getMapByPaperId(answer.getPaperId());
-    ScoreUtil.mark(answer, pqMap.get(String.valueOf(answer.getQuestionId())));
-    // 设置参数
-    answer.setUsername(SecurityUtil.getCurrentUsername());
-
-    checkSaveOrUpdate(answer);
+    markAnswer(answer);
+    answerClient.update(answer);
     return answer.getAnswerId();
   }
 
-  private void checkSaveOrUpdate(Answer answer) {
-    if (answer.getAnswerId() == null) {
-      answer.setCreateTime(new Date());
-      baseMapper.insert(answer);
-    } else {
-      answer.setUpdateTime(new Date());
-      baseMapper.updateById(answer);
-    }
+  @Override
+  public Long createAnswer(Answer answer) {
+    markAnswer(answer);
+    answerClient.add(answer);
+    return answer.getAnswerId();
+  }
+
+  private void markAnswer(Answer answer) {
+    Map<Long, PaperQuestion> ansMap = paperQuestionService.getMapByPaperId(answer.getPaperId());
+    ScoreUtil.mark(answer, ansMap.get(answer.getQuestionId()));
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> statisticAnswers(Long paperId) {
     // 预先准备一个返回体
     List<Map<String, Object>> result = new ArrayList<>();
     // 获取试卷题目正确答案
-    Map<String, PaperQuestion> rightKeyMap = paperQuestionService.getMapByPaperId(paperId);
+    Map<Long, PaperQuestion> rightKeyMap = paperQuestionService.getMapByPaperId(paperId);
     // 学生答案按照题目编号分组
     List<Answer> paperAnswer = getAnswer(paperId);
     Collection<List<Answer>> answersCollection = paperAnswer.stream().collect(Collectors.groupingBy(Answer::getQuestionId)).values();
@@ -107,9 +82,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     // 处理分组后的答案集合
     for (List<Answer> answers : answersCollection) {
       // 获取题目正确答案
-      PaperQuestion paperQuestion = rightKeyMap.get(String.valueOf(answers.get(0).getQuestionId()));
+      PaperQuestion paperQuestion = rightKeyMap.get(answers.get(0).getQuestionId());
       // 只处理单选、多选、判断
-      if (STATISTIC_TYPE.contains(paperQuestion.getTypeId())) {
+      if (paperQuestion.getTypeId() >= 3L) {
         // 学生答案按照回答或选项分组
         Map<String, Long> collect = answers.stream().collect(Collectors.groupingBy(Answer::getAnswerContent, Collectors.counting()));
         // 用于存储答题情况分布数据的集合

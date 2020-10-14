@@ -7,7 +7,9 @@ import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.basic.mapper.PaperQuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +24,13 @@ public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, P
 
   @Override
   @DS(DataSourceConstant.SLAVE)
-  public List<PaperQuestion> selectList(Long paperId) {
-    return baseMapper.selectListByPaperId(paperId);
+  public Map<Long, PaperQuestion> selectMapByPaperId(Long paperId) {
+    List<PaperQuestion> list = baseMapper.selectListByPaperId(paperId);
+    Map<Long, PaperQuestion> ansMap = new HashMap<>(list.size());
+    for (PaperQuestion question : list) {
+      ansMap.put(question.getQuestionId(), question);
+    }
+    return ansMap;
   }
 
   @Override

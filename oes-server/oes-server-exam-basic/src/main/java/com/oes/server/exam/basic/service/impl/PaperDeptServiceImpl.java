@@ -33,7 +33,7 @@ public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept
   }
 
   @Override
-  public List<Long> selectDeptIdsByPaperId(Long paperId) {
+  public List<Long> getDeptIdListByPaperId(Long paperId) {
     List<PaperDept> paperDepts = baseMapper.selectList(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
     return paperDepts.stream().map(PaperDept::getDeptId).collect(Collectors.toList());
   }

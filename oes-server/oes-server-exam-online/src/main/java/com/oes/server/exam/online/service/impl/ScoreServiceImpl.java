@@ -1,5 +1,6 @@
 package com.oes.server.exam.online.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,10 +16,10 @@ import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.core.util.SortUtil;
+import com.oes.server.exam.online.client.PaperDeptClient;
 import com.oes.server.exam.online.client.SystemUserClient;
 import com.oes.server.exam.online.mapper.ScoreMapper;
 import com.oes.server.exam.online.service.IAnswerService;
-import com.oes.server.exam.online.service.IPaperDeptService;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.Date;
 import java.util.List;
@@ -36,16 +37,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements IScoreService {
 
+  private final PaperDeptClient paperDeptClient;
   private final SystemUserClient systemUserClient;
   private final IAnswerService answerService;
-  private final IPaperDeptService paperDeptService;
 
   @Override
   @DS(DataSourceConstant.SLAVE)
   public IPage<Score> pageScore(QueryScoreDto score) {
-    if (score.getUsername() == null) {
-      score.setUsername(SecurityUtil.getCurrentUsername());
-    }
+    score.setUsername(SecurityUtil.getCurrentUsername());
     score.setStatus(Score.STATUS_HAS_SUBMIT);
     Page<Score> page = new Page<>(score.getPageNum(), score.getPageSize());
     // 根据学期降序排序
@@ -85,7 +84,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     score.setUpdateTime(new Date());
     score.setTimes(ScoreUtil.calTimes(res.getCreateTime()));
     // 计算成绩
-    List<Answer> answers = answerService.getAnswer(score.getUsername(), score.getPaperId());
+    List<Answer> answers = answerService.getAnswerList(score.getUsername(), score.getPaperId());
     score.setStudentScore(ScoreUtil.calScore(answers));
     score.setStatus(Score.STATUS_HAS_SUBMIT);
     baseMapper.update(score, new LambdaQueryWrapper<Score>()
@@ -99,10 +98,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     QueryScoreDto entity = new QueryScoreDto();
     entity.setPaperId(paperId);
     entity.setStatus(Score.STATUS_HAS_SUBMIT);
-    String deptIds = paperDeptService.getDeptIds(paperId);
+    R<List<Long>> deptsAns = paperDeptClient.getPaperDeptListByPaperId(paperId);
     // 获取考生人数
-    R<Integer> res = systemUserClient.countByDeptIds(deptIds);
-    return ScoreUtil.statisticScore(this.getScore(entity),
-        getScore(SecurityUtil.getCurrentUsername(), paperId), res.getData());
+    R<Integer> res = systemUserClient.countByDeptIds(StrUtil.join(",", deptsAns.getData()));
+    return ScoreUtil.statisticScore(this.getScore(entity), getScore(SecurityUtil.getCurrentUsername(), paperId), res.getData());
   }
 }

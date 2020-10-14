@@ -11,17 +11,10 @@
   </resultMap>
 
   <sql id="baseSql">
-    select tpq.paper_id,
-           tpq.question_id,
-           tq.question_id,
-           question_name,
-           tq.options,
-           tq.type_id,
-           tq.analysis,
-           tq.right_key
+    select tpq.question_id, tq.type_id, tq.question_name, tq.right_key, tpt.score
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id
-    where 1 = 1
+           left join t_paper_type tpt on (tpq.paper_id = tpt.paper_id and tpt.type_id = tq.type_id)
   </sql>
 
   <sql id="baseSql2">
@@ -38,7 +31,8 @@
 
   <select id="selectListByPaperId" parameterType="long" resultMap="baseMap">
     <include refid="baseSql"/>
-    and tpq.paper_id = #{paperId,jdbcType=BIGINT}
+    where tpq.paper_id = #{paperId,jdbcType=BIGINT}
+    GROUP BY tpq.question_id,tq.type_id, tq.right_key,tpt.score
   </select>
 
   <select id="selectBaseListByPaperId" parameterType="long" resultMap="baseMap">

@@ -9,6 +9,7 @@ import com.oes.common.core.util.PageUtil;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Map;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,11 @@ public class ScoreController {
   @PreAuthorize("hasAuthority('score:delete')")
   public void deleteByScore(Score score) {
     this.scoreService.deleteScore(score.getUsername(), score.getPaperId());
+  }
+
+  @GetMapping("count")
+  public R<Integer> countScoreByPaperId(@NotBlank(message = "{required}") String paperId) {
+    return R.ok(this.scoreService.countByPaperId(paperId.split(",")));
   }
 
   @GetMapping("statistic")

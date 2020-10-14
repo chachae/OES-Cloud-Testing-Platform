@@ -58,8 +58,7 @@ public class ExamBasicManager {
   public String findPaper(Long userId) {
     List<String> courseIds = getCourseIds(userId);
     if (CollUtil.isNotEmpty(courseIds)) {
-      List<Paper> papers = paperMapper
-          .selectList(new LambdaQueryWrapper<Paper>().in(Paper::getCourseId, courseIds));
+      List<Paper> papers = paperMapper.selectList(new LambdaQueryWrapper<Paper>().in(Paper::getCourseId, courseIds));
 
       return papers.stream().map(paper -> String.valueOf(paper.getPaperId()))
           .collect(Collectors.joining(StrUtil.COMMA));

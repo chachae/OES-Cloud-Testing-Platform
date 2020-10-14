@@ -69,7 +69,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @DS(DataSourceConstant.SLAVE)
   public Paper getPaper(Long paperId, String username) {
     // 判断考试是否属于该考生
-    List<Long> deptIds = paperDeptService.selectDeptIdsByPaperId(paperId);
+    List<Long> deptIds = paperDeptService.getDeptIdListByPaperId(paperId);
     if (!deptIds.isEmpty() && deptIds.contains(SecurityUtil.getCurrentUser().getDeptId())) {
       Paper paper = baseMapper.selectByPaperId(paperId);
       // 判断试卷是否存在
@@ -79,7 +79,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       // todo 题目顺序随机（获取试卷配置）
       Collections.shuffle(paper.getPaperQuestionList());
       // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力
-      List<Answer> answers = answerService.getAnswer(username, paperId);
+      List<Answer> answers = answerService.getAnswerList(username, paperId);
       Map<Long, Answer> answerMap = new HashMap<>(answers.size());
       // 答题记录不为空
       if (!answers.isEmpty()) {

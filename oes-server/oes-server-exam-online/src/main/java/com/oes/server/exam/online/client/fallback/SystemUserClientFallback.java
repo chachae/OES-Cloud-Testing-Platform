@@ -1,7 +1,7 @@
 package com.oes.server.exam.online.client.fallback;
 
 import com.oes.common.core.annotation.Fallback;
-import com.oes.server.exam.online.client.PaperClient;
+import com.oes.server.exam.online.client.SystemUserClient;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,12 +13,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Fallback
-public class RemoteExamBasicPaperServiceFallback implements
-    FallbackFactory<PaperClient> {
+public class SystemUserClientFallback implements
+    FallbackFactory<SystemUserClient> {
 
   @Override
-  public PaperClient create(Throwable throwable) {
-    return paperId -> {
+  public SystemUserClient create(Throwable throwable) {
+    return deptIds -> {
       log.error("远程调用失败", throwable);
       return null;
     };

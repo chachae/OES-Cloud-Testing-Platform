@@ -1,19 +1,13 @@
 package com.oes.server.exam.online.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.exam.entity.Score;
+import com.oes.server.exam.online.client.ScoreClient;
 import com.oes.server.exam.online.client.SystemUserClient;
-import com.oes.server.exam.online.mapper.ScoreMapper;
 import com.oes.server.exam.online.service.IExamMonitorService;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author chachae
@@ -22,23 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ExamMonitorServiceImpl implements IExamMonitorService {
 
-  private final ScoreMapper scoreMapper;
   private final SystemUserClient systemUserClient;
+  private final ScoreClient scoreClient;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Map<String, Object> statisticExamRatio(String deptIds, Long paperId) {
     // 考生总数
-    R<Integer> res = systemUserClient.countByDeptIds(deptIds);
+    R<Integer> ans1 = systemUserClient.countByDeptIds(deptIds);
     // 到场考生总数
-    Integer scoreCount = scoreMapper
-        .selectCount(new LambdaQueryWrapper<Score>().eq(Score::getPaperId, paperId));
+    R<Integer> ans2 = scoreClient.countByPaperId(String.valueOf(paperId));
     Map<String, Object> resultMap = new HashMap<>(2);
-    resultMap.put("userCount", res.getData());
-    resultMap.put("scoreCount", scoreCount);
+    resultMap.put("userCount", ans1.getData());
+    resultMap.put("scoreCount", ans2.getData());
     return resultMap;
   }
 }

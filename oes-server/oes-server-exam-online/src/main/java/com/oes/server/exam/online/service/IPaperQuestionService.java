@@ -16,6 +16,6 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    * @param paperId 试卷编号
    * @return {@link Map<Long,PaperQuestion>} Map<试题编号,题目答案信息>
    */
-  Map<String, PaperQuestion> getMapByPaperId(Long paperId);
+  Map<Long, PaperQuestion> getMapByPaperId(Long paperId);
 
 }

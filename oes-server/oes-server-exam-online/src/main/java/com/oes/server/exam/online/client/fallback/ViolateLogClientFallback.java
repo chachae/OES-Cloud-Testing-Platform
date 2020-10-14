@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Fallback
-public class RemoteExamBasicViolateLogServiceFallback implements
+public class ViolateLogClientFallback implements
     FallbackFactory<ViolateLogClient> {
 
   @Override

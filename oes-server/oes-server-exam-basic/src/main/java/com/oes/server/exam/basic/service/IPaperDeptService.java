@@ -30,7 +30,7 @@ public interface IPaperDeptService extends IService<PaperDept> {
    *
    * @param paperId 试卷编号
    */
-  List<Long> selectDeptIdsByPaperId(Long paperId);
+  List<Long> getDeptIdListByPaperId(Long paperId);
 
   /**
    * 统计指派班级数量

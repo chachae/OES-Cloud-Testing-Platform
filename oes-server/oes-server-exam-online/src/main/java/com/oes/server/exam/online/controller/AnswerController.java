@@ -2,17 +2,15 @@ package com.oes.server.exam.online.controller;
 
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
-import com.oes.common.core.exam.entity.query.QueryAnswerDto;
-import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.online.service.IAnswerService;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,14 +36,28 @@ public class AnswerController {
    */
   @GetMapping("warn")
   public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
-    QueryAnswerDto entity = new QueryAnswerDto();
-    entity.setPaperId(paperId);
-    entity.setUsername(SecurityUtil.getCurrentUsername());
-    return R.ok(answerService.getWarnAnswer(entity));
+    return R.ok(answerService.getWarnAnswerByPaperId(paperId));
   }
 
+  /**
+   * 新增试题（数据校验由远程服务处理）
+   *
+   * @param answer 试题内容
+   * @return 试题id
+   */
+  @PostMapping
+  public R<Long> saveAnswer(Answer answer) {
+    return R.ok(answerService.createAnswer(answer));
+  }
+
+  /**
+   * 更新试题
+   *
+   * @param answer 试题内容
+   * @return 试题id
+   */
   @PutMapping
-  public R<Long> updateAnswer(@Valid Answer answer) {
+  public R<Long> updateAnswer(Answer answer) {
     return R.ok(answerService.updateAnswer(answer));
   }
 

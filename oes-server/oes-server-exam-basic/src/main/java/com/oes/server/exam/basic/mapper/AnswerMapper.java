@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -24,4 +25,14 @@ public interface AnswerMapper extends BaseMapper<Answer> {
    */
   IPage<Answer> pageAnswer(@Param("answer") QueryAnswerDto answer, Page<Answer> page);
 
+  /**
+   * 错题集数据
+   * <pre>
+   *   必须传入试卷编号和学生编号，前端、控制层入口和业务层已做校验
+   * </pre>
+   *
+   * @param answer 查询条件
+   * @return 分页结果集
+   */
+  List<Answer> selectWarnAnswerList(@Param("answer") QueryAnswerDto answer);
 }

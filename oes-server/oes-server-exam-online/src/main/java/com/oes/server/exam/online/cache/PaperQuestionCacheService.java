@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class PaperQuestionCacheService implements
-    ICacheService<Map<String, PaperQuestion>> {
+public class PaperQuestionCacheService implements ICacheService<Map<String, PaperQuestion>> {
 
   private final RedisService redisService;
 

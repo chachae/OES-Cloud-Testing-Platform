@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.oes.common.core.validator.Update;
 import java.io.Serializable;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -32,6 +34,8 @@ public class Answer implements Serializable {
    * 学生答题主键（id）
    */
   @TableId(type = IdType.AUTO)
+  // 更新的时候才校验
+  @NotNull(message = "{required}", groups = {Update.class})
   private Long answerId;
   /**
    * 学生答题数据
@@ -44,6 +48,7 @@ public class Answer implements Serializable {
   /**
    * 试卷编号（id）
    */
+  @NotNull(message = "{required}")
   private Long paperId;
   /**
    * 试题编号（id）
@@ -52,6 +57,7 @@ public class Answer implements Serializable {
   /**
    * 题目的分
    */
+  @NotNull(message = "{required}")
   private Integer score;
   /**
    * 创建时间
