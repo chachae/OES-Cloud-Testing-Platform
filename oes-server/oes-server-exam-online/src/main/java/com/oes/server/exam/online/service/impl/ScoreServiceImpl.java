@@ -9,17 +9,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.R;
-import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.query.QueryScoreDto;
 import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.core.util.SortUtil;
-import com.oes.server.exam.online.client.AnswerClient;
 import com.oes.server.exam.online.client.PaperDeptClient;
 import com.oes.server.exam.online.client.SystemUserClient;
 import com.oes.server.exam.online.mapper.ScoreMapper;
+import com.oes.server.exam.online.producer.ScoreMessageSender;
 import com.oes.server.exam.online.service.IScoreService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
   private final PaperDeptClient paperDeptClient;
   private final SystemUserClient systemUserClient;
-  private final AnswerClient answerClient;
+  private final ScoreMessageSender scoreMessageSender;
 
   @Override
   @DS(DataSourceConstant.SLAVE)
@@ -74,22 +73,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     baseMapper.insert(score);
   }
 
-  // TODO 使用队列消费完成并发削峰，将该功能迁移至 exam-base 服务上
   @Override
-  @Transactional(rollbackFor = Exception.class)
   public void updateScore(Score score) {
-    // 计算答卷耗时
-    Score res = getScore(score.getUsername(), score.getPaperId());
-    score.setTimes(ScoreUtil.calTimes(res.getCreateTime()));
-    // 计算成绩
-    List<Answer> answers = answerClient.getAnswerList(score.getUsername(), score.getPaperId()).getData();
-    score.setStudentScore(ScoreUtil.calScore(answers));
-    // 成绩状态 -> 有效
-    score.setStatus(Score.STATUS_HAS_SUBMIT);
-    // 执行更新
-    baseMapper.update(score, new LambdaQueryWrapper<Score>()
-        .eq(Score::getUsername, score.getUsername())
-        .eq(Score::getPaperId, score.getPaperId()));
+    scoreMessageSender.sendMarkScoreMessage(score);
   }
 
   @Override

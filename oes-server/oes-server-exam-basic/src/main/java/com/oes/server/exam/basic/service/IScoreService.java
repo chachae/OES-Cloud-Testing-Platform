@@ -30,6 +30,15 @@ public interface IScoreService extends IService<Score> {
   List<Score> getScore(QueryScoreDto score);
 
   /**
+   * 通过分数信息查询分数
+   *
+   * @param paperId  试卷编号
+   * @param username 用户名
+   * @return 分数
+   */
+  Score getScore(String username, Long paperId);
+  
+  /**
    * 删除学期数据
    *
    * @param username 用户名
@@ -43,6 +52,13 @@ public interface IScoreService extends IService<Score> {
    * @param score 分数信息
    */
   void updateScore(Score score);
+
+  /**
+   * 自动评分
+   *
+   * @param score 分数信息
+   */
+  void autoMarkScore(Score score);
 
   /**
    * 增加学期数据
