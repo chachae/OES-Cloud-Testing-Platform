@@ -16,12 +16,11 @@ import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.exam.util.ScoreUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.common.core.util.SortUtil;
+import com.oes.server.exam.online.client.AnswerClient;
 import com.oes.server.exam.online.client.PaperDeptClient;
 import com.oes.server.exam.online.client.SystemUserClient;
 import com.oes.server.exam.online.mapper.ScoreMapper;
-import com.oes.server.exam.online.service.IAnswerService;
 import com.oes.server.exam.online.service.IScoreService;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
   private final PaperDeptClient paperDeptClient;
   private final SystemUserClient systemUserClient;
-  private final IAnswerService answerService;
+  private final AnswerClient answerClient;
 
   @Override
   @DS(DataSourceConstant.SLAVE)
@@ -72,21 +71,22 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     // 默认分数
     score.setStudentScore(Score.DEFAULT_SCORE);
     score.setStatus(Score.STATUS_NOT_SUBMIT);
-    score.setCreateTime(new Date());
     baseMapper.insert(score);
   }
 
+  // TODO 使用队列消费完成并发削峰，将该功能迁移至 exam-base 服务上
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateScore(Score score) {
     // 计算答卷耗时
     Score res = getScore(score.getUsername(), score.getPaperId());
-    score.setUpdateTime(new Date());
     score.setTimes(ScoreUtil.calTimes(res.getCreateTime()));
     // 计算成绩
-    List<Answer> answers = answerService.getAnswerList(score.getUsername(), score.getPaperId());
+    List<Answer> answers = answerClient.getAnswerList(score.getUsername(), score.getPaperId()).getData();
     score.setStudentScore(ScoreUtil.calScore(answers));
+    // 成绩状态 -> 有效
     score.setStatus(Score.STATUS_HAS_SUBMIT);
+    // 执行更新
     baseMapper.update(score, new LambdaQueryWrapper<Score>()
         .eq(Score::getUsername, score.getUsername())
         .eq(Score::getPaperId, score.getPaperId()));

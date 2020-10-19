@@ -1,6 +1,8 @@
 package com.oes.common.core.exam.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -20,8 +22,6 @@ public class Type implements Serializable {
 
   private static final long serialVersionUID = -4973257667419556920L;
 
-  public static final String[] DEFAULT_TYPE_ID_ARRAY = {"1", "2", "3", "4", "5"};
-
   /**
    * 题目类型主键
    */
@@ -39,10 +39,12 @@ public class Type implements Serializable {
   /**
    * 创建时间
    */
+  @TableField(fill = FieldFill.INSERT)
   private Date createTime;
   /**
    * 更新时间
    */
+  @TableField(fill = FieldFill.UPDATE)
   private Date updateTime;
 
 }

@@ -43,9 +43,10 @@ public class ExamController {
     Paper paper = paperService.getOnePaper(paperId);
     if (paper != null) {
       String username = SecurityUtil.getCurrentUsername();
-      Score res = scoreService.getScore(username, paperId);
-      if (res == null) {
-        Score score = new Score();
+      Score score = scoreService.getScore(username, paperId);
+      // score == null 即首次进入考试
+      if (score == null) {
+        score = new Score();
         score.setUsername(username);
         score.setPaperId(paperId);
         scoreService.createScore(score);

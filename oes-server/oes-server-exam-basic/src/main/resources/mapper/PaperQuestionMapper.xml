@@ -11,7 +11,7 @@
   </resultMap>
 
   <sql id="baseSql">
-    select tpq.question_id, tq.type_id, tq.question_name, tq.right_key, tpt.score
+    select tpq.question_id, tq.options, tq.type_id, tq.question_name, tq.right_key, tpt.score
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id
            left join t_paper_type tpt on (tpq.paper_id = tpt.paper_id and tpt.type_id = tq.type_id)

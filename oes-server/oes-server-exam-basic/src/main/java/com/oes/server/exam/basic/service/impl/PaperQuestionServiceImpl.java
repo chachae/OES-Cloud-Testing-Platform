@@ -22,15 +22,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, PaperQuestion> implements IPaperQuestionService {
 
+  // todo 缓存缓存
+  @Override
+  public Map<Long, PaperQuestion> selectMapByPaperId(Long paperId) {
+    List<PaperQuestion> list = getListByPaperId(paperId);
+    Map<Long, PaperQuestion> ansMap = new HashMap<>(list.size());
+    list.forEach(question -> ansMap.put(question.getQuestionId(), question));
+    return ansMap;
+  }
+
   @Override
   @DS(DataSourceConstant.SLAVE)
-  public Map<Long, PaperQuestion> selectMapByPaperId(Long paperId) {
-    List<PaperQuestion> list = baseMapper.selectListByPaperId(paperId);
-    Map<Long, PaperQuestion> ansMap = new HashMap<>(list.size());
-    for (PaperQuestion question : list) {
-      ansMap.put(question.getQuestionId(), question);
-    }
-    return ansMap;
+  public List<PaperQuestion> getListByPaperId(Long paperId) {
+    return baseMapper.selectListByPaperId(paperId);
   }
 
   @Override

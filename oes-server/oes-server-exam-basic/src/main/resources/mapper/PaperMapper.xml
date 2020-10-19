@@ -20,12 +20,6 @@
     <result column="creator_name" property="creatorName"/>
     <result column="term_id" property="termId"/>
     <result column="term_name" property="termName"/>
-    <collection
-      column="paper_id"
-      property="paperQuestionList"
-      ofType="com.oes.common.core.exam.entity.PaperQuestion"
-      select="com.oes.server.exam.basic.mapper.PaperQuestionMapper.selectListByPaperId"
-    />
   </resultMap>
 
   <resultMap id="baseMap2" type="com.oes.common.core.exam.entity.Paper">
@@ -44,12 +38,6 @@
     <result column="course_name" property="courseName"/>
     <result column="term_id" property="termId"/>
     <result column="term_name" property="termName"/>
-    <collection
-      column="paper_id"
-      property="paperQuestionList"
-      ofType="com.oes.common.core.exam.entity.PaperQuestion"
-      select="com.oes.server.exam.basic.mapper.PaperQuestionMapper.selectBaseListByPaperId"
-    />
   </resultMap>
 
   <sql id="baseSql">
@@ -84,9 +72,6 @@
            tp.start_time,
            tp.end_time,
            tp.minute,
-           tp.creator_name,
-           tp.create_time,
-           tp.update_time,
            tp.status,
            tp.course_id,
            tc.course_name,

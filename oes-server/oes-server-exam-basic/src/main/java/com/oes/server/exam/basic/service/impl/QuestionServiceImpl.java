@@ -70,7 +70,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     question.setCreatorId(SecurityUtil.getCurrentUserId());
     question.setCreatorName(SecurityUtil.getCurrentUser().getFullName());
     question.setConsumption(0);
-    question.setCreateTime(new Date());
     baseMapper.insert(question);
   }
 

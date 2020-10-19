@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.DataSourceConstant;
-import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.SecurityUtil;
@@ -26,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @DS(DataSourceConstant.SLAVE)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
-    IPaperService {
+public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
 
   private final PaperClient remotePaperService;
 
@@ -45,12 +43,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   @Override
   public Paper getOnePaper(Long paperId) {
-    R<Paper> res = remotePaperService.getOne(paperId);
-    return res.getData();
+    return remotePaperService.getOne(paperId).getData();
   }
 
   private IPage<Paper> filterPaper(QueryPaperDto entity) {
+    // 只查询状态为「开启」的试卷
     entity.setStatus(Paper.STATUS_OPEN);
+    // 限制试卷的归属部门（班级）
     entity.setDeptIds(String.valueOf(SecurityUtil.getCurrentUser().getDeptId()));
     return baseMapper.pagePaper(entity, new Page<>(entity.getPageNum(), entity.getPageSize()));
   }

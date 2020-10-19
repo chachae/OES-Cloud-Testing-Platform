@@ -31,7 +31,7 @@ public interface AnswerClient {
   void update(@SpringQueryMap Answer answer);
 
   @PostMapping
-  void add(@SpringQueryMap Answer answer);
+  R<Long> add(@SpringQueryMap Answer answer);
 
   @GetMapping("warn")
   R<List<Map<String, Object>>> getWarningAnswer(@RequestParam("paperId") Long paperId);

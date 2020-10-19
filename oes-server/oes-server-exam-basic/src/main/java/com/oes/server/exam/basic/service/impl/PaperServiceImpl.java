@@ -55,12 +55,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   @Override
   @DS(DataSourceConstant.SLAVE)
-  public IPage<Paper> pagePaper(QueryPaperDto paper) {
-    Page<Paper> page = new Page<>(paper.getPageNum(), paper.getPageSize());
-    IPage<Paper> result = baseMapper.pagePaper(page, paper);
+  public IPage<Paper> pagePaper(QueryPaperDto entity) {
+    Page<Paper> page = new Page<>(entity.getPageNum(), entity.getPageSize());
+    IPage<Paper> result = baseMapper.pagePaper(page, entity);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
-      result.getRecords().forEach(GroupUtil::groupQuestions);
+      // todo 效率有点差，待优化
+      for (Paper paper : result.getRecords()) {
+        List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
+        paper.setPaperQuestionList(paperQuestions);
+        GroupUtil.groupQuestions(paper, true);
+      }
     }
     return result;
   }
@@ -77,26 +82,26 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         return null;
       }
       // todo 题目顺序随机（获取试卷配置）
-      Collections.shuffle(paper.getPaperQuestionList());
-      // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力
+      List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paperId);
+      Collections.shuffle(paperQuestions);
+      // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力（O(1)）
       List<Answer> answers = answerService.getAnswerList(username, paperId);
-      Map<Long, Answer> answerMap = new HashMap<>(answers.size());
       // 答题记录不为空
       if (!answers.isEmpty()) {
+        Map<Long, Answer> answerMap = new HashMap<>(answers.size());
         // 答题记录组装到 HashMap 中
         answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
-        // 循环试题信息
-        for (PaperQuestion paperQuestion : paper.getPaperQuestionList()) {
+        for (PaperQuestion paperQuestion : paperQuestions) {
           Answer answer = answerMap.get(paperQuestion.getQuestionId());
-          // 答题记录不为空才进行答题数据封装
-          if (answer != null) {
-            paperQuestion.setAnswerId(answer.getAnswerId());
-            paperQuestion.setAnswerContent(answer.getAnswerContent());
-          }
+          paperQuestion.setAnswerId(answer.getAnswerId());
+          paperQuestion.setAnswerContent(answer.getAnswerContent());
         }
+        // 试卷题型分类
+        paper.setPaperQuestionList(paperQuestions);
+        GroupUtil.groupQuestions(paper, true);
+      } else {
+        paper.setPaperQuestionList(paperQuestions);
       }
-      // 试卷题型分类
-      GroupUtil.groupQuestions(paper);
       return paper;
     }
     return null;
@@ -192,7 +197,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   private void setPaperDept(Long paperId, String[] deptIdArray) {
-    ArrayList<PaperDept> batchObjs = new ArrayList<>(deptIdArray.length);
+    List<PaperDept> batchObjs = new LinkedList<>();
     for (String deptId : deptIdArray) {
       batchObjs.add(new PaperDept(paperId, Long.parseLong(deptId)));
     }

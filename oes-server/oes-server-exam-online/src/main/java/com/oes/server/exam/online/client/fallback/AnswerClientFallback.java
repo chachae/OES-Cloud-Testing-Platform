@@ -19,29 +19,34 @@ import lombok.extern.slf4j.Slf4j;
 @Fallback
 public class AnswerClientFallback implements FallbackFactory<AnswerClient> {
 
+  private void calc(Throwable throwable) {
+    log.error("远程调用失败", throwable);
+  }
+
   @Override
   public AnswerClient create(Throwable throwable) {
     return new AnswerClient() {
 
       @Override
       public void update(Answer answer) {
-        log.error("远程调用失败", throwable);
+        calc(throwable);
       }
 
       @Override
-      public void add(Answer answer) {
-        log.error("远程调用失败", throwable);
+      public R<Long> add(Answer answer) {
+        calc(throwable);
+        return null;
       }
 
       @Override
       public R<List<Map<String, Object>>> getWarningAnswer(Long paperId) {
-        log.error("远程调用失败", throwable);
+        calc(throwable);
         return null;
       }
 
       @Override
       public R<List<Answer>> getAnswerList(String username, Long paperId) {
-        log.error("远程调用失败", throwable);
+        calc(throwable);
         return null;
       }
     };

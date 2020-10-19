@@ -50,12 +50,14 @@ public class AnswerController {
 
   @PostMapping
   @PreAuthorize("hasAuthority('answer:add')")
-  public void add(@Validated(Insert.class) Answer answer) {
+  public R<Long> add(@Validated(Insert.class) Answer answer) {
     this.answerService.createAnswer(answer);
+    // 返回answer id
+    return R.ok(answer.getAnswerId());
   }
 
   @GetMapping("list")
-  public R<List<Answer>> getAnswerListByUsername(String username, @NotNull(message = "{required}") Long paperId) {
+  public R<List<Answer>> getAnswerList(String username, @NotNull(message = "{required}") Long paperId) {
     if (StrUtil.isBlank(username)) {
       return R.ok(answerService.getAnswerList(paperId));
     } else {
@@ -69,11 +71,5 @@ public class AnswerController {
     entity.setPaperId(paperId);
     return R.ok(answerService.getWarnAnswerList(entity));
   }
-
-//  @DeleteMapping
-//  @PreAuthorize("hasAuthority('answer:delete')")
-//  public void deleteByAnswer(Answer answer) {
-//    this.answerService.deleteAnswer(answer.getUsername(), answer.getPaperId());
-//  }
 
 }

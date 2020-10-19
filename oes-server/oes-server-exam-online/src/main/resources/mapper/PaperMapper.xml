@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.online.mapper.PaperMapper">
-
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Paper">
     <result column="paper_id" property="paperId"/>
     <result column="paper_name" property="paperName"/>
@@ -53,8 +52,8 @@
       AND tp.type = #{paper.type,jdbcType=INTEGER}
     </if>
     AND tp.status = #{paper.status,jdbcType=INTEGER}
-    AND (tp.end_time &gt;= now())
+    <!-- 考试结束时间需大于当前时间 -->
+    AND (tp.end_time &gt; now())
     group by tp.paper_id
   </select>
-
 </mapper>

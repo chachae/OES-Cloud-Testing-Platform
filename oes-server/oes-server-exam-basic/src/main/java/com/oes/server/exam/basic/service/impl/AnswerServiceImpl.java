@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.Paper;
+import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.util.SecurityUtil;
@@ -15,6 +17,7 @@ import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2020-06-03 16:43:14
  */
 @Service
+@RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements IAnswerService {
 
@@ -73,8 +77,24 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createAnswer(Answer answer) {
-    // 设置用户名
-    answer.setUsername(SecurityUtil.getCurrentUsername());
     baseMapper.insert(answer);
+  }
+
+  @Override
+  public Paper createDefaultAnswer(Paper paper) {
+    List<PaperQuestion> paperQuestionList = paper.getPaperQuestionList();
+    for (PaperQuestion paperQuestion : paperQuestionList) {
+      Answer answer = new Answer();
+      answer.setUsername(SecurityUtil.getCurrentUsername());
+      answer.setWarn(Answer.IS_WARN);
+      answer.setPaperId(paper.getPaperId());
+      answer.setStatus(Answer.STATUS_NOT_CORRECT);
+      answer.setScore(0);
+      answer.setQuestionId(paperQuestion.getQuestionId());
+      baseMapper.insert(answer);
+      paperQuestion.setAnswerId(answer.getAnswerId());
+    }
+    GroupUtil.groupQuestions(paper, true);
+    return paper;
   }
 }

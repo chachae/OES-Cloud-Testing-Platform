@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 关联查询之 left join 笛卡尔积解释：https://blog.csdn.net/w1014074794/article/details/90373043 -->
 <mapper namespace="com.oes.server.exam.basic.mapper.AnswerMapper">
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Answer">
     <result column="answer_id" property="answerId"/>
@@ -47,13 +48,11 @@
            tq.analysis,
            tq.question_name,
            tq.right_key,
-           tp.paper_name,
-           tt.term_name,
-           tq.type_id
+           tq.type_id,
+           tp.paper_name
     FROM t_answer ta
            LEFT JOIN t_question tq on ta.question_id = tq.question_id
            LEFT JOIN t_paper tp on ta.paper_id = tp.paper_id
-           LEFT JOIN t_term tt on tp.term_id = tt.term_id
     WHERE 1 = 1
   </sql>
 

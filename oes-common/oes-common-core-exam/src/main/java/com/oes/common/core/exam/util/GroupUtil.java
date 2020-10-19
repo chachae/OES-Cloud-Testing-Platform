@@ -27,28 +27,35 @@ public class GroupUtil {
    *
    * @param paper 试卷信息
    */
-  public static void groupQuestions(Paper paper) {
-    List<PaperQuestion> questions = paper.getPaperQuestionList();
+  public static void groupQuestions(Paper paper, boolean removePaperQuestionList) {
+    if (paper.getPaperQuestionList() != null) {
 
-    // 按题目类型分类
-    Collection<List<PaperQuestion>> collection = questions.stream()
-        .collect(Collectors.groupingBy(PaperQuestion::getTypeId)).values();
+      List<PaperQuestion> questions = paper.getPaperQuestionList();
 
-    List<Map<String, Object>> result = new ArrayList<>(collection.size());
+      // 按题目类型分类
+      Collection<List<PaperQuestion>> collection = questions.stream().collect(Collectors.groupingBy(PaperQuestion::getTypeId)).values();
 
-    for (List<PaperQuestion> objs : collection) {
-      Map<String, Object> questionMap = new HashMap<>(2);
-      questionMap.put(Paper.TYPE_ID_KEY, objs.get(0).getTypeId());
-      questionMap.put(Paper.QUESTION_KEY, objs);
-      result.add(questionMap);
+      List<Map<String, Object>> result = new ArrayList<>(collection.size());
+
+      for (List<PaperQuestion> objs : collection) {
+        Map<String, Object> questionMap = new HashMap<>(2);
+        questionMap.put(Paper.TYPE_ID_KEY, objs.get(0).getTypeId());
+        questionMap.put(Paper.QUESTION_KEY, objs);
+        result.add(questionMap);
+      }
+      if (removePaperQuestionList) {
+        paper.setPaperQuestionList(null);
+      }
+      paper.setPaperQuestions(result);
     }
-    paper.setPaperQuestionList(null);
-    paper.setPaperQuestions(result);
+  }
+
+  public static void groupQuestions(Paper paper) {
+    groupQuestions(paper, false);
   }
 
   public static List<Map<String, Object>> groupQuestion(List<Answer> answer) {
-    Collection<List<Answer>> collection = answer.stream()
-        .collect(Collectors.groupingBy(Answer::getTypeId)).values();
+    Collection<List<Answer>> collection = answer.stream().collect(Collectors.groupingBy(Answer::getTypeId)).values();
 
     List<Map<String, Object>> result = new ArrayList<>(collection.size());
 

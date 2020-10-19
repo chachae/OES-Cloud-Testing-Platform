@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,17 +36,6 @@ public class AnswerController {
   @GetMapping("warn")
   public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
     return R.ok(answerService.getWarnAnswerByPaperId(paperId));
-  }
-
-  /**
-   * 新增试题（数据校验由远程服务处理）
-   *
-   * @param answer 试题内容
-   * @return 试题id
-   */
-  @PostMapping
-  public R<Long> saveAnswer(Answer answer) {
-    return R.ok(answerService.createAnswer(answer));
   }
 
   /**

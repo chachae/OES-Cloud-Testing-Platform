@@ -3,6 +3,7 @@ package com.oes.server.exam.basic.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.Answer;
+import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import java.util.List;
 import java.util.Map;
@@ -71,5 +72,10 @@ public interface IAnswerService extends IService<Answer> {
    * @param answer 学生答案信息
    */
   void createAnswer(Answer answer);
+
+  /**
+   * 创建试卷题目的答案
+   */
+  Paper createDefaultAnswer(Paper paper);
 
 }
