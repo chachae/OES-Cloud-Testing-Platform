@@ -1,14 +1,12 @@
 package com.oes.auth.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.oes.auth.entity.BindUser;
 import com.oes.auth.entity.UserConnection;
 import com.oes.auth.manager.UserManager;
 import com.oes.auth.properties.AuthProperties;
 import com.oes.auth.service.ISocialLoginService;
 import com.oes.auth.service.IUserConnectionService;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.GrantTypeConstant;
 import com.oes.common.core.constant.ParamsConstant;
 import com.oes.common.core.constant.SocialConstant;
@@ -157,7 +155,6 @@ public class SocialLoginServiceImpl implements ISocialLoginService {
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<UserConnection> findUserConnections(String username) {
     return this.userConnectionService.selectByCondition(username);
   }

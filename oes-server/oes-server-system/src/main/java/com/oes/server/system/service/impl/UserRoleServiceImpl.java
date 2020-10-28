@@ -1,9 +1,7 @@
 package com.oes.server.system.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.system.UserRole;
 import com.oes.server.system.mapper.UserRoleMapper;
 import com.oes.server.system.service.IUserRoleService;
@@ -38,7 +36,6 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<String> getUserIdsByRoleId(String[] roleIds) {
     List<UserRole> list = baseMapper.selectList(
         new LambdaQueryWrapper<UserRole>().in(UserRole::getRoleId, String.join(",", roleIds)));

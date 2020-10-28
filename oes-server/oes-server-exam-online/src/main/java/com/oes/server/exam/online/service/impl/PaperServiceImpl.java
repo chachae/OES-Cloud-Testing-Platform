@@ -1,10 +1,8 @@
 package com.oes.server.exam.online.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.SecurityUtil;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@DS(DataSourceConstant.SLAVE)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
 

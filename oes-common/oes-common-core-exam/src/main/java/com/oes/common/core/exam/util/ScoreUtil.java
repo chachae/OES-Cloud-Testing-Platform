@@ -227,7 +227,7 @@ public class ScoreUtil {
    * @return 成绩
    */
   public static String calTimes(Date creteTime) {
-    return DateUtil.calTimes(creteTime, new Date());
+    return DateUtil.convertTimeConsume(creteTime, new Date());
   }
 
   /**

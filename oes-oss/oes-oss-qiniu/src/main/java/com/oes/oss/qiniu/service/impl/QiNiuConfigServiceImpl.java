@@ -1,8 +1,6 @@
 package com.oes.oss.qiniu.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.oss.qiniu.entity.QiNiuConfig;
 import com.oes.oss.qiniu.mapper.QiNiuConfigMapper;
 import com.oes.oss.qiniu.service.IQiNiuConfigService;
@@ -23,7 +21,6 @@ public class QiNiuConfigServiceImpl extends ServiceImpl<QiNiuConfigMapper, QiNiu
     IQiNiuConfigService {
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public QiNiuConfig getConfig() {
     return baseMapper.selectById(1L);
   }

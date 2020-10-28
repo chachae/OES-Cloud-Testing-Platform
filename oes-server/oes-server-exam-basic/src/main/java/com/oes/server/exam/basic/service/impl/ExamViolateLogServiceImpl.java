@@ -1,11 +1,9 @@
 package com.oes.server.exam.basic.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.UserAgent;
 import com.oes.common.core.entity.auth.CurrentUser;
@@ -36,7 +34,6 @@ public class ExamViolateLogServiceImpl extends
     ServiceImpl<ExamViolateLogMapper, ExamViolateLog> implements IExamViolateLogService {
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<ExamViolateLog> pageExamViolateLog(QueryExamViolateLogDto entity) {
     Page<ExamViolateLog> page = new Page<>(entity.getPageNum(), entity.getPageSize());
     SortUtil.handlePageSort(entity, page, "violate_id", SystemConstant.ORDER_DESC, false);
@@ -44,13 +41,11 @@ public class ExamViolateLogServiceImpl extends
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<ExamViolateLog> selectByPaperId(Long paperId) {
     return baseMapper.selectByPaperId(paperId);
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Integer getViolateCount(Long paperId, String username) {
     return baseMapper
         .selectCount(new LambdaQueryWrapper<ExamViolateLog>()
@@ -77,7 +72,7 @@ public class ExamViolateLogServiceImpl extends
     // 获取请求 UserAgent 信息
     UserAgent agentInfo = HttpUtil.getUserAgent();
     CurrentUser curUser = SecurityUtil.getCurrentUser();
-    String stayTime = DateUtil.calTimes(examViolateLog.getViolateTime(), new Date());
+    String stayTime = DateUtil.convertTimeConsume(examViolateLog.getViolateTime(), new Date());
     String violateMsg = ExamViolateBehaviourEnum.getMsg(examViolateLog.getCode());
     // 格式化描述信息
     final String desc = String.format("%s：%s于%s时%s，违规停留时间共计%s。", curUser.getDeptName(),

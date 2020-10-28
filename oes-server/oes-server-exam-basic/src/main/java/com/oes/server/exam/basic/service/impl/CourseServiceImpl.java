@@ -1,12 +1,10 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.CourseTeacher;
 import com.oes.common.core.exam.entity.Question;
@@ -39,13 +37,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   private final ICourseTeacherService courseTeacherService;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Course> pageCourse(QueryCourseDto course) {
     return baseMapper.pageCourse(course, new Page<>(course.getPageNum(), course.getPageSize()));
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Course> getList(QueryCourseDto course) {
     LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
     if (StrUtil.isNotBlank(course.getCourseName())) {

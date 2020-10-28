@@ -1,12 +1,10 @@
 package com.oes.server.exam.online.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Score;
@@ -40,7 +38,6 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   private final ScoreMessageSender scoreMessageSender;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Score> pageScore(QueryScoreDto score) {
     score.setUsername(SecurityUtil.getCurrentUsername());
     score.setStatus(Score.STATUS_HAS_SUBMIT);
@@ -51,13 +48,11 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Score> getScore(QueryScoreDto score) {
     return baseMapper.getScore(score);
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Score getScore(String username, Long paperId) {
     LambdaQueryWrapper<Score> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(Score::getUsername, username).eq(Score::getPaperId, paperId);

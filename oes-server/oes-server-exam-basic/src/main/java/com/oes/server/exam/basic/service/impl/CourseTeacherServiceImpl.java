@@ -1,10 +1,8 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.CourseTeacher;
 import com.oes.server.exam.basic.mapper.CourseTeacherMapper;
 import com.oes.server.exam.basic.service.ICourseTeacherService;
@@ -32,7 +30,6 @@ public class CourseTeacherServiceImpl extends
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public String getByTeacherId(Long teacherId) {
     List<CourseTeacher> cts = baseMapper.selectList(
         new LambdaQueryWrapper<CourseTeacher>().eq(CourseTeacher::getTeacherId, teacherId));

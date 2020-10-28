@@ -156,12 +156,14 @@ public class DateUtil {
 
   /**
    * 计算耗时
-   *
+   *  <pre>
+   *    start：
+   *  </pre>
    * @param startTime 开始时间
    * @param endTime   结束时间
    * @return 时间（%s天%s小时%s分%s秒）
    */
-  public static String calTimes(Date startTime, Date endTime) {
+  public static String convertTimeConsume(Date startTime, Date endTime) {
     long cutMilli = DateUtil.toEpochMilli(endTime) - DateUtil.toEpochMilli(startTime);
     long day = cutMilli / 1000 / 60 / 60 / 24;
     long hr = cutMilli / 1000 / 60 / 60 % 24;

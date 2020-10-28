@@ -2,12 +2,10 @@ package com.oes.server.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.system.Role;
@@ -43,7 +41,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
   private final IUserRoleService userRoleService;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Role> getAllRoles() {
     LambdaQueryWrapper<Role> qw = new LambdaQueryWrapper<>();
     qw.orderByAsc(Role::getRoleId);
@@ -51,7 +48,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Role> pageRoles(QueryParam param, Role role) {
     Page<Role> page = new Page<>(param.getPageNum(), param.getPageSize());
     SortUtil.handlePageSort(param, page, "createTime", SystemConstant.ORDER_DESC, false);
@@ -59,7 +55,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Role getByName(String roleName) {
     return baseMapper.selectOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, roleName));
   }

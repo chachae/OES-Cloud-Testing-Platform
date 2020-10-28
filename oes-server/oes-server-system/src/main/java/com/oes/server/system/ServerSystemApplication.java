@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement
-// @EnableDistributedTransaction
 @EnableOesCloudResourceServer
 @MapperScan("com.oes.server.system.mapper")
 public class ServerSystemApplication {

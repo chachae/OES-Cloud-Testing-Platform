@@ -1,13 +1,11 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.system.Announce;
 import com.oes.common.core.entity.system.query.AnnounceQueryDto;
@@ -37,7 +35,6 @@ public class AnnounceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> i
   private final AnnounceContentMapper announceContentMapper;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Announce> pageAnnounce(AnnounceQueryDto announce) {
     Page<Announce> page = new Page<>(announce.getPageNum(), announce.getPageSize());
     // 根据时间降序排序

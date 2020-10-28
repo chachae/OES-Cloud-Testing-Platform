@@ -1,11 +1,9 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperDept;
@@ -54,7 +52,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   private final IPaperQuestionService paperQuestionService;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Paper> pagePaper(QueryPaperDto entity) {
     Page<Paper> page = new Page<>(entity.getPageNum(), entity.getPageSize());
     IPage<Paper> result = baseMapper.pagePaper(page, entity);
@@ -71,7 +68,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Paper getPaper(Long paperId, String username) {
     // 判断考试是否属于该考生
     List<Long> deptIds = paperDeptService.getDeptIdListByPaperId(paperId);
@@ -108,7 +104,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getTopTenPaperData() {
     return baseMapper.selectTopTenPaper();
   }

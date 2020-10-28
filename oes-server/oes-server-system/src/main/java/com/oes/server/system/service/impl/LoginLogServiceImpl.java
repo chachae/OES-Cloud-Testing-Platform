@@ -1,12 +1,10 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.UserAgent;
@@ -39,7 +37,6 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
     ILoginLogService {
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<LoginLog> pageLoginLogs(LoginLog loginLog, QueryParam param) {
     LambdaQueryWrapper<LoginLog> qw = new LambdaQueryWrapper<>();
 
@@ -71,31 +68,26 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Long getTotalVisitCount() {
     return baseMapper.countTotalVisit();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Long getTodayVisitCount() {
     return baseMapper.countTodayVisit();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public Long getTodayIp() {
     return baseMapper.countTodayIp();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getLastTenDaysVisitCount(SystemUser user) {
     return baseMapper.selectLastTenDaysVisitCount(user);
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<LoginLog> getUserLastSevenLoginLogs(String username) {
     LoginLog loginLog = new LoginLog();
     loginLog.setUsername(username);

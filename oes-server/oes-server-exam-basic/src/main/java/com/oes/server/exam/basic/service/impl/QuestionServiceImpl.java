@@ -1,12 +1,10 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Question;
@@ -38,7 +36,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   private final IPaperQuestionService paperQuestionService;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Question> pageQuestion(QueryQuestionDto question) {
     Page<Question> page = new Page<>(question.getPageNum(), question.getPageSize());
     SortUtil.handlePageSort(question, page, "courseId", SystemConstant.ORDER_ASC, true);
@@ -46,7 +43,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Question> getList(Question question) {
     LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
     if (question.getTypeId() != null) {
@@ -90,13 +86,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getTopTenQuestionData() {
     return baseMapper.selectTopTenQuestionData();
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<Map<String, Object>> getTypeCountDistribute() {
     return baseMapper.countDistributeGroupByType();
   }

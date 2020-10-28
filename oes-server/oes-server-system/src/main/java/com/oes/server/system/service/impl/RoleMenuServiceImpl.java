@@ -1,9 +1,7 @@
 package com.oes.server.system.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.entity.system.RoleMenu;
 import com.oes.server.system.mapper.RoleMenuMapper;
 import com.oes.server.system.service.IRoleMenuService;
@@ -32,7 +30,6 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<String> getRoleIdsByMenuId(String[] menuIds) {
     return this.baseMapper.selectList(
         new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getMenuId, String.join(",", menuIds)))
@@ -48,7 +45,6 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
   }
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public List<RoleMenu> getRoleMenusByRoleId(String roleId) {
     return baseMapper
         .selectList(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, roleId));

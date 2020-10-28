@@ -1,13 +1,11 @@
 package com.oes.server.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.system.Log;
@@ -43,7 +41,6 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogS
   private final ObjectMapper objectMapper;
 
   @Override
-  @DS(DataSourceConstant.SLAVE)
   public IPage<Log> findLogs(Log log, QueryParam request) {
     QueryWrapper<Log> queryWrapper = new QueryWrapper<>();
 
