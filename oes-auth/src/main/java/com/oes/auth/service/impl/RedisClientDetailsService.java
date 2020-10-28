@@ -2,8 +2,7 @@ package com.oes.auth.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.oes.common.core.util.JSONUtil;
 import com.oes.common.redis.starter.service.RedisService;
 import java.util.List;
 import javax.sql.DataSource;
@@ -39,9 +38,7 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
   @Override
   public ClientDetails loadClientByClientId(String clientId) throws InvalidClientException {
     String value = (String) redisService.hget(CACHE_CLIENT_KEY, clientId);
-    return StrUtil.isBlank(value) ? cacheAndGetClient(clientId)
-        : JSONObject.parseObject(value, new TypeReference<BaseClientDetails>() {
-        }.getType());
+    return StrUtil.isBlank(value) ? cacheAndGetClient(clientId) : JSONUtil.decodeValue(value, BaseClientDetails.class);
   }
 
   /**
@@ -54,7 +51,7 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
     // 父级通过 JDBC 获取客户端信息，将数据缓存到 Redis
     clientDetails = super.loadClientByClientId(clientId);
     if (clientDetails != null) {
-      redisService.hset(CACHE_CLIENT_KEY, clientId, JSONObject.toJSONString(clientDetails));
+      redisService.hset(CACHE_CLIENT_KEY, clientId, JSONUtil.encode(clientDetails));
     }
     return clientDetails;
   }
@@ -83,6 +80,6 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
       return;
     }
     list.forEach(client -> redisService
-        .hset(CACHE_CLIENT_KEY, client.getClientId(), JSONObject.toJSONString(client)));
+        .hset(CACHE_CLIENT_KEY, client.getClientId(), JSONUtil.encode(client)));
   }
 }

@@ -1,11 +1,11 @@
 package com.oes.gateway.enhance.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.util.DateUtil;
 import com.oes.common.core.util.HttpUtil;
+import com.oes.common.core.util.JSONUtil;
 import com.oes.gateway.enhance.entity.BlackList;
 import com.oes.gateway.enhance.entity.BlockLog;
 import com.oes.gateway.enhance.entity.RateLimitLog;
@@ -97,7 +97,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
           o = routeEnhanceCacheService.getRateLimitRule(originUri.getPath(), requestMethod);
         }
         if (o != null) {
-          RateLimitRule rule = JSONObject.parseObject(o.toString(), RateLimitRule.class);
+          RateLimitRule rule = JSONUtil.decodeValue(o.toString(), RateLimitRule.class);
           Mono<Void> result = doRateLimitCheck(limit, rule, originUri, requestIp, requestMethod,
               response);
           log.info("Rate limit verification completed - {}", stopwatch.stop());
@@ -172,7 +172,7 @@ public class RouteEnhanceServiceImpl implements RouteEnhanceService {
   private void doBlackListCheck(AtomicBoolean forbid, Set<Object> blackList, URI uri,
       String requestMethod) {
     for (Object o : blackList) {
-      BlackList b = JSONObject.parseObject(o.toString(), BlackList.class);
+      BlackList b = JSONUtil.decodeValue(o.toString(), BlackList.class);
       if (pathMatcher.match(b.getRequestUri(), uri.getPath()) && BlackList.OPEN
           .equals(b.getStatus())) {
         if (BlackList.METHOD_ALL.equalsIgnoreCase(b.getRequestMethod())

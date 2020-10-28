@@ -1,7 +1,6 @@
 package com.oes.oss.qiniu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.DataSourceConstant;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.FileUtil;
+import com.oes.common.core.util.JSONUtil;
 import com.oes.oss.qiniu.entity.QiNiuConfig;
 import com.oes.oss.qiniu.entity.QiNiuContent;
 import com.oes.oss.qiniu.entity.query.QiNiuQueryDto;
@@ -101,7 +101,7 @@ public class QiNiuContentServiceImpl extends
       }
       Response response = uploadManager.put(file.getBytes(), key, upToken);
       //解析上传成功的结果
-      DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
+      DefaultPutRet putRet = JSONUtil.decodeValue(response.bodyString(), DefaultPutRet.class);
       QiNiuContent content = getByName(FileUtil.getFileNameNoEx(putRet.key));
       if (content == null) {
         //存入数据库

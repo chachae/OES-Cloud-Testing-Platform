@@ -1,7 +1,7 @@
 package com.oes.common.core.exam.util;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
@@ -9,6 +9,7 @@ import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Score;
 import com.oes.common.core.exam.entity.vo.StatisticScoreVo;
 import com.oes.common.core.util.DateUtil;
+import com.oes.common.core.util.JSONUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -29,6 +30,9 @@ public class ScoreUtil {
 
   private ScoreUtil() {
   }
+
+  private static final TypeReference<List<String>> LIST_TYPE_REFERENCE = new TypeReference<List<String>>() {
+  };
 
   /**
    * Jaccard 相似系数
@@ -101,7 +105,7 @@ public class ScoreUtil {
   private static void markMulChoice(Answer answer, PaperQuestion paperQuestion) {
     answer.setStatus(Answer.STATUS_CORRECT);
     // 快速失败
-    List<String> contentArray = JSON.parseArray(answer.getAnswerContent(), String.class);
+    List<String> contentArray = JSONUtil.decodeValue(answer.getAnswerContent(), LIST_TYPE_REFERENCE);
     if (contentArray.isEmpty()) {
       answer.setScore(Score.DEFAULT_SCORE);
       return;
@@ -115,7 +119,7 @@ public class ScoreUtil {
     }
 
     // 没有全对（包含正确答案内部存在的答案直接的0分）
-    List<String> rightKeys = JSON.parseArray(paperQuestion.getRightKey(), String.class);
+    List<String> rightKeys = JSONUtil.decodeValue(paperQuestion.getRightKey(), LIST_TYPE_REFERENCE);
     for (String content : contentArray) {
       if (!rightKeys.contains(content)) {
         answer.setScore(0);
@@ -152,8 +156,8 @@ public class ScoreUtil {
    */
   private static void markFill(Answer answer, PaperQuestion paperQuestion) {
     answer.setStatus(Answer.STATUS_CORRECT);
-    List<String> answerContents = JSON.parseArray(answer.getAnswerContent(), String.class);
-    List<String> rightKeys = JSON.parseArray(paperQuestion.getRightKey(), String.class);
+    List<String> answerContents = JSONUtil.decodeValue(answer.getAnswerContent(), LIST_TYPE_REFERENCE);
+    List<String> rightKeys = JSONUtil.decodeValue(paperQuestion.getRightKey(), LIST_TYPE_REFERENCE);
     // 填空数量
     int fillNum = rightKeys.size();
     // 题目总分

@@ -30,7 +30,6 @@ public class CourseTeacher implements Serializable {
   /**
    * 教师编号（id）
    */
-  @TableId(type = IdType.INPUT)
   private Long teacherId;
 
   /**

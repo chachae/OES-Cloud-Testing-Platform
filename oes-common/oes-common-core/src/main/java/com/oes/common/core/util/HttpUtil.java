@@ -1,7 +1,5 @@
 package com.oes.common.core.util;
 
-import static com.alibaba.fastjson.JSON.toJSONBytes;
-
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
@@ -49,7 +47,7 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
       int status, Object value) throws IOException {
     response.setContentType(contentType);
     response.setStatus(status);
-    response.getOutputStream().write(toJSONBytes(value));
+    response.getOutputStream().write(JSONUtil.encodeToBuffer(value).array());
   }
 
   /**
@@ -104,7 +102,7 @@ public class HttpUtil extends cn.hutool.http.HttpUtil {
     response.setStatusCode(status);
     response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
     DataBuffer dataBuffer = response.bufferFactory()
-        .wrap(toJSONBytes(value));
+        .wrap(JSONUtil.encodeToBuffer(value).array());
     return response.writeWith(Mono.just(dataBuffer));
   }
 

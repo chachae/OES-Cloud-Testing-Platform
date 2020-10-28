@@ -1,7 +1,7 @@
 FROM adoptopenjdk:8-jdk-openj9
 MAINTAINER chachae chachae@foxmail.com
 
-COPY ./target/oes-ai-1.0-SNAPSHOT.jar /oes/oes-ai-1.0-SNAPSHOT.jar
+COPY ./target/oes-ai-1.0.jar /oes/oes-ai-1.0.jar
 ENTRYPOINT [ \
     "java", \
     "-XX:MetaspaceSize=128m", \
@@ -14,5 +14,5 @@ ENTRYPOINT [ \
     "-XX:+UseConcMarkSweepGC", \
     "-Duser.timezone=GMT+08", \
     "-jar", \
-    "/oes/oes-ai-1.0-SNAPSHOT.jar"\
+    "/oes/oes-ai-1.0.jar"\
 ]

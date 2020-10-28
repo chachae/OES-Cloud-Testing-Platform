@@ -1,7 +1,7 @@
 package com.oes.gateway.enhance.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.oes.common.core.util.JSONUtil;
 import com.oes.common.redis.starter.service.RedisService;
 import com.oes.gateway.enhance.entity.BlackList;
 import com.oes.gateway.enhance.entity.RateLimitRule;
@@ -33,7 +33,7 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
       String key = StrUtil.isNotBlank(b.getIp()) ?
           RouteEnhanceCacheUtil.getBlackListCacheKey(b.getIp()) :
           RouteEnhanceCacheUtil.getBlackListCacheKey();
-      String value = JSONObject.toJSONString(b);
+      String value = JSONUtil.encode(b);
       redisService.sSet(key, value);
     });
     log.info("Cache blacklist into redis >>>");
@@ -44,7 +44,7 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
     String key = StrUtil.isNotBlank(blackList.getIp()) ?
         RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getIp()) :
         RouteEnhanceCacheUtil.getBlackListCacheKey();
-    redisService.sSet(key, JSONObject.toJSONString(blackList));
+    redisService.sSet(key, JSONUtil.encode(blackList));
   }
 
   @Override
@@ -64,7 +64,7 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
     String key = StrUtil.isNotBlank(blackList.getIp()) ?
         RouteEnhanceCacheUtil.getBlackListCacheKey(blackList.getIp()) :
         RouteEnhanceCacheUtil.getBlackListCacheKey();
-    redisService.setRemove(key, JSONObject.toJSONString(blackList));
+    redisService.setRemove(key, JSONUtil.encode(blackList));
   }
 
   @Override
@@ -72,7 +72,7 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
     rateLimitRules.subscribe(r -> {
       String key = RouteEnhanceCacheUtil
           .getRateLimitCacheKey(r.getRequestUri(), r.getRequestMethod());
-      String value = JSONObject.toJSONString(r);
+      String value = JSONUtil.encode(r);
       redisService.set(key, value);
     });
     log.info("Cache rate limit rules into redis >>>");
@@ -82,7 +82,7 @@ public class RouteEnhanceCacheServiceImpl implements RouteEnhanceCacheService {
   public void saveRateLimitRule(RateLimitRule rateLimitRule) {
     String key = RouteEnhanceCacheUtil
         .getRateLimitCacheKey(rateLimitRule.getRequestUri(), rateLimitRule.getRequestMethod());
-    redisService.set(key, JSONObject.toJSONString(rateLimitRule));
+    redisService.set(key, JSONUtil.encode(rateLimitRule));
   }
 
 

@@ -148,7 +148,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void randomCreatePaper(Paper paper, PaperType paperType) {
-    paper.setCreateTime(new Date());
     paper.setIsRandom(Paper.IS_RANDOM);
     paper.setStatus(Paper.STATUS_CLOSE);
     baseMapper.insert(paper);
@@ -159,27 +158,29 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     String[] numArray = paperType.getNums().split(StrUtil.COMMA);
 
     this.setPaperType(paperId, typeIdArray, scoreArray, numArray);
-    this.setRandomQuestion(paper, paperType.getDifficult(), typeIdArray, numArray);
+    this.setPaperQuestion(paper, paperType.getDifficult(), typeIdArray, numArray);
   }
 
-  private void setRandomQuestion(Paper paper, Integer difficult, String[] typeIdArray, String[] numArray) {
+  private void setPaperQuestion(Paper paper, Integer difficult, String[] typeIdArray, String[] numArray) {
+    // 预设置基础题目检索数据
+    Question obj = new Question();
+    // 排除整体难度限制
+    if (difficult != 0) {
+      obj.setDifficult(difficult);
+    }
+    obj.setCourseId(paper.getCourseId());
     for (int i = 0; i < typeIdArray.length; i++) {
-      Question obj = new Question();
-      // 排除整体难度限制
-      if (difficult != 0) {
-        obj.setDifficult(difficult);
-      }
-      obj.setCourseId(paper.getCourseId());
       obj.setTypeId(Long.parseLong(typeIdArray[i]));
       List<Question> questions = this.questionService.getList(obj);
       int questionNum = Integer.parseInt(numArray[i]);
+
       if (questions.size() < questionNum) {
         throw new ApiException("试题数量不足，请调试题分布后重试");
-      }
-      // 随机重排序（如果题库对应的题目数量和试卷相应题目数量一致则不需要随机排序）
-      if (questions.size() != questionNum) {
+      } else if (questions.size() != questionNum) {
+        // 随机重排序（如果题库对应的题目数量和试卷相应题目数量一致则不需要随机排序）
         Collections.shuffle(questions);
       }
+
       List<PaperQuestion> batchObjs = new ArrayList<>(questionNum);
       for (int c = 0; c < questionNum; c++) {
         batchObjs.add(new PaperQuestion(paper.getPaperId(), questions.get(c).getQuestionId()));
@@ -197,7 +198,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   private void setPaperDept(Long paperId, String[] deptIdArray) {
-    List<PaperDept> batchObjs = new LinkedList<>();
+    List<PaperDept> batchObjs = new ArrayList<>(deptIdArray.length);
     for (String deptId : deptIdArray) {
       batchObjs.add(new PaperDept(paperId, Long.parseLong(deptId)));
     }

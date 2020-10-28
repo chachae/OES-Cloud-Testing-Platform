@@ -1,6 +1,5 @@
 package com.oes.ai.function.face.badiu.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.oes.ai.client.IdCardVerifyClient;
 import com.oes.ai.entity.face.FaceMatchInfo;
 import com.oes.ai.entity.face.QueryFaceMatch;
@@ -13,6 +12,7 @@ import com.oes.ai.function.supplier.baidu.service.IAccessTokenService;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.IdCardVerify;
 import com.oes.common.core.exception.ApiException;
+import com.oes.common.core.util.JSONUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +62,7 @@ public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
     params.add(targetB);
 
     ResponseEntity<Map<String, Object>> responseEntity = remoteBaiduFaceMatchService
-        .faceMatch(accessTokenService.getAccessToken(), JSON.toJSONString(params));
+        .faceMatch(accessTokenService.getAccessToken(), JSONUtil.encode(params));
     Map<String, Object> body = responseEntity.getBody();
 
     if (body != null) {

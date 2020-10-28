@@ -1,7 +1,7 @@
 package com.oes.server.exam.online.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
+import com.oes.common.core.util.JSONUtil;
 import com.oes.common.netty.websocket.starter.annotation.BeforeHandshake;
 import com.oes.common.netty.websocket.starter.annotation.OnClose;
 import com.oes.common.netty.websocket.starter.annotation.OnError;
@@ -93,7 +93,7 @@ public class OESWebSocketHandler implements IRedisTopicMessage {
    */
   @Override
   public void receiveMessage(String message) {
-    Message msg = JSON.parseObject(message, Message.class);
+    Message msg = JSONUtil.decodeValue(message, Message.class);
     if (msg != null && SessionConfig.SESSION_MAP.get(msg.getToId()) != null) {
       handlerMessage(msg, SessionConfig.SESSION_MAP.get(msg.getToId()));
     }
@@ -126,11 +126,11 @@ public class OESWebSocketHandler implements IRedisTopicMessage {
     String fromId = message.getFromId();
     message.setFromId(message.getToId());
     message.setToId(fromId);
-    session.sendText(JSON.toJSONString(message));
+    session.sendText(JSONUtil.encode(message));
   }
 
   private void handleMsg(Message message, Session session) {
-    session.sendText(JSON.toJSONString(message));
+    session.sendText(JSONUtil.encode(message));
   }
 
 }

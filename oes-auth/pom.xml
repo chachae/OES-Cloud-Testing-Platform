@@ -5,7 +5,7 @@
   <parent>
     <artifactId>oes</artifactId>
     <groupId>com.oes</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -15,13 +15,13 @@
   <description>OES 统一认证授权服务</description>
 
   <properties>
-    <oes.version>1.0-SNAPSHOT</oes.version>
+    <oes.version>1.0</oes.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.oes</groupId>
-      <artifactId>oes-common-core-exam</artifactId>
+      <artifactId>oes-common-core</artifactId>
       <version>${oes.version}</version>
     </dependency>
     <dependency>

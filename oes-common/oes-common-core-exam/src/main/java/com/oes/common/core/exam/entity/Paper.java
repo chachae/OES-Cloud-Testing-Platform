@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +60,8 @@ public class Paper implements Serializable {
    * 使用默认的 snowflake
    */
   @TableId
+  // 解决精度丢失问题
+  @JsonSerialize(using = ToStringSerializer.class)
   private Long paperId;
 
   /**

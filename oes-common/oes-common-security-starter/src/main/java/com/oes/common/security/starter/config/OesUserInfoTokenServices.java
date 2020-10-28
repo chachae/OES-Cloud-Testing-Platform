@@ -1,7 +1,8 @@
 package com.oes.common.security.starter.config;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.oes.common.core.util.JSONUtil;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -86,19 +87,20 @@ public class OesUserInfoTokenServices implements ResourceServerTokenServices {
     Object principal = this.getPrincipal(map);
     List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
 
-    String oauth2RequestString = JSONObject.toJSONString(map.get("oauth2Request"));
-    JSONObject oauth2Request = JSONObject.parseObject(oauth2RequestString);
+    Object oauth2RequestObj = map.get("oauth2Request");
+    JsonNode oauth2Request = JSONUtil.readTree(oauth2RequestObj);
     TypeReference<Set<String>> setTypeReference = new TypeReference<Set<String>>() {
     };
-
-    Map<String, String> requestParameters = JSONObject.parseObject(oauth2Request.getString("requestParameters"), new TypeReference<Map<String, String>>() {
+    
+    Map<String, String> requestParameters = JSONUtil.decodeValue(oauth2Request.get("requestParameters").toPrettyString(), new TypeReference<Map<String, String>>() {
     });
-    boolean approved = oauth2Request.getBooleanValue("approved");
-    Set<String> scope = JSONObject.parseObject(oauth2Request.getString("scope"), setTypeReference);
-    Set<String> resourceIds = JSONObject.parseObject(oauth2Request.getString("resourceIds"), setTypeReference);
-    String redirectUri = oauth2Request.getString("redirectUri");
-    Set<String> responseTypes = JSONObject.parseObject(oauth2Request.getString("responseTypes"), setTypeReference);
-    Map<String, Serializable> extensions = JSONObject.parseObject(oauth2Request.getString("extensions"), new TypeReference<Map<String, Serializable>>() {
+
+    boolean approved = oauth2Request.get("approved").booleanValue();
+    Set<String> scope = JSONUtil.decodeValue(oauth2Request.get("scope").toPrettyString(), setTypeReference);
+    Set<String> resourceIds = JSONUtil.decodeValue(oauth2Request.get("resourceIds").toPrettyString(), setTypeReference);
+    String redirectUri = oauth2Request.get("redirectUri").asText();
+    Set<String> responseTypes = JSONUtil.decodeValue(oauth2Request.get("responseTypes").toPrettyString(), setTypeReference);
+    Map<String, Serializable> extensions = JSONUtil.decodeValue(oauth2Request.get("extensions").toPrettyString(), new TypeReference<Map<String, Serializable>>() {
     });
 
     OAuth2Request request = new OAuth2Request(requestParameters, this.clientId, authorities, approved, scope, resourceIds, redirectUri, responseTypes, extensions);

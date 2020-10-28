@@ -1,7 +1,6 @@
 package com.oes.server.job.task;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.oes.common.core.util.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,6 @@ public class TaskList {
   }
 
   public void test2(String json) {
-    JSONObject jsonObject = JSON.parseObject(json);
-    log.info("我是带JSON参数的test2方法，正在被执行，参数为：{}", jsonObject);
+    log.info("我是带JSON参数的test2方法，正在被执行，参数为：{}", JSONUtil.decodeValueAsMap(json));
   }
 }

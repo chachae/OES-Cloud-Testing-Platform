@@ -5,7 +5,7 @@
   <parent>
     <artifactId>oes-server</artifactId>
     <groupId>com.oes</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,7 @@
   <description>OES 微服务调用示例模块</description>
 
   <properties>
-    <oes.version>1.0-SNAPSHOT</oes.version>
+    <oes.version>1.0</oes.version>
   </properties>
 
   <dependencies>
