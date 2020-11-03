@@ -1,6 +1,7 @@
 package com.oes.common.netty.websocket.starter.entity;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  *
@@ -11,6 +12,10 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
   private static final long serialVersionUID = -4916539908205079687L;
+
+  public Message() {
+
+  }
 
   /**
    * 发送方id
@@ -25,7 +30,7 @@ public class Message implements Serializable {
   /**
    * 发送文本
    */
-  private String content;
+  private transient Map<String, Object> content;
 
   /**
    * 消息类型
@@ -48,11 +53,11 @@ public class Message implements Serializable {
     this.toId = toId;
   }
 
-  public String getContent() {
+  public Map<String, Object> getContent() {
     return content;
   }
 
-  public void setContent(String content) {
+  public void setContent(Map<String, Object> content) {
     this.content = content;
   }
 

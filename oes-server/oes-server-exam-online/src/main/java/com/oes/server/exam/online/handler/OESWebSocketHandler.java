@@ -1,6 +1,7 @@
 package com.oes.server.exam.online.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.oes.common.core.util.JSONUtil;
 import com.oes.common.netty.websocket.starter.annotation.BeforeHandshake;
 import com.oes.common.netty.websocket.starter.annotation.OnClose;
@@ -31,6 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OESWebSocketHandler implements IRedisTopicMessage {
 
   private static IExamOnlineInfoService examOnlineInfoService;
+
+  private static final TypeReference<Message> TYPE_REFERENCE = new TypeReference<Message>() {
+  };
 
   @Autowired
   private void setIExamOnlineInfoService(IExamOnlineInfoService examOnlineInfoService) {
@@ -93,7 +97,7 @@ public class OESWebSocketHandler implements IRedisTopicMessage {
    */
   @Override
   public void receiveMessage(String message) {
-    Message msg = JSONUtil.decodeValue(message, Message.class);
+    Message msg = JSONUtil.decodeValue(message, TYPE_REFERENCE);
     if (msg != null && SessionConfig.SESSION_MAP.get(msg.getToId()) != null) {
       handlerMessage(msg, SessionConfig.SESSION_MAP.get(msg.getToId()));
     }
