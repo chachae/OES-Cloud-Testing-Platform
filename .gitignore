@@ -8,6 +8,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 .txlcn/
+script/docker/docker-compose-bk.yml
 
 # idea
 .idea

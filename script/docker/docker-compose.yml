@@ -1,114 +1,155 @@
 version: '3'
 
 services:
+  # gateway
   oes-gateway:
     image: oes-gateway:latest
     container_name: oes-gateway
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=10.71.29.182"
-      - "--mysql.url=10.71.29.198"
-      - "--redis.url=10.71.29.182"
-      - "--oes-admin=10.71.29.182"
-      - "--mongo.url=10.71.29.182"
+      - "--p6spy=false"
+      - "--mysql.url=127.0.0.1"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--mongo.url=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 8301:8301
-    restart: on-failure
 
+  # springboot-admin
   oes-admin:
     image: oes-admin:latest
     container_name: oes-admin
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=host.docker.internal"
+      - "--p6spy=false"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 8400:8400
-    restart: on-failure
 
+  # 统一认证微服务
   oes-auth:
     image: oes-auth:latest
     container_name: oes-auth
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--mysql.url=10.71.29.198"
-      - "--nacos.url=10.71.29.182"
-      - "--redis.url=10.71.29.182"
-      - "--oes-admin=10.71.29.182"
+      - "--p6spy=false"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--mysql.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 9200:9200
-    restart: on-failure
 
+  # 人证识别认证微服务
   oes-ai:
     image: oes-ai:latest
     container_name: oes-ai
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=10.71.29.182"
-      - "--redis.url=10.71.29.182"
-      - "--oes-admin=10.71.29.182"
-      - "--oes-gateway=10.71.29.182"
+      - "--p6spy=false"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--oes-gateway=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 9700:9700
-    restart: on-failure
 
+  # 七牛云对象存储微服务
   oes-oss-qiniu:
     image: oes-oss-qiniu:latest
     container_name: oes-oss-qiniu
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=10.71.29.182"
-      - "--mysql.url=10.71.29.198"
-      - "--redis.url=10.71.29.182"
-      - "--oes-admin=10.71.29.182"
-      - "--oes-gateway=10.71.29.182"
+      - "--p6spy=false"
+      - "--mysql.url=127.0.0.1"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--oes-gateway=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 9505:9505
-    restart: on-failure
 
+  # 平台基础能力提供微服务
   oes-server-system:
     image: oes-server-system:latest
     container_name: oes-server-system
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=10.71.29.182"
-      - "--mysql.url=10.71.29.198"
-      - "--redis.url=10.71.29.182"
-      - "--oes-admin=10.71.29.182"
-      - "--oes-gateway=10.71.29.182"
+      - "--p6spy=false"
+      - "--mysql.url=127.0.0.1"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--oes-gateway=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
       - 9500:9500
-    restart: on-failure
 
-  oes-server-job:
-    image: oes-server-job:latest
-    container_name: oes-server-job
+  # 在线考试基础能力提供微服务
+  oes-server-exam-basic:
+    image: oes-server-exam-basic:latest
+    container_name: oes-server-exam-basic
     volumes:
       - "~/OES-Cloud/log:/log"
     command:
-      - "--nacos.url=10.71.29.182"
-      - "--mysql.url=10.71.29.198"
-      - "--oes-admin=10.71.29.182"
-      - "--oes-gateway=10.71.29.182"
+      - "--p6spy=false"
+      - "--mysql.url=127.0.0.1"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--oes-gateway=127.0.0.1"
     environment:
       - "TZ=Asia/Shanghai"
     ports:
-      - 8204:8204
-    restart: on-failure
+      - 9502:9502
+
+  # 在线考试微服务
+  oes-server-exam-online:
+    image: oes-server-exam-online:latest
+    container_name: oes-server-exam-online
+    volumes:
+      - "~/OES-Cloud/log:/log"
+    command:
+      - "--p6spy=false"
+      - "--mysql.url=127.0.0.1"
+      - "--server-ip=127.0.0.1"
+      - "--nacos.url=127.0.0.1"
+      - "--redis.url=127.0.0.1"
+      - "--redis.password=123456"
+      - "--oes-admin=127.0.0.1"
+      - "--oes-gateway=127.0.0.1"
+    environment:
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 9503:9503

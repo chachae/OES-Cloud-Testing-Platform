@@ -12,6 +12,8 @@ spring:
         file-extension: yaml
       discovery:
         server-addr: ${nacos.url}
+        ip: ${server-ip}
+        port: ${server.port}
 
 logging:
   level:
