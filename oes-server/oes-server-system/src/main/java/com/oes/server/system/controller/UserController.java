@@ -73,7 +73,7 @@ public class UserController {
    */
   @GetMapping("index")
   public R<Map<String, Object>> index() {
-    Map<String, Object> data = new HashMap<>(5);
+    Map<String, Object> data = new HashMap<>(7);
     // 获取系统总访问记录
     Long totalVisitCount = loginLogService.getTotalVisitCount();
     data.put("totalVisitCount", totalVisitCount);

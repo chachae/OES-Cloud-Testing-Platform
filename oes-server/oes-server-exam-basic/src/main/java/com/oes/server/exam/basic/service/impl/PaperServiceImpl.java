@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -53,11 +52,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   @Override
   public IPage<Paper> pagePaper(QueryPaperDto entity) {
-    Page<Paper> page = new Page<>(entity.getPageNum(), entity.getPageSize());
-    IPage<Paper> result = baseMapper.pagePaper(page, entity);
+    IPage<Paper> result = baseMapper.pagePaper(new Page<>(entity.getPageNum(), entity.getPageSize()), entity);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
-      // todo 效率有点差，待优化
+      // 通过循环获取每张试卷的题目信息，进行设置和分类
       for (Paper paper : result.getRecords()) {
         List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
         paper.setPaperQuestionList(paperQuestions);
@@ -84,7 +82,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       List<Answer> answers = answerService.getAnswerList(username, paperId);
       // 答题记录不为空
       if (!answers.isEmpty()) {
-        Map<Long, Answer> answerMap = new HashMap<>(answers.size());
+        Map<Long, Answer> answerMap = new HashMap<>();
         // 答题记录组装到 HashMap 中
         answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
         for (PaperQuestion paperQuestion : paperQuestions) {
@@ -185,11 +183,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   private void setPaperType(Long paperId, String[] typeIdArray, String[] scoreArray, String[] numArray) {
-    List<PaperType> objects = new LinkedList<>();
+    List<PaperType> ptList = new ArrayList<>(typeIdArray.length);
     for (int i = 0; i < typeIdArray.length; i++) {
-      objects.add(new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]), Integer.parseInt(numArray[i])));
+      ptList.add(new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]), Integer.parseInt(numArray[i])));
     }
-    this.paperTypeService.saveBatch(objects);
+    this.paperTypeService.saveBatch(ptList);
   }
 
   private void setPaperDept(Long paperId, String[] deptIdArray) {

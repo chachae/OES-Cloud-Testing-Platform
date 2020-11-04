@@ -10,7 +10,6 @@ import com.oes.gateway.enhance.util.AddressUtil;
 import com.oes.gateway.enhance.util.PageableExecutionUtil;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -53,8 +52,7 @@ public class RouteLogServiceImpl implements RouteLogService {
 
   @Override
   public Flux<RouteLog> delete(String ids) {
-    String[] idArray = StringUtils
-        .splitByWholeSeparatorPreserveAllTokens(ids, StrUtil.COMMA);
+    String[] idArray = StrUtil.split(ids, StrUtil.COMMA);
     return routeLogMapper.deleteByIdIn(Arrays.asList(idArray));
   }
 
@@ -73,17 +71,16 @@ public class RouteLogServiceImpl implements RouteLogService {
   private Query getQuery(RouteLog routeLog) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    if (StringUtils.isNotBlank(routeLog.getIp())) {
+    if (StrUtil.isNotBlank(routeLog.getIp())) {
       criteria.and("ip").is(routeLog.getIp());
     }
-    if (StringUtils.isNotBlank(routeLog.getTargetServer())) {
+    if (StrUtil.isNotBlank(routeLog.getTargetServer())) {
       criteria.and("targetServer").is(routeLog.getTargetServer());
     }
-    if (StringUtils.isNotBlank(routeLog.getRequestMethod())) {
+    if (StrUtil.isNotBlank(routeLog.getRequestMethod())) {
       criteria.and("requestMethod").is(routeLog.getRequestMethod().toUpperCase());
     }
-    if (StringUtils.isNotBlank(routeLog.getCreateTimeFrom())
-        && StringUtils.isNotBlank(routeLog.getCreateTimeTo())) {
+    if (StrUtil.isNotBlank(routeLog.getCreateTimeFrom()) && StrUtil.isNotBlank(routeLog.getCreateTimeTo())) {
       criteria.andOperator(
           Criteria.where("createTime").gt(routeLog.getCreateTimeFrom()),
           Criteria.where("createTime").lt(routeLog.getCreateTimeTo())

@@ -1,5 +1,6 @@
 package com.oes.gateway.enhance.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.constant.SystemConstant;
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +8,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -42,7 +42,7 @@ public class AddressUtil {
       return dataBlock.getRegion();
     } catch (Exception e) {
       log.warn("获取地址信息异常,{}", e.getMessage());
-      return StringUtils.EMPTY;
+      return StrUtil.EMPTY;
     } finally {
       if (searcher != null) {
         try {

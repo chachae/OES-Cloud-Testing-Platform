@@ -10,7 +10,6 @@ import com.oes.gateway.enhance.util.PageableExecutionUtil;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -61,8 +60,7 @@ public class RouteUserServiceImpl implements RouteUserService {
 
   @Override
   public Flux<RouteUser> delete(String ids) {
-    String[] idArray = StringUtils
-        .splitByWholeSeparatorPreserveAllTokens(ids, StrUtil.COMMA);
+    String[] idArray = StrUtil.split(ids, StrUtil.COMMA);
     return routeUserMapper.deleteByIdIn(Arrays.asList(idArray));
   }
 
@@ -86,7 +84,7 @@ public class RouteUserServiceImpl implements RouteUserService {
   private Query getQuery(RouteUser routeUser) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    if (StringUtils.isNotBlank(routeUser.getUsername())) {
+    if (StrUtil.isNotBlank(routeUser.getUsername())) {
       criteria.and("username").is(routeUser.getUsername());
     }
     query.addCriteria(criteria);

@@ -1,6 +1,6 @@
 package com.oes.common.core.util;
 
-import org.apache.commons.lang3.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 数据脱敏工具
@@ -14,23 +14,29 @@ public class DimUtil {
   private DimUtil() {
   }
 
-  private static final String OVERLAY = "****";
-  private static final String OVERLAY_DOUBLE = "********";
+  private static final String DIM_STAR_1 = "*";
+  private static final String DIM_STAR_2 = "**";
+  private static final String DIM_STAR_4 = "****";
+  private static final String DIM_STAR_8 = "********";
 
   /**
    * 姓名
    */
   public static String fullName(String fullName) {
-    if (StringUtils.isBlank(fullName)) {
+    if (StrUtil.isBlank(fullName)) {
       return "";
     }
 
-    if (fullName.length() >= 3) {
-      return StringUtils.overlay(fullName, "**", 1, 3);
+    if (fullName.length() == 3) {
+      return fullName.charAt(0) + DIM_STAR_1 + fullName.substring(2);
     }
 
     if (fullName.length() == 2) {
-      return StringUtils.overlay(fullName, "*", 1, 2);
+      return fullName.charAt(0) + DIM_STAR_1;
+    }
+
+    if (fullName.length() > 3) {
+      return fullName.charAt(0) + DIM_STAR_2 + fullName.substring(3);
     }
 
     return "*";
@@ -43,11 +49,15 @@ public class DimUtil {
    * </pre>
    */
   public static String mobile(String mobile) {
-    if (StringUtils.isBlank(mobile)) {
+    if (StrUtil.isBlank(mobile)) {
       return "";
     }
 
-    return StringUtils.overlay(mobile, OVERLAY, 3, 7);
+    if (mobile.length() >= 11) {
+      return mobile.substring(0, 3) + DIM_STAR_4 + mobile.substring(7);
+    }
+
+    return mobile;
   }
 
   /**
@@ -57,20 +67,21 @@ public class DimUtil {
    * </pre>
    */
   public static String idCard(String idCard) {
-    if (StringUtils.isBlank(idCard)) {
+    if (StrUtil.isBlank(idCard)) {
       return "";
     }
 
     // 二代身份证
     if (idCard.length() == 18) {
-      return StringUtils.overlay(idCard, OVERLAY_DOUBLE, 4, 12);
+      return idCard.substring(0, 4) + DIM_STAR_8 + idCard.substring(12);
     }
 
     // 一代身份证
     if (idCard.length() == 15) {
-      return StringUtils.overlay(idCard, OVERLAY_DOUBLE, 3, 11);
+      return idCard.substring(0, 3) + DIM_STAR_8 + idCard.substring(11);
     }
 
     return "";
   }
+
 }

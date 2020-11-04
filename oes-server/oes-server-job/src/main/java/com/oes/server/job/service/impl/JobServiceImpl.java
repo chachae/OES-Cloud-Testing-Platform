@@ -18,7 +18,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.springframework.stereotype.Service;
@@ -62,24 +61,23 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements IJobS
   public IPage<Job> findJobs(QueryParam request, Job job) {
     LambdaQueryWrapper<Job> queryWrapper = new LambdaQueryWrapper<>();
 
-    if (StringUtils.isNotBlank(job.getBeanName())) {
+    if (StrUtil.isNotBlank(job.getBeanName())) {
       queryWrapper.eq(Job::getBeanName, job.getBeanName());
     }
-    if (StringUtils.isNotBlank(job.getMethodName())) {
+    if (StrUtil.isNotBlank(job.getMethodName())) {
       queryWrapper.eq(Job::getMethodName, job.getMethodName());
     }
-    if (StringUtils.isNotBlank(job.getParams())) {
+    if (StrUtil.isNotBlank(job.getParams())) {
       queryWrapper.like(Job::getParams, job.getParams());
     }
-    if (StringUtils.isNotBlank(job.getRemark())) {
+    if (StrUtil.isNotBlank(job.getRemark())) {
       queryWrapper.like(Job::getRemark, job.getRemark());
     }
-    if (StringUtils.isNotBlank(job.getStatus())) {
+    if (StrUtil.isNotBlank(job.getStatus())) {
       queryWrapper.eq(Job::getStatus, job.getStatus());
     }
 
-    if (StringUtils.isNotBlank(job.getCreateTimeFrom()) && StringUtils
-        .isNotBlank(job.getCreateTimeTo())) {
+    if (StrUtil.isNotBlank(job.getCreateTimeFrom()) && StrUtil.isNotBlank(job.getCreateTimeTo())) {
       queryWrapper
           .ge(Job::getCreateTime, job.getCreateTimeFrom())
           .le(Job::getCreateTime, job.getCreateTimeTo());

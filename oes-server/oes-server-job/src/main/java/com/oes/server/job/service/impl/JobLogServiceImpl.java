@@ -1,5 +1,6 @@
 package com.oes.server.job.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,7 +14,6 @@ import com.oes.server.job.service.IJobLogService;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,14 +28,14 @@ public class JobLogServiceImpl extends
   public IPage<JobLog> findJobLogs(QueryParam request, JobLog jobLog) {
     LambdaQueryWrapper<JobLog> queryWrapper = new LambdaQueryWrapper<>();
 
-    if (StringUtils.isNotBlank(jobLog.getBeanName())) {
+    if (StrUtil.isNotBlank(jobLog.getBeanName())) {
       queryWrapper.eq(JobLog::getBeanName, jobLog.getBeanName());
     }
-    if (StringUtils.isNotBlank(jobLog.getMethodName())) {
+    if (StrUtil.isNotBlank(jobLog.getMethodName())) {
       queryWrapper
           .eq(JobLog::getMethodName, jobLog.getMethodName());
     }
-    if (StringUtils.isNotBlank(jobLog.getStatus())) {
+    if (StrUtil.isNotBlank(jobLog.getStatus())) {
       queryWrapper.eq(JobLog::getStatus, jobLog.getStatus());
     }
     Page<JobLog> page = new Page<>(request.getPageNum(),

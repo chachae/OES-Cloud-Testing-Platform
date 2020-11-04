@@ -1,9 +1,9 @@
 package com.oes.server.job.helper;
 
+import cn.hutool.core.util.StrUtil;
 import com.oes.server.job.util.SpringContextUtil;
 import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -23,7 +23,7 @@ public class ScheduleRunnable implements Runnable {
     this.target = SpringContextUtil.getBean(beanName);
     this.params = params;
 
-    if (StringUtils.isNotBlank(params)) {
+    if (StrUtil.isNotBlank(params)) {
       this.method = target.getClass().getDeclaredMethod(methodName, String.class);
     } else {
       this.method = target.getClass().getDeclaredMethod(methodName);
@@ -34,7 +34,7 @@ public class ScheduleRunnable implements Runnable {
   public void run() {
     try {
       ReflectionUtils.makeAccessible(method);
-      if (StringUtils.isNotBlank(params)) {
+      if (StrUtil.isNotBlank(params)) {
         method.invoke(target, params);
       } else {
         method.invoke(target);

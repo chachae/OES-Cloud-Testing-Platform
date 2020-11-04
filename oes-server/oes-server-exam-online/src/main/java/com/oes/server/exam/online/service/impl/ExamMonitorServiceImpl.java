@@ -27,7 +27,7 @@ public class ExamMonitorServiceImpl implements IExamMonitorService {
     R<Integer> ans1 = systemUserClient.countByDeptIds(deptIds);
     // 到场考生总数
     R<Integer> ans2 = scoreClient.countByPaperId(String.valueOf(paperId));
-    Map<String, Object> resultMap = new HashMap<>(2);
+    Map<String, Object> resultMap = new HashMap<>(1);
     resultMap.put("userCount", ans1.getData());
     resultMap.put("scoreCount", ans2.getData());
     return resultMap;

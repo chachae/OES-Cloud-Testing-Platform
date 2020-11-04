@@ -24,7 +24,7 @@ public class AliyunOcrIdCardServiceImpl implements IAliyunOcrIdCardService {
 
   @Override
   public IdCardInfo ocrIdCard(QueryOcrEntity aliyunOcr) {
-    Map<String, Object> resObj = new HashMap<>(2);
+    Map<String, Object> resObj = new HashMap<>(1);
 
     //configure配置
     Map<String, Object> configObj = new HashMap<>(1);

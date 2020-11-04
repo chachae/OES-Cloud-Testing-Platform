@@ -39,8 +39,8 @@ public class BaiduFaceMatchServiceImpl implements IBaiduFaceMatchService {
 
     List<Map<String, Object>> params = new ArrayList<>(2);
 
-    Map<String, Object> targetA = new HashMap<>(5);
-    Map<String, Object> targetB = new HashMap<>(5);
+    Map<String, Object> targetA = new HashMap<>();
+    Map<String, Object> targetB = new HashMap<>();
 
     // 检测目标A
     targetA.put(BaiduFaceMatchConstant.KEY_IMAGE, matchA.getImage());

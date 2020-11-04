@@ -21,7 +21,8 @@ public class PageUtil {
    * Page 数据处理，预防redis反序列化报错
    */
   public static <T> Map<String, Object> toPage(IPage<T> page) {
-    Map<String, Object> map = new HashMap<>(2);
+    // HashMap 初始化容量大小为2的幂次方，所以2^1=2
+    Map<String, Object> map = new HashMap<>(1);
     map.put(PageResultConstant.ROWS, page.getRecords());
     map.put(PageResultConstant.TOTAL, page.getTotal());
     return map;
@@ -31,7 +32,7 @@ public class PageUtil {
    * Page 数据处理，预防redis反序列化报错
    */
   public static <T> Map<String, Object> toPage(T records, long total) {
-    Map<String, Object> map = new HashMap<>(2);
+    Map<String, Object> map = new HashMap<>(1);
     map.put(PageResultConstant.ROWS, records);
     map.put(PageResultConstant.TOTAL, total);
     return map;
@@ -41,7 +42,7 @@ public class PageUtil {
    * List<T> 分页
    */
   public static <T> Map<String, Object> toPage(int page, int size, List<T> list) {
-    if (list.isEmpty()) {
+    if (list == null || list.isEmpty()) {
       return toPage(null, 0);
     } else {
       int start = (page - 1) * size;

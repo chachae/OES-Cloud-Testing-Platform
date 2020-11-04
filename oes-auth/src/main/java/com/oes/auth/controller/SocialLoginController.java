@@ -18,7 +18,6 @@ import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
@@ -76,11 +75,10 @@ public class SocialLoginController {
    * @return String
    */
   @GetMapping("/{oauthType}/callback")
-  public String login(@PathVariable String oauthType, AuthCallback callback, String state,
-      Model model) {
+  public String login(@PathVariable String oauthType, AuthCallback callback, String state, Model model) {
     try {
       Map<String, Object> res;
-      String type = StringUtils.substringAfterLast(state, StringConstant.DOUBLE_COLON);
+      String type = StrUtil.subAfter(state, StringConstant.DOUBLE_COLON, true);
       if (StrUtil.equals(type, TYPE_BIND)) {
         res = socialLoginService.resolveBind(oauthType, callback);
       } else {

@@ -37,7 +37,7 @@ public class StatisticController {
       return R.ok(res);
     }
 
-    Map<String, Object> result = new HashMap<>(6);
+    Map<String, Object> result = new HashMap<>();
     //对应科目试卷排行前10的题目数据
     result.put("topTenPaper", paperService.getTopTenPaperData());
     //统计科目试题排行前10的题目数据

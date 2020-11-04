@@ -1,5 +1,6 @@
 package com.oes.server.job.helper;
 
+import cn.hutool.core.util.StrUtil;
 import com.oes.server.job.entity.Job;
 import com.oes.server.job.entity.JobLog;
 import com.oes.server.job.service.IJobLogService;
@@ -7,7 +8,6 @@ import com.oes.server.job.util.SpringContextUtil;
 import java.util.Date;
 import java.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -53,7 +53,7 @@ public class ScheduleJob extends QuartzJobBean {
       long times = System.currentTimeMillis() - startTime;
       jobLog.setTimes(times);
       jobLog.setStatus(JobLog.JOB_FAIL);
-      jobLog.setError(StringUtils.substring(e.toString(), 0, 2000));
+      jobLog.setError(StrUtil.sub(e.toString(), 0, 2000));
     } finally {
       scheduleJobLogService.saveJobLog(jobLog);
     }

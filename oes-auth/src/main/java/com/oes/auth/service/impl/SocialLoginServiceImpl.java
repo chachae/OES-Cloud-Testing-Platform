@@ -216,7 +216,7 @@ public class SocialLoginServiceImpl implements ISocialLoginService {
     if (clientDetails == null) {
       throw new ApiException("未找到第三方登录可用的Client");
     }
-    Map<String, String> requestParameters = new HashMap<>(5);
+    Map<String, String> requestParameters = new HashMap<>(3);
     requestParameters.put(ParamsConstant.GRANT_TYPE, GrantTypeConstant.PASSWORD);
     requestParameters.put(USERNAME, user.getUsername());
     requestParameters.put(PASSWORD, SocialConstant.SOCIAL_LOGIN_PASSWORD);

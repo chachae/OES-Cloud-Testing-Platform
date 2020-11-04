@@ -1,9 +1,8 @@
 package com.oes.common.core.util;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.base.CaseFormat;
 import java.time.LocalDateTime;
-import java.util.stream.IntStream;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 
 /**
@@ -39,22 +38,10 @@ public class SystemUtil {
    * @return 结果
    */
   public static String camelToUnderscore(String value) {
-    if (StringUtils.isBlank(value)) {
+    if (StrUtil.isBlank(value)) {
       return value;
     }
-    String[] arr = StringUtils.splitByCharacterTypeCamelCase(value);
-    if (arr.length == 0) {
-      return value;
-    }
-    StringBuilder result = new StringBuilder();
-    IntStream.range(0, arr.length).forEach(i -> {
-      if (i != arr.length - 1) {
-        result.append(arr[i]).append("_");
-      } else {
-        result.append(arr[i]);
-      }
-    });
-    return StringUtils.lowerCase(result.toString());
+    return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, value);
   }
 
   /**
@@ -64,12 +51,10 @@ public class SystemUtil {
    * @return 结果
    */
   public static String underscoreToCamel(String value) {
-    StringBuilder result = new StringBuilder();
-    String[] arr = value.split(StrUtil.UNDERLINE);
-    for (String s : arr) {
-      result.append((String.valueOf(s.charAt(0))).toUpperCase()).append(s.substring(1));
+    if (StrUtil.isBlank(value)) {
+      return value;
     }
-    return result.toString();
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, value);
   }
 
 }
