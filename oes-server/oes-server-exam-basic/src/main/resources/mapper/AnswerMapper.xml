@@ -49,7 +49,8 @@
            tq.question_name,
            tq.right_key,
            tq.type_id,
-           tp.paper_name
+           tp.paper_name,
+           tq.options
     FROM t_answer ta
            LEFT JOIN t_question tq on ta.question_id = tq.question_id
            LEFT JOIN t_paper tp on ta.paper_id = tp.paper_id

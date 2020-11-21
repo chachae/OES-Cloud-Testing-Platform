@@ -75,27 +75,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       if (paper == null) {
         return null;
       }
-      // todo 题目顺序随机（获取试卷配置）
-      List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paperId);
-      Collections.shuffle(paperQuestions);
+      List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
+      // 判断试卷是否打乱试题顺序（试卷配置）
+      if (paper.getConfigRandomQuestionOrder()) {
+        Collections.shuffle(paperQuestions);
+      }
       // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力（O(1)）
       List<Answer> answers = answerService.getAnswerList(username, paperId);
-      // 答题记录不为空
-      if (!answers.isEmpty()) {
-        Map<Long, Answer> answerMap = new HashMap<>();
-        // 答题记录组装到 HashMap 中
-        answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
-        for (PaperQuestion paperQuestion : paperQuestions) {
-          Answer answer = answerMap.get(paperQuestion.getQuestionId());
-          paperQuestion.setAnswerId(answer.getAnswerId());
-          paperQuestion.setAnswerContent(answer.getAnswerContent());
-        }
-        // 试卷题型分类
-        paper.setPaperQuestionList(paperQuestions);
-        GroupUtil.groupQuestions(paper, true);
-      } else {
-        paper.setPaperQuestionList(paperQuestions);
-      }
+      handlePaperQuestions(paper, answers, paperQuestions);
       return paper;
     }
     return null;
@@ -206,5 +193,26 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   private boolean checkPaperScore(String[] paperIds) {
     // 存在成绩也不允许删除
     return scoreService.countByPaperId(paperIds) == 0;
+  }
+
+  /**
+   * 处理试卷题目
+   */
+  private void handlePaperQuestions(Paper paper, List<Answer> answers, List<PaperQuestion> paperQuestions) {
+    if (!answers.isEmpty()) {
+      Map<Long, Answer> answerMap = new HashMap<>();
+      // 答题记录组装到 HashMap 中
+      answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
+      for (PaperQuestion paperQuestion : paperQuestions) {
+        Answer answer = answerMap.get(paperQuestion.getQuestionId());
+        paperQuestion.setAnswerId(answer.getAnswerId());
+        paperQuestion.setAnswerContent(answer.getAnswerContent());
+      }
+      // 试卷题型分类
+      paper.setPaperQuestionList(paperQuestions);
+      GroupUtil.groupQuestions(paper, true);
+    } else {
+      paper.setPaperQuestionList(paperQuestions);
+    }
   }
 }

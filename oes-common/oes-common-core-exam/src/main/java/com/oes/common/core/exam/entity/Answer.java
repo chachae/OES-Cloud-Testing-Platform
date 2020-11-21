@@ -32,6 +32,11 @@ public class Answer implements Serializable {
   public static final Integer IS_WARN = 0;
 
   /**
+   * 填空题ID
+   */
+  public static final long FILL_ID = 4L;
+
+  /**
    * 学生答题主键（id）
    */
   @TableId(type = IdType.AUTO)
