@@ -119,4 +119,14 @@ public class Answer implements Serializable {
    */
   @TableField(exist = false)
   private String termName;
+
+  public Answer createDefaultObject(String username, long paperId, long questionId) {
+    this.setUsername(username);
+    this.setWarn(IS_WARN);
+    this.setPaperId(paperId);
+    this.setStatus(STATUS_NOT_CORRECT);
+    this.setScore(0);
+    this.setQuestionId(questionId);
+    return this;
+  }
 }

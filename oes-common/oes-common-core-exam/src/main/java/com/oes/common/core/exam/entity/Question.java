@@ -95,7 +95,12 @@ public class Question implements Serializable {
   /**
    * 使用量
    */
-  private Integer consumption;
+  private Integer usedCount;
+
+  /**
+   * 填空数量
+   */
+  private Integer fillCount;
 
   /**
    * 题目类型名称

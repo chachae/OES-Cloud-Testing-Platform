@@ -8,7 +8,6 @@ import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.PageUtil;
 import com.oes.common.core.util.SecurityUtil;
-import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IPaperService;
 import java.util.Map;
 import javax.validation.Valid;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaperController {
 
   private final IPaperService paperService;
-  private final IAnswerService answerService;
 
   @GetMapping
   @PreAuthorize("hasAuthority('paper:view')")
@@ -51,10 +49,6 @@ public class PaperController {
   @GetMapping("{paperId}")
   public R<Paper> getOne(@PathVariable("paperId") @NotNull(message = "{required}") Long paperId) {
     Paper paper = paperService.getPaper(paperId, SecurityUtil.getCurrentUsername());
-    // paper.getPaperQuestionList() != null == 首次进入考试
-    if (paper.getPaperQuestionList() != null) {
-      paper = answerService.createDefaultAnswer(paper);
-    }
     return R.ok(paper);
   }
 

@@ -24,7 +24,7 @@ public class PaperQuestionController {
 
   @GetMapping("list")
   public R<Map<Long, PaperQuestion>> getMap(@NotNull(message = "{required}") Long paperId) {
-    return R.ok(paperQuestionService.selectMapByPaperId(paperId));
+    return R.ok(paperQuestionService.getMapByPaperId(paperId));
   }
 
 }

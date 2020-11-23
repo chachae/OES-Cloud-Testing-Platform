@@ -6,6 +6,7 @@ import com.oes.common.core.exam.entity.PaperQuestion;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,45 +28,32 @@ public class GroupUtil {
    *
    * @param paper 试卷信息
    */
-  public static void groupQuestions(Paper paper, boolean removePaperQuestionList) {
-    if (paper.getPaperQuestionList() != null) {
-
-      List<PaperQuestion> questions = paper.getPaperQuestionList();
-
-      // 按题目类型分类
-      Collection<List<PaperQuestion>> collection = questions.stream().collect(Collectors.groupingBy(PaperQuestion::getTypeId)).values();
-
-      List<Map<String, Object>> result = new ArrayList<>(collection.size());
-
-      for (List<PaperQuestion> objs : collection) {
-        Map<String, Object> questionMap = new HashMap<>(2);
-        questionMap.put(Paper.TYPE_ID_KEY, objs.get(0).getTypeId());
-        questionMap.put(Paper.QUESTION_KEY, objs);
-        result.add(questionMap);
-      }
-      if (removePaperQuestionList) {
-        paper.setPaperQuestionList(null);
-      }
-      paper.setPaperQuestions(result);
-    }
-  }
-
-  public static void groupQuestions(Paper paper) {
-    groupQuestions(paper, false);
-  }
-
-  public static List<Map<String, Object>> groupQuestion(List<Answer> answer) {
-    Collection<List<Answer>> collection = answer.stream().collect(Collectors.groupingBy(Answer::getTypeId)).values();
-
+  public static List<Map<String, Object>> groupQuestionListByTypeId(List<PaperQuestion> paperQuestionList) {
+    // 按题目类型分类
+    Collection<List<PaperQuestion>> collection = paperQuestionList.stream().collect(Collectors.groupingBy(PaperQuestion::getTypeId)).values();
+    Iterator<List<PaperQuestion>> listIterator = collection.iterator();
     List<Map<String, Object>> result = new ArrayList<>(collection.size());
-
-    for (List<Answer> objs : collection) {
+    while (listIterator.hasNext()) {
+      List<PaperQuestion> objs = listIterator.next();
       Map<String, Object> questionMap = new HashMap<>(2);
       questionMap.put(Paper.TYPE_ID_KEY, objs.get(0).getTypeId());
       questionMap.put(Paper.QUESTION_KEY, objs);
       result.add(questionMap);
     }
+    return result;
+  }
 
+  public static List<Map<String, Object>> groupQuestion(List<Answer> answer) {
+    Collection<List<Answer>> collection = answer.stream().collect(Collectors.groupingBy(Answer::getTypeId)).values();
+    Iterator<List<Answer>> listIterator = collection.iterator();
+    List<Map<String, Object>> result = new ArrayList<>(collection.size());
+    while (listIterator.hasNext()) {
+      List<Answer> objs = listIterator.next();
+      Map<String, Object> questionMap = new HashMap<>(2);
+      questionMap.put(Paper.TYPE_ID_KEY, objs.get(0).getTypeId());
+      questionMap.put(Paper.QUESTION_KEY, objs);
+      result.add(questionMap);
+    }
     return result;
   }
 

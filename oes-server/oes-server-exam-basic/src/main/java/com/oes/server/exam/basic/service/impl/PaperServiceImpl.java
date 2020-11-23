@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +57,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       // 通过循环获取每张试卷的题目信息，进行设置和分类
       for (Paper paper : result.getRecords()) {
         List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
-        paper.setPaperQuestionList(paperQuestions);
-        GroupUtil.groupQuestions(paper, true);
+        List<Map<String, Object>> maps = GroupUtil.groupQuestionListByTypeId(paperQuestions);
+        paper.setPaperQuestions(maps);
       }
     }
     return result;
@@ -75,14 +74,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       if (paper == null) {
         return null;
       }
-      List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
+      List<PaperQuestion> paperQuestions = paperQuestionService.getExamInfoListByPaperId(paper.getPaperId());
       // 判断试卷是否打乱试题顺序（试卷配置）
       if (paper.getConfigRandomQuestionOrder()) {
         Collections.shuffle(paperQuestions);
       }
-      // 获取学生答题记录并组装成 Map，优化先前单次从数据库获取单题目的方式，最大程度降低访问数据库的压力（O(1)）
-      List<Answer> answers = answerService.getAnswerList(username, paperId);
-      handlePaperQuestions(paper, answers, paperQuestions);
+      Map<Long, Answer> questionIdAndAnswerKV = answerService.getAnswerMap(username, paperId);
+      handlePaperQuestions(paper, questionIdAndAnswerKV, paperQuestions);
       return paper;
     }
     return null;
@@ -102,6 +100,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       // 维护试卷-课程数据
       paperDeptService.deleteByPaperId(paper.getPaperId());
       setPaperDept(paper.getPaperId(), paper.getDeptIds().split(StrUtil.COMMA));
+      // 维护答题预置数据信息
     }
   }
 
@@ -198,21 +197,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   /**
    * 处理试卷题目
    */
-  private void handlePaperQuestions(Paper paper, List<Answer> answers, List<PaperQuestion> paperQuestions) {
-    if (!answers.isEmpty()) {
-      Map<Long, Answer> answerMap = new HashMap<>();
-      // 答题记录组装到 HashMap 中
-      answers.forEach(answer -> answerMap.put(answer.getQuestionId(), answer));
+  private void handlePaperQuestions(Paper paper, Map<Long, Answer> map, List<PaperQuestion> paperQuestions) {
+    if (!map.isEmpty()) {
       for (PaperQuestion paperQuestion : paperQuestions) {
-        Answer answer = answerMap.get(paperQuestion.getQuestionId());
+        Answer answer = map.get(paperQuestion.getQuestionId());
         paperQuestion.setAnswerId(answer.getAnswerId());
         paperQuestion.setAnswerContent(answer.getAnswerContent());
       }
       // 试卷题型分类
-      paper.setPaperQuestionList(paperQuestions);
-      GroupUtil.groupQuestions(paper, true);
+      List<Map<String, Object>> maps = GroupUtil.groupQuestionListByTypeId(paperQuestions);
+      paper.setPaperQuestions(maps);
     } else {
+      // 首次进入考试
       paper.setPaperQuestionList(paperQuestions);
+      answerService.createDefaultAnswer(paper);
     }
   }
 }

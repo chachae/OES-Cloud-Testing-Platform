@@ -16,7 +16,6 @@ import com.oes.server.exam.basic.mapper.QuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import com.oes.server.exam.basic.service.IQuestionService;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +64,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   public void createQuestion(Question question) {
     question.setCreatorId(SecurityUtil.getCurrentUserId());
     question.setCreatorName(SecurityUtil.getCurrentUser().getFullName());
-    question.setConsumption(0);
+    question.setUsedCount(0);
     baseMapper.insert(question);
   }
 
@@ -81,7 +80,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateQuestion(Question question) {
-    question.setUpdateTime(new Date());
     baseMapper.updateById(question);
   }
 

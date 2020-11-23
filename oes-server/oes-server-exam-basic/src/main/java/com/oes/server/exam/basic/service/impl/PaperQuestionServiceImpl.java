@@ -21,16 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, PaperQuestion> implements IPaperQuestionService {
 
   @Override
-  public Map<Long, PaperQuestion> selectMapByPaperId(Long paperId) {
+  public Map<Long, PaperQuestion> getMapByPaperId(Long paperId) {
     List<PaperQuestion> list = getListByPaperId(paperId);
-    Map<Long, PaperQuestion> ansMap = new HashMap<>();
-    list.forEach(question -> ansMap.put(question.getQuestionId(), question));
-    return ansMap;
+    Map<Long, PaperQuestion> map = new HashMap<>();
+    list.forEach(question -> map.put(question.getQuestionId(), question));
+    return map;
   }
 
   @Override
   public List<PaperQuestion> getListByPaperId(Long paperId) {
     return baseMapper.selectListByPaperId(paperId);
+  }
+
+  @Override
+  public List<PaperQuestion> getExamInfoListByPaperId(Long paperId) {
+    return baseMapper.selectExamQuestionInfoListByPaperId(paperId);
   }
 
   @Override

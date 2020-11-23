@@ -1,6 +1,5 @@
 package com.oes.server.exam.basic.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
@@ -58,11 +57,7 @@ public class AnswerController {
 
   @GetMapping("list")
   public R<List<Answer>> getAnswerList(String username, @NotNull(message = "{required}") Long paperId) {
-    if (StrUtil.isBlank(username)) {
-      return R.ok(answerService.getAnswerList(paperId));
-    } else {
-      return R.ok(answerService.getAnswerList(username, paperId));
-    }
+    return R.ok(answerService.getAnswerList(username, paperId));
   }
 
   @GetMapping("warn")

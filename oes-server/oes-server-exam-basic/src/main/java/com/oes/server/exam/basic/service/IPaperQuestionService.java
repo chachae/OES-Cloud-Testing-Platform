@@ -17,7 +17,7 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    * @param paperId 试卷编号
    * @return Map<String, PaperQuestion> key=试题id，value=试题信息
    */
-  Map<Long, PaperQuestion> selectMapByPaperId(Long paperId);
+  Map<Long, PaperQuestion> getMapByPaperId(Long paperId);
 
   /**
    * 通过试卷编号获取试卷题目集合
@@ -26,6 +26,14 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    * @return 试卷题目集合
    */
   List<PaperQuestion> getListByPaperId(Long paperId);
+
+  /**
+   * 通过试卷编号获取试卷题目集合（针对考试列出的信息）
+   *
+   * @param paperId 试卷编号
+   * @return 试卷题目集合
+   */
+  List<PaperQuestion> getExamInfoListByPaperId(Long paperId);
 
   void deleteBatchByPaperIds(String[] paperIds);
 }

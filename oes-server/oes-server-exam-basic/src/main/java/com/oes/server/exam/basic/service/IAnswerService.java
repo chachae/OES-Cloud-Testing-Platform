@@ -26,29 +26,20 @@ public interface IAnswerService extends IService<Answer> {
   /**
    * 获取学生答题数据
    *
-   * @param username   用户名
-   * @param paperId    试卷编号
-   * @param questionId 问题编号
-   * @return {@link Answer} 信息
-   */
-  Answer getAnswer(String username, Long paperId, Long questionId);
-
-  /**
-   * 获取考试答题数据
-   *
-   * @param paperId  试卷编号
-   * @return {@link Answer} 信息
-   */
-  List<Answer> getAnswerList(Long paperId);
-
-  /**
-   * 获取学生答题数据
-   *
    * @param username 用户名
    * @param paperId  试卷编号
    * @return {@link Answer} 信息
    */
   List<Answer> getAnswerList(String username, Long paperId);
+
+  /**
+   * 获取答题记录问题id和答题信息键值表
+   *
+   * @param username 用户名
+   * @param paperId  试卷编号
+   * @return HashMap
+   */
+  Map<Long, Answer> getAnswerMap(String username, Long paperId);
 
 
   /**
@@ -76,6 +67,6 @@ public interface IAnswerService extends IService<Answer> {
   /**
    * 创建试卷题目的答案
    */
-  Paper createDefaultAnswer(Paper paper);
+  void createDefaultAnswer(Paper paper);
 
 }

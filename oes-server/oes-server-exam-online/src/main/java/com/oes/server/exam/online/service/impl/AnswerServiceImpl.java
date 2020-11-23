@@ -49,6 +49,7 @@ public class AnswerServiceImpl implements IAnswerService {
   }
 
   private void markAnswer(Answer answer) {
+    // todo 主服务需要缓存该数据
     Map<Long, PaperQuestion> ansMap = paperQuestionClient.getMap(answer.getPaperId()).getData();
     ScoreUtil.mark(answer, ansMap.get(answer.getQuestionId()));
   }

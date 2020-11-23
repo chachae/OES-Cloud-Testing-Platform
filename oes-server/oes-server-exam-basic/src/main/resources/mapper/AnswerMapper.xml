@@ -15,7 +15,6 @@
     <result column="right_key" property="rightKey"/>
     <result column="score" property="score"/>
     <result column="status" property="status"/>
-    <result column="term_name" property="termName"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
   </resultMap>
@@ -38,6 +37,7 @@
   <sql id="baseSql">
     SELECT ta.answer_id,
            ta.answer_content,
+           ta.warn,
            ta.username,
            ta.paper_id,
            ta.question_id,
@@ -46,7 +46,7 @@
            ta.create_time,
            ta.update_time,
            tq.analysis,
-           tq.question_name,
+           replace(tq.question_name, '{{#@#}}', '____') as question_name,
            tq.right_key,
            tq.type_id,
            tp.paper_name,
@@ -64,7 +64,7 @@
   >
     <include refid="baseSql"/>
     <if test="answer.paperName != null and answer.paperName != ''">
-      AND tp.paper_name LIKE concat('%',#{answer.paperName,jdbcType=VARCHAR},'%')
+      AND tp.paper_name LIKE concat('%', #{answer.paperName,jdbcType=VARCHAR}, '%')
     </if>
     <if test="answer.termId != null">
       AND tp.term_id = #{answer.termId,jdbcType=BIGINT}

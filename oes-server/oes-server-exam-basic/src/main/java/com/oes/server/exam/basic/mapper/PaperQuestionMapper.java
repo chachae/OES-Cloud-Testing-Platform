@@ -25,5 +25,5 @@ public interface PaperQuestionMapper extends BaseMapper<PaperQuestion> {
    * @param paperId 试卷编号
    * @return {@link List<PaperQuestion>} 试题集合
    */
-  List<PaperQuestion> selectBaseListByPaperId(@Param("paperId") Long paperId);
+  List<PaperQuestion> selectExamQuestionInfoListByPaperId(@Param("paperId") Long paperId);
 }

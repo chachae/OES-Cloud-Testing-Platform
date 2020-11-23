@@ -1,5 +1,6 @@
 package com.oes.server.exam.basic.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +14,7 @@ import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.mapper.AnswerMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -35,22 +37,24 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
-  public Answer getAnswer(String username, Long paperId, Long questionId) {
-    LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId).eq(Answer::getQuestionId, questionId);
-    return baseMapper.selectOne(wrapper);
-  }
-
-  @Override
-  public List<Answer> getAnswerList(Long paperId) {
-    return baseMapper.selectList(new LambdaQueryWrapper<Answer>().eq(Answer::getPaperId, paperId));
-  }
-
-  @Override
   public List<Answer> getAnswerList(String username, Long paperId) {
+    // 处理用户名
+    username = StrUtil.isBlank(username) ? SecurityUtil.getCurrentUsername() : username;
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId);
     return baseMapper.selectList(wrapper);
+  }
+
+  @Override
+  public Map<Long, Answer> getAnswerMap(String username, Long paperId) {
+    Map<Long, Answer> map = new HashMap<>();
+    List<Answer> answerList = getAnswerList(username, paperId);
+    if (!answerList.isEmpty()) {
+      // 答题记录组装到 HashMap 中
+      answerList.forEach(answer -> map.put(answer.getQuestionId(), answer));
+      return map;
+    }
+    return map;
   }
 
   @Override
@@ -75,20 +79,18 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
-  public Paper createDefaultAnswer(Paper paper) {
+  @Transactional(rollbackFor = Exception.class)
+  public void createDefaultAnswer(Paper paper) {
     List<PaperQuestion> paperQuestionList = paper.getPaperQuestionList();
+    String username = SecurityUtil.getCurrentUsername();
     for (PaperQuestion paperQuestion : paperQuestionList) {
-      Answer answer = new Answer();
-      answer.setUsername(SecurityUtil.getCurrentUsername());
-      answer.setWarn(Answer.IS_WARN);
-      answer.setPaperId(paper.getPaperId());
-      answer.setStatus(Answer.STATUS_NOT_CORRECT);
-      answer.setScore(0);
-      answer.setQuestionId(paperQuestion.getQuestionId());
+      // 回答问题的预置信息
+      Answer answer = new Answer().createDefaultObject(username, paper.getPaperId(), paperQuestion.getQuestionId());
       baseMapper.insert(answer);
       paperQuestion.setAnswerId(answer.getAnswerId());
     }
-    GroupUtil.groupQuestions(paper, true);
-    return paper;
+    List<Map<String, Object>> maps = GroupUtil.groupQuestionListByTypeId(paperQuestionList);
+    paper.setPaperQuestions(maps);
+    paper.setPaperQuestionList(null);
   }
 }
