@@ -47,6 +47,8 @@ public class ExamController {
       // score == null 即首次进入考试
       if (score == null) {
         score = new Score();
+        // fixme 字段
+        score.setUserId(SecurityUtil.getCurrentUserId());
         score.setUsername(username);
         score.setPaperId(paperId);
         scoreService.createScore(score);

@@ -15,6 +15,8 @@ public class QueryAnswerDto extends QueryParam {
 
   private static final long serialVersionUID = -4631054172498714743L;
 
+  private Long userId;
+  
   private Long paperId;
 
   private String paperName;

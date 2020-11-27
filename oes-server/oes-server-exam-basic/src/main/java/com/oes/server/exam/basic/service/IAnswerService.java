@@ -2,11 +2,12 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.oes.common.core.constant.SystemConstant;
 import com.oes.common.core.exam.entity.Answer;
-import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  * @author chachae
@@ -26,20 +27,20 @@ public interface IAnswerService extends IService<Answer> {
   /**
    * 获取学生答题数据
    *
-   * @param username 用户名
-   * @param paperId  试卷编号
+   * @param userId  用户id
+   * @param paperId 试卷编号
    * @return {@link Answer} 信息
    */
-  List<Answer> getAnswerList(String username, Long paperId);
+  List<Answer> getAnswerList(Long userId, Long paperId);
 
   /**
    * 获取答题记录问题id和答题信息键值表
    *
-   * @param username 用户名
-   * @param paperId  试卷编号
+   * @param userId  用户名
+   * @param paperId 试卷编号
    * @return HashMap
    */
-  Map<Long, Answer> getAnswerMap(String username, Long paperId);
+  Map<Long, Answer> getAnswerMap(Long userId, Long paperId);
 
 
   /**
@@ -58,15 +59,10 @@ public interface IAnswerService extends IService<Answer> {
   void updateAnswer(Answer answer);
 
   /**
-   * 增加学生答案数据
-   *
-   * @param answer 学生答案信息
-   */
-  void createAnswer(Answer answer);
-
-  /**
    * 创建试卷题目的答案
    */
-  void createDefaultAnswer(Paper paper);
+  @Async(SystemConstant.ASYNC_POOL)
+  void createDefaultAnswer(long paperId, List<Long> userIds, List<Long> questionIds);
 
+  void deleteByPaperId(Long paperId);
 }

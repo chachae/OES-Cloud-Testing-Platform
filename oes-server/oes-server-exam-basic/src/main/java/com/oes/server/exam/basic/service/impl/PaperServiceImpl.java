@@ -14,6 +14,7 @@ import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SecurityUtil;
+import com.oes.server.exam.basic.client.SystemUserClient;
 import com.oes.server.exam.basic.mapper.PaperMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IPaperDeptService;
@@ -25,7 +26,6 @@ import com.oes.server.exam.basic.service.IScoreService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements IPaperService {
 
+  private final SystemUserClient systemUserClient;
   private final IScoreService scoreService;
   private final IAnswerService answerService;
   private final IQuestionService questionService;
@@ -65,7 +66,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public Paper getPaper(Long paperId, String username) {
+  public Paper getPaper(Long paperId, Long userId) {
     // 判断考试是否属于该考生
     List<Long> deptIds = paperDeptService.getDeptIdListByPaperId(paperId);
     if (!deptIds.isEmpty() && deptIds.contains(SecurityUtil.getCurrentUser().getDeptId())) {
@@ -76,10 +77,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       }
       List<PaperQuestion> paperQuestions = paperQuestionService.getExamInfoListByPaperId(paper.getPaperId());
       // 判断试卷是否打乱试题顺序（试卷配置）
-      if (paper.getConfigRandomQuestionOrder()) {
+      if (Boolean.TRUE.equals(paper.getConfigRandomQuestionOrder())) {
         Collections.shuffle(paperQuestions);
       }
-      Map<Long, Answer> questionIdAndAnswerKV = answerService.getAnswerMap(username, paperId);
+      Map<Long, Answer> questionIdAndAnswerKV = answerService.getAnswerMap(userId, paperId);
       handlePaperQuestions(paper, questionIdAndAnswerKV, paperQuestions);
       return paper;
     }
@@ -92,15 +93,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
   public void updatePaper(Paper paper) {
-    paper.setUpdateTime(new Date());
     baseMapper.updateById(paper);
+    // 维护
+    paperDeptService.deleteByPaperId(paper.getPaperId());
+    answerService.deleteByPaperId(paper.getPaperId());
     if (StrUtil.isNotBlank(paper.getDeptIds())) {
       // 维护试卷-课程数据
-      paperDeptService.deleteByPaperId(paper.getPaperId());
-      setPaperDept(paper.getPaperId(), paper.getDeptIds().split(StrUtil.COMMA));
+      setPaperDept(paper.getPaperId(), paper.getDeptIds());
       // 维护答题预置数据信息
+      setPaperAnswer(paper.getPaperId(), paper.getDeptIds());
     }
   }
 
@@ -164,7 +166,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       for (int c = 0; c < questionNum; c++) {
         batchObjs.add(new PaperQuestion(paper.getPaperId(), questions.get(c).getQuestionId()));
       }
-      this.paperQuestionService.saveBatch(batchObjs);
+      this.paperQuestionService.insertBatch(batchObjs);
     }
   }
 
@@ -173,15 +175,24 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     for (int i = 0; i < typeIdArray.length; i++) {
       ptList.add(new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]), Integer.parseInt(numArray[i])));
     }
-    this.paperTypeService.saveBatch(ptList);
+    this.paperTypeService.insertBatch(ptList);
   }
 
-  private void setPaperDept(Long paperId, String[] deptIdArray) {
+  private void setPaperDept(Long paperId, String deptIds) {
+    String[] deptIdArray = deptIds.split(StrUtil.COMMA);
     List<PaperDept> batchObjs = new ArrayList<>(deptIdArray.length);
     for (String deptId : deptIdArray) {
       batchObjs.add(new PaperDept(paperId, Long.parseLong(deptId)));
     }
-    this.paperDeptService.saveBatch(batchObjs);
+    this.paperDeptService.insertBatch(batchObjs);
+  }
+
+  private void setPaperAnswer(Long paperId, String deptIds) {
+    List<Long> userIds = systemUserClient.getUserIdsByDeptIds(deptIds).getData();
+    if (!userIds.isEmpty()) {
+      List<Long> questionIds = paperQuestionService.getQuestionIdsByPaperId(paperId);
+      answerService.createDefaultAnswer(paperId, userIds, questionIds);
+    }
   }
 
   private boolean checkPaperDept(String[] paperIds) {
@@ -201,16 +212,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     if (!map.isEmpty()) {
       for (PaperQuestion paperQuestion : paperQuestions) {
         Answer answer = map.get(paperQuestion.getQuestionId());
-        paperQuestion.setAnswerId(answer.getAnswerId());
         paperQuestion.setAnswerContent(answer.getAnswerContent());
       }
       // 试卷题型分类
       List<Map<String, Object>> maps = GroupUtil.groupQuestionListByTypeId(paperQuestions);
       paper.setPaperQuestions(maps);
-    } else {
-      // 首次进入考试
-      paper.setPaperQuestionList(paperQuestions);
-      answerService.createDefaultAnswer(paper);
     }
   }
 }

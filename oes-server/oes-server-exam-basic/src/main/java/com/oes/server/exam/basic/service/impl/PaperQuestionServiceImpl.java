@@ -1,5 +1,6 @@
 package com.oes.server.exam.basic.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.server.exam.basic.mapper.PaperQuestionMapper;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,18 @@ public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, P
     Map<Long, PaperQuestion> map = new HashMap<>();
     list.forEach(question -> map.put(question.getQuestionId(), question));
     return map;
+  }
+
+  @Override
+  public List<Long> getQuestionIdsByPaperId(Long paperId) {
+    return baseMapper.selectList(new LambdaQueryWrapper<PaperQuestion>().eq(PaperQuestion::getPaperId, paperId
+    )).stream().map(PaperQuestion::getQuestionId).collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void insertBatch(List<PaperQuestion> paperQuestions) {
+    baseMapper.insertBatchSomeColumn(paperQuestions);
   }
 
   @Override

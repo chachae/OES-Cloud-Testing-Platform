@@ -25,11 +25,11 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 通过试卷编号和学生编号获取试卷信息
    *
-   * @param paperId  试卷编号
-   * @param username 用户名
+   * @param paperId 试卷编号
+   * @param userId  用户id
    * @return {@link Paper} 试卷数据
    */
-  Paper getPaper(Long paperId, String username);
+  Paper getPaper(Long paperId, Long userId);
 
   /**
    * 统计各科目题量排名前10的题目情况

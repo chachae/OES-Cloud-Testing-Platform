@@ -45,7 +45,7 @@ public class AnswerServiceImpl implements IAnswerService {
   public Long updateAnswer(Answer answer) {
     markAnswer(answer);
     answerClient.update(answer);
-    return answer.getAnswerId();
+    return 1L;
   }
 
   private void markAnswer(Answer answer) {

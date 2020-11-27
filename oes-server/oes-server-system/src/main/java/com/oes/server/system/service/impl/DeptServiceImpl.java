@@ -112,7 +112,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
       throw new ApiException("部门存在二级部门关联，请删除相关部门后重试");
     }
     // 查询是否有用户关联
-    List<String> result = this.userService.getUserIdByDeptIds(deptIds);
+    List<Long> result = this.userService.getUserIdByDeptIds(deptIds);
     if (CollUtil.isNotEmpty(result)) {
       throw new ApiException("部门存在用户关联，请删除相关用户后重试");
     }

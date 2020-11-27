@@ -46,4 +46,10 @@ public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept
       return baseMapper.selectCount(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
     }
   }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void insertBatch(List<PaperDept> paperDepts) {
+    baseMapper.insertBatchSomeColumn(paperDepts);
+  }
 }

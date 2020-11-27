@@ -48,7 +48,7 @@ public class PaperController {
 
   @GetMapping("{paperId}")
   public R<Paper> getOne(@PathVariable("paperId") @NotNull(message = "{required}") Long paperId) {
-    Paper paper = paperService.getPaper(paperId, SecurityUtil.getCurrentUsername());
+    Paper paper = paperService.getPaper(paperId, SecurityUtil.getCurrentUserId());
     return R.ok(paper);
   }
 

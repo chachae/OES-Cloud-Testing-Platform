@@ -1,11 +1,8 @@
 package com.oes.common.core.exam.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.oes.common.core.validator.Update;
 import java.io.Serializable;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
@@ -18,7 +15,7 @@ import lombok.Data;
  * @since 2020-06-03 16:43:11
  */
 @Data
-@TableName("t_answer")
+@TableName("t_paper_answer")
 public class Answer implements Serializable {
 
   private static final long serialVersionUID = -2379218847487357896L;
@@ -32,17 +29,21 @@ public class Answer implements Serializable {
   public static final Integer IS_WARN = 0;
 
   /**
-   * 填空题ID
+   * 试题编号（id）
    */
-  public static final long FILL_ID = 4L;
+  private Long questionId;
 
   /**
-   * 学生答题主键（id）
+   * 试卷编号（id）
    */
-  @TableId(type = IdType.AUTO)
-  // 更新的时候才校验
-  @NotNull(message = "{required}", groups = {Update.class})
-  private Long answerId;
+  @NotNull(message = "{required}")
+  private Long paperId;
+
+  /**
+   * 用户主键（id）
+   */
+  private Long userId;
+
   /**
    * 学生答题数据
    */
@@ -51,15 +52,7 @@ public class Answer implements Serializable {
    * 用户名
    */
   private String username;
-  /**
-   * 试卷编号（id）
-   */
-  @NotNull(message = "{required}")
-  private Long paperId;
-  /**
-   * 试题编号（id）
-   */
-  private Long questionId;
+
   /**
    * 题目的分
    */
@@ -120,13 +113,11 @@ public class Answer implements Serializable {
   @TableField(exist = false)
   private String termName;
 
-  public Answer createDefaultObject(String username, long paperId, long questionId) {
-    this.setUsername(username);
+  public Answer createDefaultObject(long paperId) {
     this.setWarn(IS_WARN);
     this.setPaperId(paperId);
     this.setStatus(STATUS_NOT_CORRECT);
     this.setScore(0);
-    this.setQuestionId(questionId);
     return this;
   }
 }

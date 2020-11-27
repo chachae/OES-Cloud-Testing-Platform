@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.oes.common.core.exam.entity.PaperQuestion;
+import com.oes.server.exam.basic.enhance.EnhanceMapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
  * @author chachae
  * @since 2020-06-03 16:43:16
  */
-public interface PaperQuestionMapper extends BaseMapper<PaperQuestion> {
+public interface PaperQuestionMapper extends EnhanceMapper<PaperQuestion> {
 
   /**
    * 通过试卷编号查询试题集合

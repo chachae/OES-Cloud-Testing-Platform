@@ -2,6 +2,7 @@ package com.oes.server.exam.basic.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oes.common.core.exam.entity.CourseTeacher;
+import java.util.List;
 
 /**
  * @author chachae
@@ -16,12 +17,11 @@ public interface ICourseTeacherService extends IService<CourseTeacher> {
    */
   void deleteByCourseId(Long courseId);
 
-  /**
-   * 通过教师编号获取课程数据
-   *
-   * @param teacherId 教师编号
-   * @return 课程编号集合
-   */
-  String getByTeacherId(Long teacherId);
 
+  /**
+   * 批量插入
+   *
+   * @param paperDept 实体
+   */
+  void insertBatch(List<CourseTeacher> paperDept);
 }

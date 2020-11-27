@@ -17,7 +17,6 @@ import com.oes.server.exam.basic.service.ICourseService;
 import com.oes.server.exam.basic.service.ICourseTeacherService;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,33 +67,34 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateCourse(Course course) {
-    course.setUpdateTime(new Date());
     baseMapper.updateById(course);
     // 维护课程-教师数据
     courseTeacherService.deleteByCourseId(course.getCourseId());
-    setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
+    if (StrUtil.isNotBlank(course.getTeacherIds())) {
+      setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
+    }
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createCourse(Course course) {
     course.setCreatorId(SecurityUtil.getCurrentUserId());
-    course.setCreateTime(new Date());
     baseMapper.insert(course);
     // 维护课程-教师数据
-    setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
+    if (StrUtil.isNotBlank(course.getTeacherIds())) {
+      setCourseTeacher(course.getCourseId(), StrUtil.split(course.getTeacherIds(), StrUtil.COMMA));
+    }
   }
 
   private void setCourseTeacher(Long courseId, String[] teacherIds) {
-    List<CourseTeacher> batchObjs = new ArrayList<>(teacherIds.length);
+    List<CourseTeacher> courseTeachers = new ArrayList<>(teacherIds.length);
     for (String teacherId : teacherIds) {
-      batchObjs.add(new CourseTeacher(courseId, Long.parseLong(teacherId)));
+      courseTeachers.add(new CourseTeacher(courseId, Long.parseLong(teacherId)));
     }
-    courseTeacherService.saveBatch(batchObjs);
+    courseTeacherService.insertBatch(courseTeachers);
   }
 
   private boolean hasCourse(String[] courseIds) {
-    return questionMapper.selectCount(
-        new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds))) > 0;
+    return questionMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds))) > 0;
   }
 }

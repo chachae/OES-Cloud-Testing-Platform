@@ -45,8 +45,9 @@ public class AnswerController {
    * @return 试题id
    */
   @PutMapping
-  public R<Long> updateAnswer(Answer answer) {
-    return R.ok(answerService.updateAnswer(answer));
+  public R<Object> updateAnswer(Answer answer) {
+    answerService.updateAnswer(answer);
+    return R.ok();
   }
 
   @GetMapping("statistic")

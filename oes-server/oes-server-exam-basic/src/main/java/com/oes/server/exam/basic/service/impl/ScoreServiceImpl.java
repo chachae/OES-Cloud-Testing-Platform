@@ -71,7 +71,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     Score res = getScore(score.getUsername(), score.getPaperId());
     score.setTimes(ScoreUtil.calTimes(res.getCreateTime()));
     // 计算成绩
-    List<Answer> answers = answerService.getAnswerList(score.getUsername(), score.getPaperId());
+    List<Answer> answers = answerService.getAnswerList(score.getUserId(), score.getPaperId());
     score.setStudentScore(ScoreUtil.calScore(answers));
     // 成绩状态 -> 有效
     score.setStatus(Score.STATUS_HAS_SUBMIT);

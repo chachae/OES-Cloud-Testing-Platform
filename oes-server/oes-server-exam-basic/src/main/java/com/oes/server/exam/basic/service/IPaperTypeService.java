@@ -41,4 +41,11 @@ public interface IPaperTypeService extends IService<PaperType> {
    * @param paperIds 试卷编号
    */
   void deleteBatchByPaperIds(String[] paperIds);
+
+  /**
+   * 批量插入
+   *
+   * @param paperQuestions 实体
+   */
+  void insertBatch(List<PaperType> paperQuestions);
 }

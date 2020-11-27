@@ -19,6 +19,15 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    */
   Map<Long, PaperQuestion> getMapByPaperId(Long paperId);
 
+  List<Long> getQuestionIdsByPaperId(Long paperId);
+
+  /**
+   * 批量插入
+   *
+   * @param paperQuestions 实体
+   */
+  void insertBatch(List<PaperQuestion> paperQuestions);
+
   /**
    * 通过试卷编号获取试卷题目集合
    *
