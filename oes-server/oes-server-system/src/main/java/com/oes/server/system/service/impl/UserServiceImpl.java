@@ -120,12 +120,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   }
 
   @Override
-  public List<String> getUserIdByDeptIds(String[] deptIds) {
-    return baseMapper.selectList(
-        new LambdaQueryWrapper<SystemUser>()
-            .in(SystemUser::getDeptId, String.join(",", deptIds)))
-        .stream().map(user -> String.valueOf(user.getUserId()))
-        .collect(Collectors.toList());
+  public List<Long> getUserIdByDeptIds(String[] deptIds) {
+    return baseMapper.selectList(new LambdaQueryWrapper<SystemUser>()
+        .in(SystemUser::getDeptId, Arrays.asList(deptIds)))
+        .stream().map(SystemUser::getUserId).collect(Collectors.toList());
   }
 
   @Override

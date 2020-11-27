@@ -138,6 +138,13 @@ public class UserController {
     return R.ok(dataPermissions);
   }
 
+  @GetMapping("user-id")
+  public R<List<Long>> getUserIds(@NotNull(message = "{required}") String deptIds) {
+    String[] ids = deptIds.split(StrUtil.COMMA);
+    List<Long> userIds = userService.getUserIdByDeptIds(ids);
+    return R.ok(userIds);
+  }
+
   @PostMapping
   @PreAuthorize("hasAuthority('user:add')")
   @ControllerEndpoint(operation = "新增用户", exceptionMessage = "新增用户失败")
