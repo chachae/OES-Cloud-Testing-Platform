@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -107,7 +107,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
     user.setUsername(null);
     user.setCreateTime(null);
     user.setUpdateTime(new Date());
-    updateById(user);
+    baseMapper.updateById(user);
     // 维护用户角色信息
     String[] userIds = {String.valueOf(user.getUserId())};
     userRoleService.deleteUserRolesByUserId(userIds);
@@ -171,16 +171,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SystemUser> impleme
   @Override
   public List<OptionTree<SystemUser>> getSystemUserTree(SystemUser user) {
     List<SystemUser> users = baseMapper.selectSystemUserDetail(user);
-    Collection<List<SystemUser>> values = users.stream()
-        .collect(Collectors.groupingBy(SystemUser::getDeptId)).values();
-
-    List<OptionTree<SystemUser>> result = new LinkedList<>();
-    for (List<SystemUser> list : values) {
-      List<OptionTree<SystemUser>> children = new LinkedList<>();
+    Collection<List<SystemUser>> values = users.stream().collect(Collectors.groupingBy(SystemUser::getDeptId)).values();
+    Iterator<List<SystemUser>> iterator = values.iterator();
+    List<OptionTree<SystemUser>> result = new ArrayList<>();
+    while (iterator.hasNext()) {
+      List<SystemUser> list = iterator.next();
+      List<OptionTree<SystemUser>> children = new ArrayList<>();
       list.forEach(cur -> children.add(new OptionTree<>(cur.getUserId(), cur.getFullName())));
       result.add(new OptionTree<>(list.get(0).getDeptId(), list.get(0).getDeptName(), children));
     }
-
     return result;
   }
 
