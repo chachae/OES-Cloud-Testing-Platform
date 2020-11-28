@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.core.exception.ApiException;
@@ -71,7 +70,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void deleteQuestion(String[] questionIds) {
-    if (hasQuestion(questionIds)) {
+    if (checkQuestionRelate(questionIds)) {
       throw new ApiException("试题与试卷存在关联，请删除相关试卷后重试");
     }
     baseMapper.deleteBatchIds(Arrays.asList(questionIds));
@@ -93,9 +92,25 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     return baseMapper.countDistributeGroupByType();
   }
 
-  private boolean hasQuestion(String[] questionIds) {
-    return this.paperQuestionService
-        .count(new LambdaQueryWrapper<PaperQuestion>().in(PaperQuestion::getQuestionId,
-            Arrays.asList(questionIds))) > 0;
+  @Override
+  public Integer countByTypeIds(String[] typeIds) {
+    if (typeIds.length == 1) {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getTypeId, typeIds[0]));
+    } else {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)));
+    }
+  }
+
+  @Override
+  public Integer countByCourseIds(String[] courseIds) {
+    if (courseIds.length == 1) {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getCourseId, courseIds[0]));
+    } else {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds)));
+    }
+  }
+
+  private boolean checkQuestionRelate(String[] questionIds) {
+    return this.paperQuestionService.countByQuestionIds(questionIds) > 0;
   }
 }

@@ -35,8 +35,6 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
   @Override
   public List<Answer> getAnswerList(Long userId, Long paperId) {
-    // 处理用户名
-    userId = userId == null ? SecurityUtil.getCurrentUserId() : userId;
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(Answer::getUserId, userId).eq(Answer::getPaperId, paperId);
     return baseMapper.selectList(wrapper);
@@ -55,6 +53,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
+  // todo 重构接口
   public List<Map<String, Object>> getWarnAnswerList(QueryAnswerDto entity) {
     entity.setUserId(SecurityUtil.getCurrentUserId());
     List<Answer> answers = baseMapper.selectWarnAnswerList(entity);

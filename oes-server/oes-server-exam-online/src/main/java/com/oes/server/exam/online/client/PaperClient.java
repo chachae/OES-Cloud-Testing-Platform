@@ -7,6 +7,7 @@ import com.oes.server.exam.online.client.fallback.PaperClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author chachae
@@ -22,5 +23,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface PaperClient {
 
   @GetMapping("{paperId}")
-  R<Paper> getOne(@PathVariable("paperId") Long paperId);
+  R<Paper> getOne(@PathVariable("paperId") Long paperId, @RequestParam("userId") Long userId);
 }

@@ -32,5 +32,4 @@ public class CourseTeacherServiceImpl extends
     baseMapper.insertBatchSomeColumn(courseTeachers);
   }
 
-
 }

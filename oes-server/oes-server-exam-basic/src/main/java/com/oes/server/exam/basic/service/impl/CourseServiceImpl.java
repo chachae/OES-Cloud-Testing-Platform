@@ -7,14 +7,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.CourseTeacher;
-import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.core.exception.ApiException;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.mapper.CourseMapper;
-import com.oes.server.exam.basic.mapper.QuestionMapper;
 import com.oes.server.exam.basic.service.ICourseService;
 import com.oes.server.exam.basic.service.ICourseTeacherService;
+import com.oes.server.exam.basic.service.IQuestionService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements ICourseService {
 
-  private final QuestionMapper questionMapper;
+  private final IQuestionService questionService;
   private final ICourseTeacherService courseTeacherService;
 
   @Override
@@ -95,6 +94,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
   }
 
   private boolean hasCourse(String[] courseIds) {
-    return questionMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds))) > 0;
+    return questionService.countByCourseIds(courseIds) > 0;
   }
 }

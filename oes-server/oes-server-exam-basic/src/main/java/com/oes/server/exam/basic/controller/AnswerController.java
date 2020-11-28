@@ -46,8 +46,7 @@ public class AnswerController {
   }
 
   @GetMapping("warn")
-  public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
-    QueryAnswerDto entity = new QueryAnswerDto();
+  public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId, QueryAnswerDto entity) {
     entity.setPaperId(paperId);
     return R.ok(answerService.getWarnAnswerList(entity));
   }

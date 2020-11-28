@@ -19,6 +19,12 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    */
   Map<Long, PaperQuestion> getMapByPaperId(Long paperId);
 
+  /**
+   * 通过试卷编号获取题目编号集合
+   *
+   * @param paperId 试卷编号
+   * @return 题目编号集合
+   */
   List<Long> getQuestionIdsByPaperId(Long paperId);
 
   /**
@@ -44,5 +50,18 @@ public interface IPaperQuestionService extends IService<PaperQuestion> {
    */
   List<PaperQuestion> getExamInfoListByPaperId(Long paperId);
 
+  /**
+   * 根据题目编号计算试卷关联数量
+   *
+   * @param questionIds 题目编号
+   * @return 数量
+   */
+  Integer countByQuestionIds(String[] questionIds);
+
+  /**
+   * 根据试卷编号批量删除题目编号-试卷编号关联数据
+   *
+   * @param paperIds 试卷编号数组
+   */
   void deleteBatchByPaperIds(String[] paperIds);
 }

@@ -26,14 +26,17 @@ public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, P
   public Map<Long, PaperQuestion> getMapByPaperId(Long paperId) {
     List<PaperQuestion> list = getListByPaperId(paperId);
     Map<Long, PaperQuestion> map = new HashMap<>();
-    list.forEach(question -> map.put(question.getQuestionId(), question));
+    if (!list.isEmpty()) {
+      list.forEach(question -> map.put(question.getQuestionId(), question));
+    }
     return map;
   }
 
   @Override
   public List<Long> getQuestionIdsByPaperId(Long paperId) {
-    return baseMapper.selectList(new LambdaQueryWrapper<PaperQuestion>().eq(PaperQuestion::getPaperId, paperId
-    )).stream().map(PaperQuestion::getQuestionId).collect(Collectors.toList());
+    LambdaQueryWrapper<PaperQuestion> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(PaperQuestion::getPaperId, paperId).select(PaperQuestion::getQuestionId);
+    return baseMapper.selectList(wrapper).stream().map(PaperQuestion::getQuestionId).collect(Collectors.toList());
   }
 
   @Override
@@ -50,6 +53,15 @@ public class PaperQuestionServiceImpl extends ServiceImpl<PaperQuestionMapper, P
   @Override
   public List<PaperQuestion> getExamInfoListByPaperId(Long paperId) {
     return baseMapper.selectExamQuestionInfoListByPaperId(paperId);
+  }
+
+  @Override
+  public Integer countByQuestionIds(String[] questionIds) {
+    if (questionIds.length == 1) {
+      return baseMapper.selectCount(new LambdaQueryWrapper<PaperQuestion>().eq(PaperQuestion::getQuestionId, questionIds[0]));
+    } else {
+      return baseMapper.selectCount(new LambdaQueryWrapper<PaperQuestion>().in(PaperQuestion::getQuestionId, Arrays.asList(questionIds)));
+    }
   }
 
   @Override

@@ -64,5 +64,10 @@ public interface IAnswerService extends IService<Answer> {
   @Async(SystemConstant.ASYNC_POOL)
   void createDefaultAnswer(long paperId, List<Long> userIds, List<Long> questionIds);
 
+  /**
+   * 通过试卷编号删除回答信息
+   *
+   * @param paperId 试卷编号
+   */
   void deleteByPaperId(Long paperId);
 }

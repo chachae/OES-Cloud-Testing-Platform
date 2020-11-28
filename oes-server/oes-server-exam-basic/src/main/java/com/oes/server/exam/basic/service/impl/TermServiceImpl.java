@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.Term;
 import com.oes.common.core.exam.entity.query.QueryTermDto;
 import com.oes.common.core.exception.ApiException;
@@ -13,7 +12,6 @@ import com.oes.server.exam.basic.mapper.TermMapper;
 import com.oes.server.exam.basic.service.IPaperService;
 import com.oes.server.exam.basic.service.ITermService;
 import java.util.Arrays;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements
-    ITermService {
+public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements ITermService {
 
   private final IPaperService paperService;
 
@@ -58,30 +55,16 @@ public class TermServiceImpl extends ServiceImpl<TermMapper, Term> implements
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateTerm(Term term) {
-    createOrUpdate(term);
+    baseMapper.updateById(term);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createTerm(Term term) {
-    createOrUpdate(term);
-  }
-
-  private void createOrUpdate(Term term) {
-    if (getByTermName(term.getTermName()) != null) {
-      throw new ApiException("学期名称已存在");
-    }
-    if (term.getTermId() == null) {
-      term.setCreateTime(new Date());
-      baseMapper.insert(term);
-    } else {
-      term.setUpdateTime(new Date());
-      baseMapper.updateById(term);
-    }
+    baseMapper.insert(term);
   }
 
   private boolean hasPaper(String[] termIds) {
-    return paperService
-        .count(new LambdaQueryWrapper<Paper>().in(Paper::getTermId, Arrays.asList(termIds))) > 0;
+    return paperService.countByTermIds(termIds) > 0;
   }
 }

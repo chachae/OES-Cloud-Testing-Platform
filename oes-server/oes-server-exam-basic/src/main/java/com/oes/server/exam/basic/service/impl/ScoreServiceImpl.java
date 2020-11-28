@@ -14,7 +14,6 @@ import com.oes.server.exam.basic.mapper.ScoreMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IScoreService;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,7 +59,6 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateScore(Score score) {
-    score.setUpdateTime(new Date());
     baseMapper.updateById(score);
   }
 
@@ -84,7 +82,6 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
   public void createScore(Score score) {
     // 默认分数
     score.setStudentScore(Score.DEFAULT_SCORE);
-    score.setCreateTime(new Date());
     // 当前用户
     score.setUsername(SecurityUtil.getCurrentUsername());
     baseMapper.insert(score);

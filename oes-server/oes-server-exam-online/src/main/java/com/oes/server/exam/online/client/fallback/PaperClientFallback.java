@@ -17,7 +17,7 @@ public class PaperClientFallback implements FallbackFactory<PaperClient> {
 
   @Override
   public PaperClient create(Throwable throwable) {
-    return paperId -> {
+    return (paperId, userId) -> {
       log.error("远程调用失败", throwable);
       return null;
     };

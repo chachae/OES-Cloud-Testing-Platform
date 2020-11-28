@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.exam.entity.query.QueryTypeDto;
 import com.oes.common.core.exception.ApiException;
@@ -15,7 +14,6 @@ import com.oes.server.exam.basic.mapper.TypeMapper;
 import com.oes.server.exam.basic.service.IQuestionService;
 import com.oes.server.exam.basic.service.ITypeService;
 import java.util.Arrays;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,7 +44,6 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void createType(Type type) {
-    type.setCreateTime(new Date());
     baseMapper.insert(type);
   }
 
@@ -66,7 +63,6 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateType(Type type) {
-    type.setUpdateTime(new Date());
     baseMapper.updateById(type);
   }
 
@@ -85,8 +81,6 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
   }
 
   public boolean hasQuestion(String[] typeIds) {
-    return this.questionService
-        .count(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)))
-        > 0;
+    return this.questionService.countByTypeIds(typeIds) > 0;
   }
 }

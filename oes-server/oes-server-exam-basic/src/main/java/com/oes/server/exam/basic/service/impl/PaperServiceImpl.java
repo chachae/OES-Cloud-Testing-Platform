@@ -1,6 +1,7 @@
 package com.oes.server.exam.basic.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,6 +11,7 @@ import com.oes.common.core.exam.entity.PaperDept;
 import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.Question;
+import com.oes.common.core.exam.entity.Type;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.exception.ApiException;
@@ -23,6 +25,7 @@ import com.oes.server.exam.basic.service.IPaperService;
 import com.oes.server.exam.basic.service.IPaperTypeService;
 import com.oes.server.exam.basic.service.IQuestionService;
 import com.oes.server.exam.basic.service.IScoreService;
+import com.oes.server.exam.basic.service.ITypeService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,6 +47,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   private final SystemUserClient systemUserClient;
   private final IScoreService scoreService;
+  private final ITypeService typeService;
   private final IAnswerService answerService;
   private final IQuestionService questionService;
   private final IPaperTypeService paperTypeService;
@@ -142,31 +146,45 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     this.setPaperQuestion(paper, paperType.getDifficult(), typeIdArray, numArray);
   }
 
+  @Override
+  public Integer countByTermIds(String[] termIds) {
+    if (termIds.length == 1) {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Paper>().eq(Paper::getTermId, termIds[0]));
+    } else {
+      return baseMapper.selectCount(new LambdaQueryWrapper<Paper>().in(Paper::getTermId, Arrays.asList(termIds)));
+    }
+  }
+
   private void setPaperQuestion(Paper paper, Integer difficult, String[] typeIdArray, String[] numArray) {
     // 预设置基础题目检索数据
-    Question obj = new Question();
+    Question question = new Question();
     // 排除整体难度限制
     if (difficult != 0) {
-      obj.setDifficult(difficult);
+      question.setDifficult(difficult);
     }
-    obj.setCourseId(paper.getCourseId());
+    question.setCourseId(paper.getCourseId());
+    // 用户批量插入的试卷-题目集合
+    List<PaperQuestion> paperQuestionList = new ArrayList<>();
     for (int i = 0; i < typeIdArray.length; i++) {
-      obj.setTypeId(Long.parseLong(typeIdArray[i]));
-      List<Question> questions = this.questionService.getList(obj);
-      int questionNum = Integer.parseInt(numArray[i]);
-
-      if (questions.size() < questionNum) {
-        throw new ApiException("试题数量不足，请调试题分布后重试");
-      } else if (questions.size() != questionNum) {
+      long typeId = Long.parseLong(typeIdArray[i]);
+      question.setTypeId(typeId);
+      // 查询符合条件的题目
+      List<Question> questions = this.questionService.getList(question);
+      // 用户设定的当前题目类型的题目数量
+      int targetCount = Integer.parseInt(numArray[i]);
+      // 题目数量比较和确定是否需要随机排序
+      if (questions.size() < targetCount) {
+        Type type = typeService.getById(typeId);
+        throw new ApiException(String.format("符合条件的%s数量只有%s道，请调整数量后重新提交任务", type.getTypeName(), questions.size()));
+      } else if (questions.size() != targetCount) {
         // 随机重排序（如果题库对应的题目数量和试卷相应题目数量一致则不需要随机排序）
         Collections.shuffle(questions);
       }
-
-      List<PaperQuestion> batchObjs = new ArrayList<>(questionNum);
-      for (int c = 0; c < questionNum; c++) {
-        batchObjs.add(new PaperQuestion(paper.getPaperId(), questions.get(c).getQuestionId()));
+      // 设置当前题目类型的试卷-题目信息
+      for (int j = 0; j < targetCount; j++) {
+        paperQuestionList.add(new PaperQuestion(paper.getPaperId(), questions.get(j).getQuestionId()));
       }
-      this.paperQuestionService.insertBatch(batchObjs);
+      this.paperQuestionService.insertBatch(paperQuestionList);
     }
   }
 

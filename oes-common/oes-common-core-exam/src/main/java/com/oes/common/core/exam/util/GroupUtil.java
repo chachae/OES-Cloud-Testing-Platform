@@ -26,7 +26,7 @@ public class GroupUtil {
   /**
    * 为试卷题目类型分组
    *
-   * @param paper 试卷信息
+   * @param paperQuestionList 试卷信息
    */
   public static List<Map<String, Object>> groupQuestionListByTypeId(List<PaperQuestion> paperQuestionList) {
     // 按题目类型分类

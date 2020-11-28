@@ -60,5 +60,4 @@ public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType
     baseMapper.insertBatchSomeColumn(paperQuestions);
   }
 
-
 }

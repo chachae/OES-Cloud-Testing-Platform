@@ -65,4 +65,12 @@ public interface IPaperService extends IService<Paper> {
    * @param paperType 试卷试题类型分布数据
    */
   void randomCreatePaper(Paper paper, PaperType paperType);
+
+  /**
+   * 通过课程编号查询题目数量
+   *
+   * @param termIds 学期编号集合
+   * @return 数量
+   */
+  Integer countByTermIds(String[] termIds);
 }
