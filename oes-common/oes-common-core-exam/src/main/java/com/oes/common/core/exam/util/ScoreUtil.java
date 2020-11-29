@@ -2,7 +2,6 @@ package com.oes.common.core.exam.util;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.Lists;
 import com.oes.common.core.entity.EchartMap;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.PaperQuestion;
@@ -99,7 +98,7 @@ public class ScoreUtil {
   /**
    * 多项选择题计算
    *
-   * @param answer answer
+   * @param answer        answer
    * @param paperQuestion 当前题目的答案信息
    */
   private static void markMulChoice(Answer answer, PaperQuestion paperQuestion) {
@@ -247,7 +246,8 @@ public class ScoreUtil {
    * @return 平均分
    */
   public static StatisticScoreVo statisticScore(List<Score> scores) {
-    return statisticScoreInts(Lists.transform(scores, Score::getStudentScore));
+    List<Integer> scoreList = scores.stream().map(Score::getStudentScore).collect(Collectors.toList());
+    return statisticScoreInts(scoreList);
   }
 
   /**
@@ -312,13 +312,29 @@ public class ScoreUtil {
    */
   private static List<EchartMap> calFraction(List<Integer> scores) {
     List<EchartMap> result = new ArrayList<>(5);
-
-    long lt60 = scores.stream().filter(s -> s < 60).count();
-    long bt60To70 = scores.stream().filter(s -> s < 70 && s >= 60).count();
-    long bt70To80 = scores.stream().filter(s -> s < 80 && s >= 70).count();
-    long bt80To90 = scores.stream().filter(s -> s < 90 && s >= 80).count();
-    long mt90 = scores.stream().filter(s -> s >= 90).count();
-
+    // 小于60分
+    int lt60 = 0;
+    // 介于60-70
+    int bt60To70 = 0;
+    // 介于70-80
+    int bt70To80 = 0;
+    // 介于80-90
+    int bt80To90 = 0;
+    // 高于90
+    int mt90 = 0;
+    for (Integer s : scores) {
+      if (s < 60) {
+        ++lt60;
+      } else if (s < 70) {
+        ++bt60To70;
+      } else if (s < 80) {
+        ++bt70To80;
+      } else if (s < 90) {
+        ++bt80To90;
+      } else {
+        ++mt90;
+      }
+    }
     result.add(new EchartMap().pubData("低于60分", lt60));
     result.add(new EchartMap().pubData("60分-70分", bt60To70));
     result.add(new EchartMap().pubData("70分-80分", bt70To80));
