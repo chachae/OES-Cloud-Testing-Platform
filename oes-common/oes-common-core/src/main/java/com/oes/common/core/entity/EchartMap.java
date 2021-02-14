@@ -17,8 +17,8 @@ public class EchartMap extends HashMap<String, Object> {
 
   private static final long serialVersionUID = -8422981954211556220L;
 
-  public EchartMap pubData(String name, Object value) {
-    return putName(name).putValue(value);
+  public EchartMap putData(String name, Object value) {
+    return this.putName(name).putValue(value);
   }
 
   public EchartMap putName(Object name) {

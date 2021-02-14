@@ -335,11 +335,11 @@ public class ScoreUtil {
         ++mt90;
       }
     }
-    result.add(new EchartMap().pubData("低于60分", lt60));
-    result.add(new EchartMap().pubData("60分-70分", bt60To70));
-    result.add(new EchartMap().pubData("70分-80分", bt70To80));
-    result.add(new EchartMap().pubData("80分-90分", bt80To90));
-    result.add(new EchartMap().pubData("90分以上", mt90));
+    result.add(new EchartMap().putData("低于60分", lt60));
+    result.add(new EchartMap().putData("60分-70分", bt60To70));
+    result.add(new EchartMap().putData("70分-80分", bt70To80));
+    result.add(new EchartMap().putData("80分-90分", bt80To90));
+    result.add(new EchartMap().putData("90分以上", mt90));
     return result;
   }
 }
