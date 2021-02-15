@@ -36,6 +36,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   public IPage<Question> pageQuestion(QueryQuestionDto question) {
     Page<Question> page = new Page<>(question.getPageNum(), question.getPageSize());
+    // fixme 前端查询排序乱序
     SortUtil.handlePageSort(question, page, "courseId", SystemConstant.ORDER_ASC, true);
     return baseMapper.pageQuestion(page, question);
   }

@@ -35,7 +35,8 @@ public class AnswerController {
    */
   @GetMapping("warn")
   public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
-    return R.ok(answerService.getWarnAnswerByPaperId(paperId));
+    this.answerService.statisticAnswers(1L);
+    return R.ok(this.answerService.getWarnAnswerByPaperId(paperId));
   }
 
   /**
@@ -46,12 +47,14 @@ public class AnswerController {
    */
   @PutMapping
   public R<Object> updateAnswer(Answer answer) {
-    answerService.updateAnswer(answer);
+    this.answerService.updateAnswer(answer);
     return R.ok();
   }
 
+  // todo 试题答题统计，有bug，但未被使用到，暂无影响
+  @Deprecated
   @GetMapping("statistic")
   public R<List<Map<String, Object>>> answerStatistic(@NotNull(message = "{required}") Long paperId) {
-    return R.ok(answerService.statisticAnswers(paperId));
+    return R.ok(this.answerService.statisticAnswers(paperId));
   }
 }
