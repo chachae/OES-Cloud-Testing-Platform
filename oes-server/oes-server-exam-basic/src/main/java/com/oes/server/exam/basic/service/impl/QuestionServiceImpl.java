@@ -38,7 +38,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     Page<Question> page = new Page<>(question.getPageNum(), question.getPageSize());
     // fixme 前端查询排序乱序
     SortUtil.handlePageSort(question, page, "courseId", SystemConstant.ORDER_ASC, true);
-    return baseMapper.pageQuestion(page, question);
+    return this.baseMapper.pageQuestion(page, question);
   }
 
   @Override
@@ -56,7 +56,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     if (StrUtil.isNotBlank(question.getQuestionName())) {
       wrapper.like(Question::getQuestionName, question.getQuestionName());
     }
-    return baseMapper.selectList(wrapper);
+    return this.baseMapper.selectList(wrapper);
   }
 
   @Override
@@ -65,49 +65,49 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     question.setCreatorId(SecurityUtil.getCurrentUserId());
     question.setCreatorName(SecurityUtil.getCurrentUser().getFullName());
     question.setUsedCount(0);
-    baseMapper.insert(question);
+    this.baseMapper.insert(question);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void deleteQuestion(String[] questionIds) {
-    if (checkQuestionRelate(questionIds)) {
+    if (this.checkQuestionRelate(questionIds)) {
       throw new ApiException("试题与试卷存在关联，请删除相关试卷后重试");
     }
-    baseMapper.deleteBatchIds(Arrays.asList(questionIds));
+    this.baseMapper.deleteBatchIds(Arrays.asList(questionIds));
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateQuestion(Question question) {
-    baseMapper.updateById(question);
+    this.baseMapper.updateById(question);
   }
 
   @Override
   public List<Map<String, Object>> getTopTenQuestionData() {
-    return baseMapper.selectTopTenQuestionData();
+    return this.baseMapper.selectTopTenQuestionData();
   }
 
   @Override
   public List<Map<String, Object>> getTypeCountDistribute() {
-    return baseMapper.countDistributeGroupByType();
+    return this.baseMapper.countDistributeGroupByType();
   }
 
   @Override
   public Integer countByTypeIds(String[] typeIds) {
     if (typeIds.length == 1) {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getTypeId, typeIds[0]));
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getTypeId, typeIds[0]));
     } else {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)));
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)));
     }
   }
 
   @Override
   public Integer countByCourseIds(String[] courseIds) {
     if (courseIds.length == 1) {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getCourseId, courseIds[0]));
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getCourseId, courseIds[0]));
     } else {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds)));
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds)));
     }
   }
 

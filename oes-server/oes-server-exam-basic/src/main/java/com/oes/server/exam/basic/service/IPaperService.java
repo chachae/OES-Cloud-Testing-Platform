@@ -26,7 +26,7 @@ public interface IPaperService extends IService<Paper> {
    * 通过试卷编号和学生编号获取试卷信息
    *
    * @param paperId 试卷编号
-   * @param userId  用户id
+   * @param userId 用户id
    * @return {@link Paper} 试卷数据
    */
   Paper getPaper(Long paperId, Long userId);
@@ -61,10 +61,18 @@ public interface IPaperService extends IService<Paper> {
   /**
    * 随机抽取题目组卷
    *
-   * @param paper     组卷数据
+   * @param paper 组卷数据
    * @param paperType 试卷试题类型分布数据
    */
   void randomCreatePaper(Paper paper, PaperType paperType);
+
+  /**
+   * 通过导入模板的方式抽取题目组卷
+   *
+   * @param paper 组卷数据
+   * @param paperType 试卷试题类型分布数据
+   */
+  void importCreatePaper(Paper paper, PaperType paperType);
 
   /**
    * 通过课程编号查询题目数量

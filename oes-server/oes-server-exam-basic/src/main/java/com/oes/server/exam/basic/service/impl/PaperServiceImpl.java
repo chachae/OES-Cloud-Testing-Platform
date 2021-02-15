@@ -56,12 +56,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   @Override
   public IPage<Paper> pagePaper(QueryPaperDto entity) {
-    IPage<Paper> result = baseMapper.pagePaper(new Page<>(entity.getPageNum(), entity.getPageSize()), entity);
+    IPage<Paper> result =
+        this.baseMapper.pagePaper(new Page<>(entity.getPageNum(), entity.getPageSize()), entity);
     // 对试卷试题类型分类排序
     if (result.getTotal() > 0L) {
       // 通过循环获取每张试卷的题目信息，进行设置和分类
       for (Paper paper : result.getRecords()) {
-        List<PaperQuestion> paperQuestions = paperQuestionService.getListByPaperId(paper.getPaperId());
+        List<PaperQuestion> paperQuestions =
+            this.paperQuestionService.getListByPaperId(paper.getPaperId());
         List<Map<String, Object>> maps = GroupUtil.groupQuestionListByTypeId(paperQuestions);
         paper.setPaperQuestions(maps);
       }
@@ -72,20 +74,21 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Override
   public Paper getPaper(Long paperId, Long userId) {
     // 判断考试是否属于该考生
-    List<Long> deptIds = paperDeptService.getDeptIdListByPaperId(paperId);
+    List<Long> deptIds = this.paperDeptService.getDeptIdListByPaperId(paperId);
     if (!deptIds.isEmpty() && deptIds.contains(SecurityUtil.getCurrentUser().getDeptId())) {
-      Paper paper = baseMapper.selectByPaperId(paperId);
+      Paper paper = this.baseMapper.selectByPaperId(paperId);
       // 判断试卷是否存在
       if (paper == null) {
         return null;
       }
-      List<PaperQuestion> paperQuestions = paperQuestionService.getExamInfoListByPaperId(paper.getPaperId());
+      List<PaperQuestion> paperQuestions =
+          this.paperQuestionService.getExamInfoListByPaperId(paper.getPaperId());
       // 判断试卷是否打乱试题顺序（试卷配置）
       if (Boolean.TRUE.equals(paper.getConfigRandomQuestionOrder())) {
         Collections.shuffle(paperQuestions);
       }
-      Map<Long, Answer> questionIdAndAnswerKV = answerService.getAnswerMap(userId, paperId);
-      handlePaperQuestions(paper, questionIdAndAnswerKV, paperQuestions);
+      Map<Long, Answer> questionIdAndAnswerKV = this.answerService.getAnswerMap(userId, paperId);
+      this.handlePaperQuestions(paper, questionIdAndAnswerKV, paperQuestions);
       return paper;
     }
     return null;
@@ -93,20 +96,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
   @Override
   public List<Map<String, Object>> getTopTenPaperData() {
-    return baseMapper.selectTopTenPaper();
+    return this.baseMapper.selectTopTenPaper();
   }
 
   @Override
   public void updatePaper(Paper paper) {
-    baseMapper.updateById(paper);
+    this.baseMapper.updateById(paper);
     // 维护
-    paperDeptService.deleteByPaperId(paper.getPaperId());
-    answerService.deleteByPaperId(paper.getPaperId());
+    this.paperDeptService.deleteByPaperId(paper.getPaperId());
+    this.answerService.deleteByPaperId(paper.getPaperId());
     if (StrUtil.isNotBlank(paper.getDeptIds())) {
       // 维护试卷-课程数据
-      setPaperDept(paper.getPaperId(), paper.getDeptIds());
+      this.setPaperDept(paper.getPaperId(), paper.getDeptIds());
       // 维护答题预置数据信息
-      setPaperAnswer(paper.getPaperId(), paper.getDeptIds());
+      this.setPaperAnswer(paper.getPaperId(), paper.getDeptIds());
     }
   }
 
@@ -114,20 +117,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   @Transactional(rollbackFor = Exception.class)
   public void deletePaper(String[] paperIds) {
     // 检查试卷的班级指派和成绩关联系信息
-    if (!checkPaperDept(paperIds)) {
+    if (!this.checkPaperDept(paperIds)) {
       throw new ApiException("试卷存在班级关联信息，请删除后再试");
     }
-    if (!checkPaperScore(paperIds)) {
+    if (!this.checkPaperScore(paperIds)) {
       throw new ApiException("试卷存在成绩关联信息，请删除后再试");
     }
     // 删除试卷
-    baseMapper.deleteBatchIds(Arrays.asList(paperIds));
+    this.baseMapper.deleteBatchIds(Arrays.asList(paperIds));
     // 删除试卷关联班级
-    paperDeptService.deleteBatchByPaperIds(paperIds);
+    this.paperDeptService.deleteBatchByPaperIds(paperIds);
     // 删除试卷关联试题编号
-    paperQuestionService.deleteBatchByPaperIds(paperIds);
+    this.paperQuestionService.deleteBatchByPaperIds(paperIds);
     // 删除试卷试题类型与分值数据
-    paperTypeService.deleteBatchByPaperIds(paperIds);
+    this.paperTypeService.deleteBatchByPaperIds(paperIds);
   }
 
   @Override
@@ -135,7 +138,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   public void randomCreatePaper(Paper paper, PaperType paperType) {
     paper.setIsRandom(Paper.IS_RANDOM);
     paper.setStatus(Paper.STATUS_CLOSE);
-    baseMapper.insert(paper);
+    this.baseMapper.insert(paper);
     Long paperId = paper.getPaperId();
 
     String[] typeIdArray = paperType.getTypeIds().split(StrUtil.COMMA);
@@ -147,15 +150,23 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
+  public void importCreatePaper(Paper paper, PaperType paperType) {
+    // todo 实现业务
+  }
+
+  @Override
   public Integer countByTermIds(String[] termIds) {
     if (termIds.length == 1) {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Paper>().eq(Paper::getTermId, termIds[0]));
+      return this.baseMapper.selectCount(
+          new LambdaQueryWrapper<Paper>().eq(Paper::getTermId, termIds[0]));
     } else {
-      return baseMapper.selectCount(new LambdaQueryWrapper<Paper>().in(Paper::getTermId, Arrays.asList(termIds)));
+      return this.baseMapper.selectCount(
+          new LambdaQueryWrapper<Paper>().in(Paper::getTermId, Arrays.asList(termIds)));
     }
   }
 
-  private void setPaperQuestion(Paper paper, Integer difficult, String[] typeIdArray, String[] numArray) {
+  private void setPaperQuestion(
+      Paper paper, Integer difficult, String[] typeIdArray, String[] numArray) {
     // 预设置基础题目检索数据
     Question question = new Question();
     // 排除整体难度限制
@@ -174,15 +185,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
       int targetCount = Integer.parseInt(numArray[i]);
       // 题目数量比较和确定是否需要随机排序
       if (questions.size() < targetCount) {
-        Type type = typeService.getById(typeId);
-        throw new ApiException(String.format("符合条件的%s数量只有%s道，请调整数量后重新提交任务", type.getTypeName(), questions.size()));
+        Type type = this.typeService.getById(typeId);
+        throw new ApiException(
+            String.format("符合条件的%s数量只有%s道，请调整数量后重新提交任务", type.getTypeName(), questions.size()));
       } else if (questions.size() != targetCount) {
         // 随机重排序（如果题库对应的题目数量和试卷相应题目数量一致则不需要随机排序）
         Collections.shuffle(questions);
       }
       // 设置当前题目类型的试卷-题目信息
       for (int j = 0; j < targetCount; j++) {
-        paperQuestionList.add(new PaperQuestion(paper.getPaperId(), questions.get(j).getQuestionId()));
+        paperQuestionList.add(
+            new PaperQuestion(paper.getPaperId(), questions.get(j).getQuestionId()));
       }
       this.paperQuestionService.insertBatch(paperQuestionList);
     }
@@ -191,7 +204,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   private void setPaperType(Long paperId, String[] typeIdArray, String[] scoreArray, String[] numArray) {
     List<PaperType> ptList = new ArrayList<>(typeIdArray.length);
     for (int i = 0; i < typeIdArray.length; i++) {
-      ptList.add(new PaperType(paperId, Long.parseLong(typeIdArray[i]), Integer.parseInt(scoreArray[i]), Integer.parseInt(numArray[i])));
+      ptList.add(
+          new PaperType(
+              paperId,
+              Long.parseLong(typeIdArray[i]),
+              Integer.parseInt(scoreArray[i]),
+              Integer.parseInt(numArray[i])));
     }
     this.paperTypeService.insertBatch(ptList);
   }
@@ -206,21 +224,21 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   private void setPaperAnswer(Long paperId, String deptIds) {
-    List<Long> userIds = systemUserClient.getUserIdsByDeptIds(deptIds).getData();
+    List<Long> userIds = this.systemUserClient.getUserIdsByDeptIds(deptIds).getData();
     if (!userIds.isEmpty()) {
-      List<Long> questionIds = paperQuestionService.getQuestionIdsByPaperId(paperId);
-      answerService.createDefaultAnswer(paperId, userIds, questionIds);
+      List<Long> questionIds = this.paperQuestionService.getQuestionIdsByPaperId(paperId);
+      this.answerService.createDefaultAnswer(paperId, userIds, questionIds);
     }
   }
 
   private boolean checkPaperDept(String[] paperIds) {
     // 已指派班级则不允许删除
-    return paperDeptService.countByPaperId(paperIds) == 0;
+    return this.paperDeptService.countByPaperId(paperIds) == 0;
   }
 
   private boolean checkPaperScore(String[] paperIds) {
     // 存在成绩也不允许删除
-    return scoreService.countByPaperId(paperIds) == 0;
+    return this.scoreService.countByPaperId(paperIds) == 0;
   }
 
   /**
