@@ -21,7 +21,10 @@ import cn.hutool.core.util.StrUtil;
 import com.oes.common.core.exam.constant.QuestionTransferConstant;
 import com.oes.common.core.exam.entity.QuestionTransfer;
 import com.oes.common.core.util.JSONUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chachae
@@ -31,6 +34,18 @@ import java.util.List;
 public final class QuestionUtil {
 
   private QuestionUtil() {
+  }
+
+  private static final Map<Integer, String> choiceRightKeyMap;
+
+  // 加载选项
+  static {
+    choiceRightKeyMap = new HashMap<>();
+    char first = 'A';
+    for (int i = 0; i <= 10; i++) {
+      choiceRightKeyMap.put(i, String.valueOf(first));
+      first = (char) (first + 1);
+    }
   }
 
   public static String validateImportQuestion(QuestionTransfer questionTransfer) {
@@ -87,21 +102,39 @@ public final class QuestionUtil {
     }
 
     List<String> optionList = StrUtil.split(options, ',');
-    if (typeId == 1L && !optionList.contains(rightKey)) {
-      errorMessage.append(QuestionTransferConstant.CHOICE_RIGHT_KEY_MATCH_ERROR + ",");
+
+    if (optionList.size() > 10) {
+      errorMessage.append(QuestionTransferConstant.OPTIONS_TOO_LARGE + ",");
       return;
     }
 
-    List<String> rightKeyList = StrUtil.split(rightKey, ',');
+    if (typeId == 1L) {
+      int i = optionList.indexOf(rightKey);
+      if (i == -1) {
+        errorMessage.append(QuestionTransferConstant.CHOICE_RIGHT_KEY_MATCH_ERROR + ",");
+      } else {
+        questionTransfer.setOptions(JSONUtil.encode(optionList));
+        questionTransfer.setRightKey(choiceRightKeyMap.get(i));
+      }
+      return;
+    }
+
+    List<String> excelRightKeyList = StrUtil.split(rightKey, ',');
     if (typeId == 2L) {
-      for (String cur : rightKeyList) {
-        if (!optionList.contains(cur)) {
+      List<String> rightKeyList = new ArrayList<>(excelRightKeyList.size());
+      for (String curRightKey : excelRightKeyList) {
+        int i = optionList.indexOf(curRightKey);
+        if (i == -1) {
           errorMessage.append(QuestionTransferConstant.CHOICE_RIGHT_KEY_MATCH_ERROR + ",");
           return;
+        } else {
+          rightKeyList.add(choiceRightKeyMap.get(i));
         }
       }
+      // 多选选项转JSON
+      questionTransfer.setOptions(JSONUtil.encode(optionList));
       // 多选正确答案转JSON
-      questionTransfer.setOptions(JSONUtil.encode(rightKeyList));
+      questionTransfer.setRightKey(JSONUtil.encode(rightKeyList));
     }
   }
 
@@ -123,6 +156,25 @@ public final class QuestionUtil {
     String rightKey = questionTransfer.getRightKey();
     List<String> rightKeyList = StrUtil.split(rightKey, ',');
     // 填空题正确答案转JSON
-    questionTransfer.setOptions(JSONUtil.encode(rightKeyList));
+    questionTransfer.setRightKey(JSONUtil.encode(rightKeyList));
   }
+
+  /**
+   public static void main(String[] args) {
+   long start = System.currentTimeMillis();
+   QuestionTransfer questionTransfer = new QuestionTransfer();
+   questionTransfer.setQuestionName("****");
+   questionTransfer.setTypeId(2L);
+   questionTransfer.setDifficult(2);
+   questionTransfer.setCourseId(2L);
+   questionTransfer.setOptions("1,2,3,4,5,6");
+   questionTransfer.setRightKey("2,5,6");
+   String s = validateImportQuestion(questionTransfer);
+   System.out.println(s);
+   Question question = new Question();
+   BeanUtil.copyProperties(questionTransfer, question);
+   System.out.println(question.toString());
+   long end = System.currentTimeMillis();
+   System.out.println(end - start);
+   }*/
 }

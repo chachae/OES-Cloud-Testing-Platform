@@ -36,6 +36,8 @@ public interface QuestionTransferConstant {
 
   String OPTIONS_NOT_EMPTY = "题目选项不能为空";
 
+  String OPTIONS_TOO_LARGE = "题目选项过多，不能超过10个";
+
   String JUDGE_RIGHT_KEY_MATCH_ERROR = "判断题选项匹配失败";
 
   String CHOICE_RIGHT_KEY_MATCH_ERROR = "选择题（单选/多选）题选项匹配失败";
