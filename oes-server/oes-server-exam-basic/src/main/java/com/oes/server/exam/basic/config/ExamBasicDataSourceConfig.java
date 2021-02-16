@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.config;
 
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.oes.server.exam.basic.enhance.BatchInsertSqlInjector;
+import com.oes.common.core.enhance.orm.BatchInsertSqlInjector;
 import com.oes.server.exam.basic.interceptor.ExamInfoScopeInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

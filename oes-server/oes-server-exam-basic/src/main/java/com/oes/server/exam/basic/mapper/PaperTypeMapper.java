@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.mapper;
 
+import com.oes.common.core.enhance.orm.EnhanceMapper;
 import com.oes.common.core.exam.entity.PaperType;
-import com.oes.server.exam.basic.enhance.EnhanceMapper;
 
 /**
  * @author chachae

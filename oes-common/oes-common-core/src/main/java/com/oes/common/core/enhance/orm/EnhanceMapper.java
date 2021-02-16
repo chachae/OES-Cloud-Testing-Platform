@@ -1,4 +1,4 @@
-package com.oes.server.exam.basic.enhance;
+package com.oes.common.core.enhance.orm;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;

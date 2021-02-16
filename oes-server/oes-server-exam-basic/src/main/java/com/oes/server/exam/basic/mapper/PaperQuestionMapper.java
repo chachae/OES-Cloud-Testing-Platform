@@ -1,7 +1,7 @@
 package com.oes.server.exam.basic.mapper;
 
+import com.oes.common.core.enhance.orm.EnhanceMapper;
 import com.oes.common.core.exam.entity.PaperQuestion;
-import com.oes.server.exam.basic.enhance.EnhanceMapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

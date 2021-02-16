@@ -2,10 +2,10 @@ package com.oes.server.exam.basic.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oes.common.core.enhance.orm.EnhanceMapper;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
-import com.oes.server.exam.basic.enhance.EnhanceMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
