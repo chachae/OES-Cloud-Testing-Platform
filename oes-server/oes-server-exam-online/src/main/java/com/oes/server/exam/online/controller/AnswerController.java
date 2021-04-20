@@ -35,7 +35,7 @@ public class AnswerController {
    */
   @GetMapping("warn")
   public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
-    this.answerService.statisticAnswers(1L);
+    // this.answerService.statisticAnswers(paperId);
     return R.ok(this.answerService.getWarnAnswerByPaperId(paperId));
   }
 
