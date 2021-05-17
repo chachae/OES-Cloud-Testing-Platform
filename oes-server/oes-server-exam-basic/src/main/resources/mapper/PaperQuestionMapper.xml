@@ -3,40 +3,36 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oes.server.exam.basic.mapper.PaperQuestionMapper">
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.PaperQuestion">
-    <result column="paper_id" property="paperId"/>
     <result column="question_id" property="questionId"/>
     <result column="question_name" property="questionName"/>
     <result column="type_id" property="typeId"/>
     <result column="options" property="options"/>
+    <result column="fill_count" property="fillCount"/>
   </resultMap>
 
   <sql id="baseSql">
-    select tpq.question_id, tq.options, tq.type_id, tq.question_name, tq.right_key, tpt.score
+    select tpq.question_id, tq.options, tq.type_id, replace(tq.question_name, '{{#@#}}', '____') as question_name, tq.fill_count, tq.right_key, tpt.score
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id
            left join t_paper_type tpt on (tpq.paper_id = tpt.paper_id and tpt.type_id = tq.type_id)
   </sql>
 
+  <!-- 不包含正确答案 -->
   <sql id="baseSql2">
-    select tpq.paper_id,
-           tpq.question_id,
-           tq.question_id,
-           tq.question_name,
-           tq.options,
-           tq.type_id
+    select tpq.question_id, tq.options, tq.type_id, replace(tq.question_name, '{{#@#}}', '____') as question_name, tq.fill_count
     from t_paper_question tpq
            left join t_question tq on tpq.question_id = tq.question_id
-    where 1 = 1
   </sql>
 
   <select id="selectListByPaperId" parameterType="long" resultMap="baseMap">
     <include refid="baseSql"/>
     where tpq.paper_id = #{paperId,jdbcType=BIGINT}
-    GROUP BY tpq.question_id,tq.type_id, tq.right_key,tpt.score
+    GROUP BY tpq.question_id, tq.type_id, tq.right_key, tpt.score
   </select>
 
-  <select id="selectBaseListByPaperId" parameterType="long" resultMap="baseMap">
+  <select id="selectExamQuestionInfoListByPaperId" parameterType="long" resultMap="baseMap">
     <include refid="baseSql2"/>
-    and tpq.paper_id = #{paperId,jdbcType=BIGINT}
+    where tpq.paper_id = #{paperId,jdbcType=BIGINT}
+    group by tpq.question_id, tq.type_id
   </select>
 </mapper>

@@ -1,12 +1,10 @@
 package com.oes.server.exam.basic.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.exam.entity.Answer;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.core.util.PageUtil;
-import com.oes.common.core.validator.Insert;
 import com.oes.common.core.validator.Update;
 import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.List;
@@ -17,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,26 +45,8 @@ public class AnswerController {
     this.answerService.updateAnswer(answer);
   }
 
-  @PostMapping
-  @PreAuthorize("hasAuthority('answer:add')")
-  public R<Long> add(@Validated(Insert.class) Answer answer) {
-    this.answerService.createAnswer(answer);
-    // 返回answer id
-    return R.ok(answer.getAnswerId());
-  }
-
-  @GetMapping("list")
-  public R<List<Answer>> getAnswerList(String username, @NotNull(message = "{required}") Long paperId) {
-    if (StrUtil.isBlank(username)) {
-      return R.ok(answerService.getAnswerList(paperId));
-    } else {
-      return R.ok(answerService.getAnswerList(username, paperId));
-    }
-  }
-
   @GetMapping("warn")
-  public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId) {
-    QueryAnswerDto entity = new QueryAnswerDto();
+  public R<List<Map<String, Object>>> getWarningAnswer(@NotNull(message = "{required}") Long paperId, QueryAnswerDto entity) {
     entity.setPaperId(paperId);
     return R.ok(answerService.getWarnAnswerList(entity));
   }

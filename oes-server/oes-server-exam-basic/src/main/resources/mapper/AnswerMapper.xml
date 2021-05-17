@@ -4,7 +4,7 @@
 <!-- 关联查询之 left join 笛卡尔积解释：https://blog.csdn.net/w1014074794/article/details/90373043 -->
 <mapper namespace="com.oes.server.exam.basic.mapper.AnswerMapper">
   <resultMap id="baseMap" type="com.oes.common.core.exam.entity.Answer">
-    <result column="answer_id" property="answerId"/>
+    <result column="user_id" property="userId"/>
     <result column="answer_content" property="answerContent"/>
     <result column="username" property="username"/>
     <result column="paper_id" property="paperId"/>
@@ -15,14 +15,13 @@
     <result column="right_key" property="rightKey"/>
     <result column="score" property="score"/>
     <result column="status" property="status"/>
-    <result column="term_name" property="termName"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
   </resultMap>
 
   <resultMap id="baseMap2" type="com.oes.common.core.exam.entity.Answer">
-    <result column="answer_id" property="answerId"/>
     <result column="answer_content" property="answerContent"/>
+    <result column="user_id" property="userId"/>
     <result column="paper_id" property="paperId"/>
     <result column="question_id" property="questionId"/>
     <result column="score" property="score"/>
@@ -36,21 +35,23 @@
   </resultMap>
 
   <sql id="baseSql">
-    SELECT ta.answer_id,
-           ta.answer_content,
+    SELECT ta.answer_content,
+           ta.warn,
            ta.username,
            ta.paper_id,
            ta.question_id,
+           ta.user_id,
            ta.score,
            ta.status,
            ta.create_time,
            ta.update_time,
            tq.analysis,
-           tq.question_name,
+           replace(tq.question_name, '{{#@#}}', '____') as question_name,
            tq.right_key,
            tq.type_id,
-           tp.paper_name
-    FROM t_answer ta
+           tp.paper_name,
+           tq.options
+    FROM t_paper_answer ta
            LEFT JOIN t_question tq on ta.question_id = tq.question_id
            LEFT JOIN t_paper tp on ta.paper_id = tp.paper_id
     WHERE 1 = 1
@@ -63,7 +64,7 @@
   >
     <include refid="baseSql"/>
     <if test="answer.paperName != null and answer.paperName != ''">
-      AND tp.paper_name LIKE concat('%',#{answer.paperName,jdbcType=VARCHAR},'%')
+      AND tp.paper_name LIKE concat('%', #{answer.paperName,jdbcType=VARCHAR}, '%')
     </if>
     <if test="answer.termId != null">
       AND tp.term_id = #{answer.termId,jdbcType=BIGINT}
@@ -74,17 +75,18 @@
     <if test="answer.username != null and answer.username != ''">
       AND (ta.username = #{answer.username,jdbcType=VARCHAR})
     </if>
-    GROUP BY ta.answer_id
+    GROUP BY ta.username, ta.warn, ta.answer_content, ta.paper_id, ta.question_id, ta.user_id, ta.score, ta.status, ta.create_time, ta.update_time, tq.analysis,
+             tq.question_name, tq.right_key, tq.type_id, tp.paper_name, tq.options
   </select>
 
   <select id="selectWarnAnswerList" parameterType="com.oes.common.core.exam.entity.query.QueryAnswerDto"
     resultMap="baseMap2">
     <include refid="baseSql"/>
     and ta.paper_id = #{answer.paperId,jdbcType=BIGINT}
-    and ta.username = #{answer.username,jdbcType=VARCHAR}
+    and ta.user_id = #{answer.userId,jdbcType=BIGINT}
     <!-- 错题 wran：0 -->
     and ta.warn = 0
-    group by ta.answer_id, ta.answer_content, ta.paper_id, ta.question_id, ta.score,
-    ta.status, ta.warn, tq.question_name, tq.options, tq.type_id, tq.right_key
+      group by ta.answer_content, ta.warn, ta.username, ta.paper_id, ta.question_id, ta.user_id, ta.score, ta.status, ta.create_time, ta.update_time, tq.analysis, tq.question_name, tq.right_key,
+               tq.type_id, tp.paper_name, tq.options
   </select>
 </mapper>

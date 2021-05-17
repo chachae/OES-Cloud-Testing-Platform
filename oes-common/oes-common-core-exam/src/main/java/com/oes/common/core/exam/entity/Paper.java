@@ -1,12 +1,11 @@
 package com.oes.common.core.exam.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -56,12 +55,10 @@ public class Paper implements Serializable {
   public static final Integer STATUS_CLOSE = 0;
 
   /**
-   * 试卷主键（id）
-   * 使用默认的 snowflake
+   * 试卷主键（id） 使用默认的 snowflake
    */
-  @TableId
+  @TableId(type = IdType.AUTO)
   // 解决精度丢失问题
-  @JsonSerialize(using = ToStringSerializer.class)
   private Long paperId;
 
   /**
@@ -131,6 +128,22 @@ public class Paper implements Serializable {
    * 学期编号
    */
   private Long termId;
+
+  /**
+   * 远程监控配置
+   */
+  private Boolean configRemote;
+
+  /**
+   * 试题乱序配置
+   */
+  private Boolean configRandomQuestionOrder;
+
+  /**
+   * 标签切换检测配置
+   */
+  private Boolean configLabelSwitch;
+
   /**
    * 学期名称
    */

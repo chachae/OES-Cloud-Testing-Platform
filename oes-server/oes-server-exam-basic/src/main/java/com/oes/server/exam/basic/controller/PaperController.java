@@ -7,8 +7,6 @@ import com.oes.common.core.exam.entity.Paper;
 import com.oes.common.core.exam.entity.PaperType;
 import com.oes.common.core.exam.entity.query.QueryPaperDto;
 import com.oes.common.core.util.PageUtil;
-import com.oes.common.core.util.SecurityUtil;
-import com.oes.server.exam.basic.service.IAnswerService;
 import com.oes.server.exam.basic.service.IPaperService;
 import java.util.Map;
 import javax.validation.Valid;
@@ -39,35 +37,38 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaperController {
 
   private final IPaperService paperService;
-  private final IAnswerService answerService;
 
   @GetMapping
   @PreAuthorize("hasAuthority('paper:view')")
   public R<Map<String, Object>> pageCourse(QueryPaperDto paper) {
-    IPage<Paper> result = paperService.pagePaper(paper);
+    IPage<Paper> result = this.paperService.pagePaper(paper);
     return R.ok(PageUtil.toPage(result));
   }
 
   @GetMapping("{paperId}")
-  public R<Paper> getOne(@PathVariable("paperId") @NotNull(message = "{required}") Long paperId) {
-    Paper paper = paperService.getPaper(paperId, SecurityUtil.getCurrentUsername());
-    // paper.getPaperQuestionList() != null == 首次进入考试
-    if (paper.getPaperQuestionList() != null) {
-      paper = answerService.createDefaultAnswer(paper);
-    }
+  public R<Paper> getOne(
+      @PathVariable @NotNull(message = "{required}") Long paperId,
+      @NotNull(message = "{required}") Long userId) {
+    Paper paper = this.paperService.getPaper(paperId, userId);
     return R.ok(paper);
   }
 
   @PutMapping
   @PreAuthorize("hasAuthority('paper:update')")
   public void updateStatus(@Valid Paper paper) {
-    paperService.updatePaper(paper);
+    this.paperService.updatePaper(paper);
   }
 
   @PostMapping("random")
   @PreAuthorize("hasAuthority('paper:add')")
   public void randomCreatePaper(@Valid Paper paper, @Valid PaperType paperTypes) {
-    paperService.randomCreatePaper(paper, paperTypes);
+    this.paperService.randomCreatePaper(paper, paperTypes);
+  }
+
+  @PostMapping("import")
+  @PreAuthorize("hasAuthority('paper:add')")
+  public void importCreatePaper(@Valid Paper paper, @Valid PaperType paperTypes) {
+    this.paperService.importCreatePaper(paper, paperTypes);
   }
 
   @DeleteMapping("{paperIds}")
@@ -76,5 +77,4 @@ public class PaperController {
     String[] paperIdArray = paperIds.split(StrUtil.COMMA);
     this.paperService.deletePaper(paperIdArray);
   }
-
 }

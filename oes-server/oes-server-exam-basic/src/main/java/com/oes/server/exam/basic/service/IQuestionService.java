@@ -69,4 +69,21 @@ public interface IQuestionService extends IService<Question> {
    * @return {@link List<Map>} 分布数据
    */
   List<Map<String, Object>> getTypeCountDistribute();
+
+  /**
+   * 通过课程编号查询题目数量
+   *
+   * @param courseIds 课程编号集合
+   * @return 数量
+   */
+  Integer countByCourseIds(String[] courseIds);
+
+
+  /**
+   * 通过题目类型编号查询题目数量
+   *
+   * @param typeIds 题目类型编号
+   * @return 数量
+   */
+  Integer countByTypeIds(String[] typeIds);
 }

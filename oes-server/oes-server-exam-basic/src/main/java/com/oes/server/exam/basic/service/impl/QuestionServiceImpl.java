@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.constant.SystemConstant;
-import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.Question;
 import com.oes.common.core.exam.entity.query.QueryQuestionDto;
 import com.oes.common.core.exception.ApiException;
@@ -16,7 +15,6 @@ import com.oes.server.exam.basic.mapper.QuestionMapper;
 import com.oes.server.exam.basic.service.IPaperQuestionService;
 import com.oes.server.exam.basic.service.IQuestionService;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +36,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   @Override
   public IPage<Question> pageQuestion(QueryQuestionDto question) {
     Page<Question> page = new Page<>(question.getPageNum(), question.getPageSize());
+    // fixme 前端查询排序乱序
     SortUtil.handlePageSort(question, page, "courseId", SystemConstant.ORDER_ASC, true);
-    return baseMapper.pageQuestion(page, question);
+    return this.baseMapper.pageQuestion(page, question);
   }
 
   @Override
@@ -57,7 +56,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     if (StrUtil.isNotBlank(question.getQuestionName())) {
       wrapper.like(Question::getQuestionName, question.getQuestionName());
     }
-    return baseMapper.selectList(wrapper);
+    return this.baseMapper.selectList(wrapper);
   }
 
   @Override
@@ -65,39 +64,54 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
   public void createQuestion(Question question) {
     question.setCreatorId(SecurityUtil.getCurrentUserId());
     question.setCreatorName(SecurityUtil.getCurrentUser().getFullName());
-    question.setConsumption(0);
-    baseMapper.insert(question);
+    question.setUsedCount(0);
+    this.baseMapper.insert(question);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void deleteQuestion(String[] questionIds) {
-    if (hasQuestion(questionIds)) {
+    if (this.checkQuestionRelate(questionIds)) {
       throw new ApiException("试题与试卷存在关联，请删除相关试卷后重试");
     }
-    baseMapper.deleteBatchIds(Arrays.asList(questionIds));
+    this.baseMapper.deleteBatchIds(Arrays.asList(questionIds));
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateQuestion(Question question) {
-    question.setUpdateTime(new Date());
-    baseMapper.updateById(question);
+    this.baseMapper.updateById(question);
   }
 
   @Override
   public List<Map<String, Object>> getTopTenQuestionData() {
-    return baseMapper.selectTopTenQuestionData();
+    return this.baseMapper.selectTopTenQuestionData();
   }
 
   @Override
   public List<Map<String, Object>> getTypeCountDistribute() {
-    return baseMapper.countDistributeGroupByType();
+    return this.baseMapper.countDistributeGroupByType();
   }
 
-  private boolean hasQuestion(String[] questionIds) {
-    return this.paperQuestionService
-        .count(new LambdaQueryWrapper<PaperQuestion>().in(PaperQuestion::getQuestionId,
-            Arrays.asList(questionIds))) > 0;
+  @Override
+  public Integer countByTypeIds(String[] typeIds) {
+    if (typeIds.length == 1) {
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getTypeId, typeIds[0]));
+    } else {
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getTypeId, Arrays.asList(typeIds)));
+    }
+  }
+
+  @Override
+  public Integer countByCourseIds(String[] courseIds) {
+    if (courseIds.length == 1) {
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().eq(Question::getCourseId, courseIds[0]));
+    } else {
+      return this.baseMapper.selectCount(new LambdaQueryWrapper<Question>().in(Question::getCourseId, Arrays.asList(courseIds)));
+    }
+  }
+
+  private boolean checkQuestionRelate(String[] questionIds) {
+    return this.paperQuestionService.countByQuestionIds(questionIds) > 0;
   }
 }

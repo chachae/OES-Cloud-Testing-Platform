@@ -5,14 +5,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oes.common.core.exam.entity.Answer;
-import com.oes.common.core.exam.entity.Paper;
-import com.oes.common.core.exam.entity.PaperQuestion;
 import com.oes.common.core.exam.entity.query.QueryAnswerDto;
 import com.oes.common.core.exam.util.GroupUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.exam.basic.mapper.AnswerMapper;
 import com.oes.server.exam.basic.service.IAnswerService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -35,27 +34,28 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   }
 
   @Override
-  public Answer getAnswer(String username, Long paperId, Long questionId) {
+  public List<Answer> getAnswerList(Long userId, Long paperId) {
     LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId).eq(Answer::getQuestionId, questionId);
-    return baseMapper.selectOne(wrapper);
-  }
-
-  @Override
-  public List<Answer> getAnswerList(Long paperId) {
-    return baseMapper.selectList(new LambdaQueryWrapper<Answer>().eq(Answer::getPaperId, paperId));
-  }
-
-  @Override
-  public List<Answer> getAnswerList(String username, Long paperId) {
-    LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(Answer::getUsername, username).eq(Answer::getPaperId, paperId);
+    wrapper.eq(Answer::getUserId, userId).eq(Answer::getPaperId, paperId);
     return baseMapper.selectList(wrapper);
   }
 
   @Override
+  public Map<Long, Answer> getAnswerMap(Long userId, Long paperId) {
+    Map<Long, Answer> map = new HashMap<>();
+    List<Answer> answerList = getAnswerList(userId, paperId);
+    if (!answerList.isEmpty()) {
+      // 答题记录组装到 HashMap 中
+      answerList.forEach(answer -> map.put(answer.getQuestionId(), answer));
+      return map;
+    }
+    return map;
+  }
+
+  @Override
+  // todo 重构接口
   public List<Map<String, Object>> getWarnAnswerList(QueryAnswerDto entity) {
-    entity.setUsername(SecurityUtil.getCurrentUsername());
+    entity.setUserId(SecurityUtil.getCurrentUserId());
     List<Answer> answers = baseMapper.selectWarnAnswerList(entity);
     return !answers.isEmpty() ? GroupUtil.groupQuestion(answers) : new ArrayList<>(0);
   }
@@ -63,32 +63,32 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void updateAnswer(Answer answer) {
-    answer.setUsername(SecurityUtil.getCurrentUsername());
     answer.setStatus(Answer.STATUS_CORRECT);
-    baseMapper.updateById(answer);
+    baseMapper.update(answer, new LambdaQueryWrapper<Answer>()
+        .eq(Answer::getPaperId, answer.getPaperId())
+        .eq(Answer::getQuestionId, answer.getQuestionId())
+        .eq(Answer::getUserId, answer.getUserId()));
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void createAnswer(Answer answer) {
-    baseMapper.insert(answer);
+  public void createDefaultAnswer(long paperId, List<Long> userIds, List<Long> questionIds) {
+    List<Answer> answers = new ArrayList<>();
+    for (Long userId : userIds) {
+      for (Long questionId : questionIds) {
+        Answer answer = new Answer().createDefaultObject(paperId);
+        answer.setUserId(userId);
+        answer.setQuestionId(questionId);
+        answers.add(answer);
+      }
+    }
+    // 批量插入
+    baseMapper.insertBatchSomeColumn(answers);
   }
 
   @Override
-  public Paper createDefaultAnswer(Paper paper) {
-    List<PaperQuestion> paperQuestionList = paper.getPaperQuestionList();
-    for (PaperQuestion paperQuestion : paperQuestionList) {
-      Answer answer = new Answer();
-      answer.setUsername(SecurityUtil.getCurrentUsername());
-      answer.setWarn(Answer.IS_WARN);
-      answer.setPaperId(paper.getPaperId());
-      answer.setStatus(Answer.STATUS_NOT_CORRECT);
-      answer.setScore(0);
-      answer.setQuestionId(paperQuestion.getQuestionId());
-      baseMapper.insert(answer);
-      paperQuestion.setAnswerId(answer.getAnswerId());
-    }
-    GroupUtil.groupQuestions(paper, true);
-    return paper;
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteByPaperId(Long paperId) {
+    baseMapper.delete(new LambdaQueryWrapper<Answer>().eq(Answer::getPaperId, paperId));
   }
 }

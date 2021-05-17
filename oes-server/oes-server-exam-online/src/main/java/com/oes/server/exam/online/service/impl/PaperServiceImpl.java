@@ -39,8 +39,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
   }
 
   @Override
-  public Paper getOnePaper(Long paperId) {
-    return remotePaperService.getOne(paperId).getData();
+  public Paper getOnePaper(Long paperId, Long userId) {
+    return remotePaperService.getOne(paperId, userId).getData();
   }
 
   private IPage<Paper> filterPaper(QueryPaperDto entity) {

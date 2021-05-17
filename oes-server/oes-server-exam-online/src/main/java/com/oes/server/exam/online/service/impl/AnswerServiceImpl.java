@@ -33,23 +33,24 @@ public class AnswerServiceImpl implements IAnswerService {
 
   @Override
   public List<Answer> getAnswer(Long paperId) {
-    return answerClient.getAnswerList(null, paperId).getData();
+    return this.answerClient.getAnswerList(null, paperId).getData();
   }
 
   @Override
   public List<Map<String, Object>> getWarnAnswerByPaperId(Long paperId) {
-    return answerClient.getWarningAnswer(paperId).getData();
+    return this.answerClient.getWarningAnswer(paperId).getData();
   }
 
   @Override
   public Long updateAnswer(Answer answer) {
-    markAnswer(answer);
-    answerClient.update(answer);
-    return answer.getAnswerId();
+    this.markAnswer(answer);
+    this.answerClient.update(answer);
+    return 1L;
   }
 
   private void markAnswer(Answer answer) {
-    Map<Long, PaperQuestion> ansMap = paperQuestionClient.getMap(answer.getPaperId()).getData();
+    // todo 主服务需要缓存该数据
+    Map<Long, PaperQuestion> ansMap = this.paperQuestionClient.getMap(answer.getPaperId()).getData();
     ScoreUtil.mark(answer, ansMap.get(answer.getQuestionId()));
   }
 
@@ -58,9 +59,9 @@ public class AnswerServiceImpl implements IAnswerService {
     // 预先准备一个返回体
     List<Map<String, Object>> result = new ArrayList<>();
     // 获取试卷题目正确答案
-    Map<Long, PaperQuestion> rightKeyMap = paperQuestionClient.getMap(paperId).getData();
+    Map<Long, PaperQuestion> rightKeyMap = this.paperQuestionClient.getMap(paperId).getData();
     // 学生答案按照题目编号分组
-    List<Answer> paperAnswer = getAnswer(paperId);
+    List<Answer> paperAnswer = this.getAnswer(paperId);
     Collection<List<Answer>> answersCollection = paperAnswer.stream().collect(Collectors.groupingBy(Answer::getQuestionId)).values();
 
     // 处理分组后的答案集合
@@ -81,7 +82,7 @@ public class AnswerServiceImpl implements IAnswerService {
             rightRatio = entry.getValue() / answers.size();
           }
           // 放进学生答案分布集合内
-          distribute.add(new EchartMap().pubData(entry.getKey(), entry.getValue()));
+          distribute.add(new EchartMap().putData(entry.getKey(), entry.getValue()));
         }
 
         // 单道题目的数据体

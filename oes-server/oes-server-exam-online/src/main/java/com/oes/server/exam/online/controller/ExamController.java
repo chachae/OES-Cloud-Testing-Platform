@@ -40,13 +40,16 @@ public class ExamController {
    */
   @GetMapping("{paperId}")
   public R<Paper> getExam(@PathVariable @NotNull(message = "{required}") Long paperId) {
-    Paper paper = paperService.getOnePaper(paperId);
+    Long userId = SecurityUtil.getCurrentUserId();
+    Paper paper = paperService.getOnePaper(paperId, userId);
     if (paper != null) {
       String username = SecurityUtil.getCurrentUsername();
       Score score = scoreService.getScore(username, paperId);
       // score == null 即首次进入考试
       if (score == null) {
         score = new Score();
+        // fixme 字段
+        score.setUserId(userId);
         score.setUsername(username);
         score.setPaperId(paperId);
         scoreService.createScore(score);

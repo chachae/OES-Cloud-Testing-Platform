@@ -43,6 +43,9 @@ public class Score implements Serializable {
    * 试卷编号（id）
    */
   private Long paperId;
+
+  private Long userId;
+
   /**
    * 考试用时
    */

@@ -52,6 +52,9 @@ public class PaperQuestion implements Serializable {
   @TableField(exist = false)
   private String options;
 
+  @TableField(exist = false)
+  private Integer fillCount;
+
   /**
    * 正确答案
    */

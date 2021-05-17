@@ -1,7 +1,6 @@
 package com.oes.server.system.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oes.common.core.entity.OptionTree;
@@ -9,15 +8,12 @@ import com.oes.common.core.entity.QueryParam;
 import com.oes.common.core.entity.R;
 import com.oes.common.core.entity.system.LoginLog;
 import com.oes.common.core.entity.system.SystemUser;
-import com.oes.common.core.util.FileUtil;
 import com.oes.common.core.util.PageUtil;
 import com.oes.common.core.util.SecurityUtil;
 import com.oes.server.system.annotation.ControllerEndpoint;
-import com.oes.server.system.event.SyncReadExcelListener;
 import com.oes.server.system.service.ILoginLogService;
 import com.oes.server.system.service.IUserDataPermissionService;
 import com.oes.server.system.service.IUserService;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户信息控制层
@@ -75,21 +69,21 @@ public class UserController {
   public R<Map<String, Object>> index() {
     Map<String, Object> data = new HashMap<>(7);
     // 获取系统总访问记录
-    Long totalVisitCount = loginLogService.getTotalVisitCount();
+    Long totalVisitCount = this.loginLogService.getTotalVisitCount();
     data.put("totalVisitCount", totalVisitCount);
     // 获取系统今日访问记录
-    Long todayVisitCount = loginLogService.getTodayVisitCount();
+    Long todayVisitCount = this.loginLogService.getTodayVisitCount();
     data.put("todayVisitCount", todayVisitCount);
     // 获取系统进入访问IP量
-    Long todayIp = loginLogService.getTodayIp();
+    Long todayIp = this.loginLogService.getTodayIp();
     data.put("todayIp", todayIp);
     // 获取近期系统访问记录
-    List<Map<String, Object>> lastTenVisitCount = loginLogService.getLastTenDaysVisitCount(null);
+    List<Map<String, Object>> lastTenVisitCount = this.loginLogService.getLastTenDaysVisitCount(null);
     data.put("lastTenVisitCount", lastTenVisitCount);
     // 当前用户近七天访问记录
     SystemUser systemUser = new SystemUser();
     systemUser.setUsername(SecurityUtil.getCurrentUsername());
-    List<Map<String, Object>> lastTenUserVisitCount = loginLogService
+    List<Map<String, Object>> lastTenUserVisitCount = this.loginLogService
         .getLastTenDaysVisitCount(systemUser);
     data.put("lastTenUserVisitCount", lastTenUserVisitCount);
     return R.ok(data);
@@ -103,13 +97,13 @@ public class UserController {
    */
   @GetMapping("check")
   public boolean checkUserName(@NotBlank(message = "{required}") String username) {
-    SystemUser result = userService.getSystemUser(username);
+    SystemUser result = this.userService.getSystemUser(username);
     return result == null;
   }
 
   @GetMapping("count")
   public R<Integer> getDeptCount(@NotBlank(message = "{required}") String deptIds) {
-    Integer count = userService.count(new LambdaQueryWrapper<SystemUser>().in(SystemUser::getDeptId, StrUtil.split(deptIds, ',')));
+    Integer count = this.userService.count(new LambdaQueryWrapper<SystemUser>().in(SystemUser::getDeptId, StrUtil.split(deptIds, ',')));
     return R.ok(count);
   }
 
@@ -121,21 +115,28 @@ public class UserController {
    */
   @GetMapping("options")
   public R<List<OptionTree<SystemUser>>> getTreeOption(SystemUser user) {
-    List<OptionTree<SystemUser>> tree = userService.getSystemUserTree(user);
+    List<OptionTree<SystemUser>> tree = this.userService.getSystemUserTree(user);
     return R.ok(tree);
   }
 
   @GetMapping
   @PreAuthorize("hasAuthority('user:view')")
   public R<Map<String, Object>> userList(QueryParam param, SystemUser user) {
-    IPage<SystemUser> result = userService.pageSystemUser(param, user);
+    IPage<SystemUser> result = this.userService.pageSystemUser(param, user);
     return R.ok(PageUtil.toPage(result));
   }
 
   @GetMapping("{userId}")
   public R<String> findUserDataPermissions(@NotNull(message = "{required}") @PathVariable Long userId) {
-    String dataPermissions = userDeptService.getByUserId(userId);
+    String dataPermissions = this.userDeptService.getByUserId(userId);
     return R.ok(dataPermissions);
+  }
+
+  @GetMapping("user-id")
+  public R<List<Long>> getUserIds(@NotNull(message = "{required}") String deptIds) {
+    String[] ids = deptIds.split(StrUtil.COMMA);
+    List<Long> userIds = this.userService.getUserIdByDeptIds(ids);
+    return R.ok(userIds);
   }
 
   @PostMapping
@@ -175,14 +176,14 @@ public class UserController {
   @GetMapping("password/check")
   public boolean checkPassword(@NotBlank(message = "{required}") String password) {
     String curUsername = SecurityUtil.getCurrentUsername();
-    SystemUser user = userService.getSystemUser(curUsername);
-    return user != null && passwordEncoder.matches(password, user.getPassword());
+    SystemUser user = this.userService.getSystemUser(curUsername);
+    return user != null && this.passwordEncoder.matches(password, user.getPassword());
   }
 
   @PutMapping("password")
   @ControllerEndpoint(exceptionMessage = "修改密码失败")
   public void updatePassword(@NotBlank(message = "{required}") String password) {
-    userService.updatePassword(password);
+    this.userService.updatePassword(password);
   }
 
   @PutMapping("password/reset")
@@ -193,74 +194,4 @@ public class UserController {
     this.userService.resetPassword(usernameArr);
   }
 
-  @PostMapping("import")
-  public void importUser(@RequestParam("file") MultipartFile multipartFile) {
-    File file = FileUtil.toFile(multipartFile);
-    SyncReadExcelListener<SystemUser> listener = new SyncReadExcelListener<>();
-    EasyExcel.read(file, SystemUser.class, listener).sheet(0).doRead();
-    for (SystemUser object : listener.getList()) {
-      switch (object.getDeptName()) {
-        case "17会计1班":
-          object.setDeptId(90L);
-          object.setDeptIds("90");
-          break;
-        case "17会计2班":
-          object.setDeptId(91L);
-          object.setDeptIds("91");
-          break;
-        case "17会计3班":
-          object.setDeptId(92L);
-          object.setDeptIds("92");
-          break;
-        case "17会计4班":
-          object.setDeptId(93L);
-          object.setDeptIds("93");
-          break;
-        case "17会计5班":
-          object.setDeptId(94L);
-          object.setDeptIds("94");
-          break;
-        case "17国贸1班":
-          object.setDeptId(95L);
-          object.setDeptIds("95");
-          break;
-        case "17国贸2班":
-          object.setDeptId(96L);
-          object.setDeptIds("96");
-          break;
-        case "17国贸3班":
-          object.setDeptId(97L);
-          object.setDeptIds("97");
-          break;
-        case "17经济1班":
-          object.setDeptId(98L);
-          object.setDeptIds("98");
-          break;
-        case "17经济2班":
-          object.setDeptId(99L);
-          object.setDeptIds("99");
-          break;
-        case "17财管1班":
-          object.setDeptId(100L);
-          object.setDeptIds("100");
-          break;
-        case "17财管2班":
-          object.setDeptId(101L);
-          object.setDeptIds("101");
-          break;
-        case "17财管3班":
-          object.setDeptId(102L);
-          object.setDeptIds("102");
-          break;
-        default:
-          object.setDeptId(103L);
-          object.setDeptIds("103");
-          break;
-      }
-      object.setRoleId("5");
-      object.setStatus("1");
-      object.setSex("2");
-      userService.createUser(object);
-    }
-  }
 }

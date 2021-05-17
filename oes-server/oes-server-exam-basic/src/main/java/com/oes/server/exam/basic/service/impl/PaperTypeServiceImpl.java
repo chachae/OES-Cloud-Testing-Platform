@@ -54,5 +54,10 @@ public class PaperTypeServiceImpl extends ServiceImpl<PaperTypeMapper, PaperType
     }
   }
 
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void insertBatch(List<PaperType> paperQuestions) {
+    baseMapper.insertBatchSomeColumn(paperQuestions);
+  }
 
 }

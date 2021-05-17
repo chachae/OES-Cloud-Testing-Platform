@@ -39,4 +39,11 @@ public interface IPaperDeptService extends IService<PaperDept> {
    * @return 数量
    */
   Integer countByPaperId(String[] paperIds);
+
+  /**
+   * 批量插入
+   *
+   * @param paperDept 实体
+   */
+  void insertBatch(List<PaperDept> paperDept);
 }

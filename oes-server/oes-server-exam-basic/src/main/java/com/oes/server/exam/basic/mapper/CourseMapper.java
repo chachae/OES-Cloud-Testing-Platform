@@ -1,8 +1,8 @@
 package com.oes.server.exam.basic.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oes.common.core.enhance.orm.EnhanceMapper;
 import com.oes.common.core.exam.entity.Course;
 import com.oes.common.core.exam.entity.query.QueryCourseDto;
 import com.oes.common.exam.datasource.starter.annotation.ExamInfoScope;
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2020-06-03 16:43:16
  */
 @ExamInfoScope(methods = {"pageCourse"}, field = "course_id")
-public interface CourseMapper extends BaseMapper<Course> {
+public interface CourseMapper extends EnhanceMapper<Course> {
 
   /**
    * 分页查询课程信息

@@ -20,6 +20,9 @@
     <result column="creator_name" property="creatorName"/>
     <result column="term_id" property="termId"/>
     <result column="term_name" property="termName"/>
+    <result column="config_random_question_order" property="configRandomQuestionOrder"/>
+    <result column="config_remote" property="configRemote"/>
+    <result column="config_label_switch" property="configLabelSwitch"/>
   </resultMap>
 
   <resultMap id="baseMap2" type="com.oes.common.core.exam.entity.Paper">
@@ -38,6 +41,9 @@
     <result column="course_name" property="courseName"/>
     <result column="term_id" property="termId"/>
     <result column="term_name" property="termName"/>
+    <result column="config_random_question_order" property="configRandomQuestionOrder"/>
+    <result column="config_remote" property="configRemote"/>
+    <result column="config_label_switch" property="configLabelSwitch"/>
   </resultMap>
 
   <sql id="baseSql">
@@ -52,11 +58,14 @@
            tp.update_time,
            tp.status,
            tp.course_id,
-           tc.course_name,
            tp.type,
            tp.is_random,
            tp.term_id,
+           tp.config_remote,
+           tp.config_label_switch,
+           tp.config_random_question_order,
            tt.term_name,
+           tc.course_name,
            group_concat(tpd.dept_id) as dept_ids
     from t_paper tp
            left join t_course tc on (tp.course_id = tc.course_id)
@@ -74,9 +83,12 @@
            tp.minute,
            tp.status,
            tp.course_id,
-           tc.course_name,
            tp.type,
            tp.term_id,
+           tp.config_remote,
+           tp.config_label_switch,
+           tp.config_random_question_order,
+           tc.course_name,
            tt.term_name
     from t_paper tp
            left join t_course tc on (tp.course_id = tc.course_id)

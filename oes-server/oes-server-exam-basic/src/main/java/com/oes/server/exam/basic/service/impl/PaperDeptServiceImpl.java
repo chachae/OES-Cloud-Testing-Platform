@@ -21,21 +21,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept> implements IPaperDeptService {
 
   @Override
-  // 不需要加事务，被上层试卷「PaperService#deletePaper」删除接口调用，重复事务会导致事务失效
-  // @Transactional(rollbackFor = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   public void deleteBatchByPaperIds(String[] paperIds) {
     baseMapper.delete(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void deleteByPaperId(Long paperId) {
     baseMapper.delete(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
   }
 
   @Override
   public List<Long> getDeptIdListByPaperId(Long paperId) {
-    List<PaperDept> paperDepts = baseMapper.selectList(new LambdaQueryWrapper<PaperDept>().eq(PaperDept::getPaperId, paperId));
-    return paperDepts.stream().map(PaperDept::getDeptId).collect(Collectors.toList());
+    LambdaQueryWrapper<PaperDept> wrapper = new LambdaQueryWrapper<>();
+    // 查询条件：paperId，查询字段：deptId
+    wrapper.eq(PaperDept::getPaperId, paperId).select(PaperDept::getDeptId);
+    return baseMapper.selectList(wrapper).stream().map(PaperDept::getDeptId).collect(Collectors.toList());
   }
 
   @Override
@@ -45,5 +47,11 @@ public class PaperDeptServiceImpl extends ServiceImpl<PaperDeptMapper, PaperDept
     } else {
       return baseMapper.selectCount(new LambdaQueryWrapper<PaperDept>().in(PaperDept::getPaperId, Arrays.asList(paperIds)));
     }
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void insertBatch(List<PaperDept> paperDepts) {
+    baseMapper.insertBatchSomeColumn(paperDepts);
   }
 }
