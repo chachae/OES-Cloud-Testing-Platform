@@ -19,7 +19,7 @@
 
   <properties>
     <oes.version>1.0</oes.version>
-    <netty.version>4.1.59.Final</netty.version>
+    <netty.version>4.1.86.Final</netty.version>
   </properties>
 
   <dependencies>
